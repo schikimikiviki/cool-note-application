@@ -33,7 +33,8 @@ public class NoteEndpoint {
         return noteRepository.save(note);
     }
 
-    Note delete(long id) {
-        return null;
+    @DeleteMapping("/{id}")
+    void delete(@PathVariable long id) {
+        noteRepository.deleteById(id);
     }
 }
