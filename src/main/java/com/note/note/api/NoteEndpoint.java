@@ -37,4 +37,18 @@ public class NoteEndpoint {
     void delete(@PathVariable long id) {
         noteRepository.deleteById(id);
     }
+
+    @PutMapping("/{id}")
+    Note update(@PathVariable Long id, @RequestBody Note updatedNote) throws NoteNotFoundExpection {
+        Note existingNote = noteRepository.findById(id)
+                .orElseThrow(NoteNotFoundExpection::new);
+
+        // Update the existing note with the data from updatedNote
+        existingNote.setName(updatedNote.getName());
+        existingNote.setContent(updatedNote.getContent());
+
+        // Save the updated note
+        return noteRepository.save(existingNote);
+    }
+
 }
