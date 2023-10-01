@@ -1,15 +1,19 @@
 package com.note.note.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "notes")
 public class Note {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "contents")
+    private String content;
 
     public long getId() {
         return id;
@@ -35,6 +39,6 @@ public class Note {
         this.content = content;
     }
 
-    private String content;
+
 
 }

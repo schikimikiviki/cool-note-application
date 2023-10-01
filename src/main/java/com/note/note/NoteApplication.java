@@ -1,5 +1,6 @@
 package com.note.note;
 
+import com.note.note.data.Note;
 import com.note.note.database.Database;
 import com.note.note.database.TableInitializer;
 import com.note.note.database.TableStatements;
@@ -8,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Map;
 
+
+//Todo: Er erstellt Table notes, statt notes_list ???
 @SpringBootApplication
 public class NoteApplication {
 
@@ -16,7 +19,7 @@ public class NoteApplication {
 
 
         Database database = new Database(
-                "jdbc:postgresql://localhost:5432/notes",
+                "jdbc:postgresql://localhost:5432/notes-application",
                 "postgres",
                 "postgres");
         Map<String, String> tables = Map.of(
@@ -24,6 +27,8 @@ public class NoteApplication {
         );
         TableInitializer tableInitializer = new TableInitializer(database, tables);
         tableInitializer.initialize();
+
+
     }
 
 
