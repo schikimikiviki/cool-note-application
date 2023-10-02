@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./styles.css";
 import "./index.css";
 import NoteList from "./components/NoteList";
+import Header from "./components/Header";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -20,6 +21,7 @@ function App() {
 
   return (
     <div>
+      <Header />
       <NoteList notes={notes} />
     </div>
   );
