@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import api from "../api/axiosConfig";
 
-const NoteList = ({ notes, onUpdate }) => {
+const NoteList = ({ notes }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
@@ -24,8 +23,6 @@ const NoteList = ({ notes, onUpdate }) => {
       await api.put(`/${noteId}`, editedNote);
 
       setEditingNote(null);
-
-      onUpdate();
     } catch (error) {
       console.error("Error while saving note:", error);
     }
