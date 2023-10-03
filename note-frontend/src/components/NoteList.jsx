@@ -32,7 +32,7 @@ const NoteList = ({ notes, props }) => {
     try {
       await api.delete(`/${noteId}`);
       console.log(`Note with id ${noteId} sucessfully deleted!`);
-      props.onDelete(noteId);
+      props.onData(noteId);
     } catch (error) {
       console.error("Error while deleting note:", error);
     }

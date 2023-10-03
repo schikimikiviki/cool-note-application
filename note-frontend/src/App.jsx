@@ -34,7 +34,6 @@ function App() {
   };
 
   const handleRequest = () => {
-    console.log("this is the app component");
     openPopup();
   };
 
