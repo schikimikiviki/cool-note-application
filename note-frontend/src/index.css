@@ -106,3 +106,12 @@
     color: rgb(59, 59, 59); 
     cursor: pointer;
   }
+
+  .link-default {
+
+    color: black; 
+    &:hover {
+      text-decoration: underline;
+
+    }
+  }
