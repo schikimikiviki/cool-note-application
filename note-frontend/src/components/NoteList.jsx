@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../api/axiosConfig";
 
-const NoteList = ({ notes }) => {
+const NoteList = ({ notes, props }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
@@ -25,6 +25,16 @@ const NoteList = ({ notes }) => {
       setEditingNote(null);
     } catch (error) {
       console.error("Error while saving note:", error);
+    }
+  };
+
+  const handleDelete = async (noteId) => {
+    try {
+      await api.delete(`/${noteId}`);
+      console.log(`Note with id ${noteId} sucessfully deleted!`);
+      props.onDelete(noteId);
+    } catch (error) {
+      console.error("Error while deleting note:", error);
     }
   };
 

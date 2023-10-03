@@ -1,8 +1,12 @@
 import React from "react";
 
-const PlusButton = ({ onClick }) => {
+const PlusButton = (props) => {
+  const handleClick = () => {
+    props.onClick();
+  };
+
   return (
-    <button onClick={onClick} className="button-hover">
+    <button onClick={() => handleClick()} className="button-hover">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
