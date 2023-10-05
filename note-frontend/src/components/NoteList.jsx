@@ -53,7 +53,7 @@ const NoteList = ({ notes, props }) => {
           ) : (
             <div>
               <span
-                className="close-button"
+                // className="close-button"
                 onClick={() => handleDelete(note.id)}
               >
                 X
