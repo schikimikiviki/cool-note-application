@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosConfig";
 
-const Popup = ({ onClose }) => {
+const Popup = ({ onClose, onAdd }) => {
   const [noteData, setNoteData] = useState({
     name: "",
     content: "",
   });
-
-  // empty requests get sent
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,8 +25,8 @@ const Popup = ({ onClose }) => {
       });
 
       console.log(noteData, typeof noteData);
-      console.log("-----");
-      console.log(jsonString, typeof jsonString);
+
+      onAdd();
       onClose();
     } catch (error) {
       console.error("Error while posting note:", error);

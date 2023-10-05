@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../api/axiosConfig";
 
-const NoteList = ({ notes, props }) => {
+const NoteList = ({ notes, onDelete }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
@@ -32,7 +32,7 @@ const NoteList = ({ notes, props }) => {
     try {
       await api.delete(`/${noteId}`);
       console.log(`Note with id ${noteId} sucessfully deleted!`);
-      props.onData(noteId);
+      onDelete(noteId);
     } catch (error) {
       console.error("Error while deleting note:", error);
     }
@@ -53,7 +53,7 @@ const NoteList = ({ notes, props }) => {
           ) : (
             <div>
               <span
-                // className="close-button"
+                className="close-button"
                 onClick={() => handleDelete(note.id)}
               >
                 X

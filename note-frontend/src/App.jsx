@@ -19,10 +19,9 @@ function App() {
     setNotes(result.data);
   }
 
-  const handleDeleteFromState = (noteId) => {
+  const handleDeleteFromState = async (noteId) => {
     console.log(noteId);
-    setNotes((notes) => notes.filter((note) => note.id !== noteId));
-    //Find the error here :/
+    await setNotes((notes) => notes.filter((note) => note.id !== noteId));
   };
 
   const openPopup = () => {
@@ -40,7 +39,7 @@ function App() {
   return (
     <div>
       <Header onReceive={handleRequest} />
-      {isPopupOpen && <Popup onClose={closePopup} />}
+      {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
       <NoteList notes={notes} onDelete={handleDeleteFromState} />
     </div>
   );
