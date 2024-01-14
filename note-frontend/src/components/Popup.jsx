@@ -5,6 +5,7 @@ const Popup = ({ onClose, onAdd }) => {
   const [noteData, setNoteData] = useState({
     name: "",
     content: "",
+    color: "",
   });
 
   const [selectedColor, setSelectedColor] = useState(null);
@@ -20,6 +21,7 @@ const Popup = ({ onClose, onAdd }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNoteData({ ...noteData, [name]: value });
+    console.log(noteData);
   };
 
   const handleColorClick = (color) => {
@@ -30,7 +32,12 @@ const Popup = ({ onClose, onAdd }) => {
     e.preventDefault();
 
     try {
-      const jsonString = JSON.stringify(noteData);
+      const dataToSubmit = {
+        ...noteData,
+        color: selectedColor,
+      };
+
+      const jsonString = JSON.stringify(dataToSubmit);
 
       await api.post("", jsonString, {
         headers: {
@@ -38,10 +45,9 @@ const Popup = ({ onClose, onAdd }) => {
         },
       });
 
-      console.log(noteData, typeof noteData);
-
       onAdd();
       onClose();
+      console.log(dataToSubmit, typeof dataToSubmit);
     } catch (error) {
       console.error("Error while posting note:", error);
     }
@@ -98,7 +104,6 @@ const Popup = ({ onClose, onAdd }) => {
                 ></div>
               ))}
             </div>
-            {/* {selectedColor && <p>Selected Color: {selectedColor}</p>} */}
           </div>
 
           <button type="submit" className="submit-button">

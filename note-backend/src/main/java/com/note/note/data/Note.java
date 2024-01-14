@@ -15,6 +15,9 @@ public class Note {
     @Column(name = "contents")
     private String content;
 
+    @Column(name = "color")
+    private String color;
+
     public long getId() {
         return id;
     }
@@ -37,6 +40,14 @@ public class Note {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
 
