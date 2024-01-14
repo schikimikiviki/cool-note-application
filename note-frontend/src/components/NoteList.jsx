@@ -41,7 +41,11 @@ const NoteList = ({ notes, onDelete }) => {
   return (
     <div className="main-container">
       {notes.map((note) => (
-        <div key={note.id} className="note-container relative">
+        <div
+          key={note.id}
+          className="note-container relative"
+          style={{ backgroundColor: note.color }}
+        >
           {editingNote === note.id ? (
             <div>
               <textarea
