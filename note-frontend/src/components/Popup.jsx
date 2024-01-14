@@ -31,6 +31,12 @@ const Popup = ({ onClose, onAdd }) => {
   const submitForm = async (e) => {
     e.preventDefault();
 
+    // Check if a color is selected
+    if (!selectedColor) {
+      alert("Please select a color before submitting.");
+      return;
+    }
+
     try {
       const dataToSubmit = {
         ...noteData,
