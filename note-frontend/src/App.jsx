@@ -37,15 +37,14 @@ function App() {
     openPopup();
   };
 
-  const handleThemeChange = (data) => {
-    if (data == true) {
-      setIsDarkThemeSet(true);
-      console.log("now yes");
-    }
+  const handleThemeChange = () => {
+    setIsDarkThemeSet(!isDarkThemeSet);
   };
 
   return (
-    <div className={`${isDarkThemeSet ? "dark-theme" : "light-theme"}`}>
+    <div
+      className={`main-page ${isDarkThemeSet ? "dark-theme" : "light-theme"}`}
+    >
       <Header onReceive={handleRequest} onClick={handleThemeChange} />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
       <NoteList notes={notes} onDelete={handleDeleteFromState} />

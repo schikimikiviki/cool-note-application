@@ -7,8 +7,8 @@ const Header = (props) => {
     props.onReceive();
   };
 
-  const handleSwitch = (data) => {
-    props.onClick(data);
+  const handleSwitch = () => {
+    props.onClick();
   };
 
   return (
