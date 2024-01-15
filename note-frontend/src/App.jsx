@@ -1,14 +1,15 @@
 import api from "./api/axiosConfig";
 import { useEffect, useState } from "react";
-import "./styles.css";
+
 import "./index.css";
 import NoteList from "./components/NoteList";
-import Header from "./components/Header";
-import Popup from "./components/Popup";
+import Header from "./components/Header/Header.jsx";
+import Popup from "./components/Popup/Popup.jsx";
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
 
   useEffect(() => {
     (async () => await load())();
@@ -36,9 +37,16 @@ function App() {
     openPopup();
   };
 
+  const handleThemeChange = (data) => {
+    if (data == true) {
+      setIsDarkThemeSet(true);
+      console.log("now yes");
+    }
+  };
+
   return (
-    <div>
-      <Header onReceive={handleRequest} />
+    <div className={`${isDarkThemeSet ? "dark-theme" : "light-theme"}`}>
+      <Header onReceive={handleRequest} onClick={handleThemeChange} />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
       <NoteList notes={notes} onDelete={handleDeleteFromState} />
     </div>

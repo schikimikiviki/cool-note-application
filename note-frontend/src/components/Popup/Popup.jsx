@@ -1,5 +1,6 @@
 import { useState } from "react";
-import api from "../api/axiosConfig";
+import api from "../../api/axiosConfig";
+import "./Popup.css";
 
 const Popup = ({ onClose, onAdd }) => {
   const [noteData, setNoteData] = useState({
