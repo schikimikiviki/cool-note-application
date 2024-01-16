@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import api from "../api/axiosConfig";
+import api from "../../api/axiosConfig";
+import "./NoteList.css";
 
 const NoteList = ({ notes, onDelete }) => {
   const [editingNote, setEditingNote] = useState(null);
@@ -43,7 +44,7 @@ const NoteList = ({ notes, onDelete }) => {
       {notes.map((note) => (
         <div
           key={note.id}
-          className="note-container relative"
+          className="note-container"
           style={{ backgroundColor: note.color }}
         >
           {editingNote === note.id ? (

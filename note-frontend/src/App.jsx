@@ -2,7 +2,7 @@ import api from "./api/axiosConfig";
 import { useEffect, useState } from "react";
 
 import "./index.css";
-import NoteList from "./components/NoteList";
+import NoteList from "./components/NoteList/NoteList.jsx";
 import Header from "./components/Header/Header.jsx";
 import Popup from "./components/Popup/Popup.jsx";
 

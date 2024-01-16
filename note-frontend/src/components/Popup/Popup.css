@@ -79,4 +79,10 @@
     align-content: center;
     padding: 3%;
   }
+
+  .heading-medium {
+    font-size: 20px;
+    color: #333;
+    
+  }
   

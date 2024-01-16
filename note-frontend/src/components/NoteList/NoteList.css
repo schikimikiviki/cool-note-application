@@ -1,0 +1,54 @@
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 3%;
+  }
+
+  .note-container {
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #ccc; 
+    padding: 2rem; 
+    margin: 2.5rem; 
+  }
+
+  .close-button {
+  
+    top: 0.5rem; 
+    margin-left: 90%; 
+    font-size: 1.2rem; 
+    color: rgb(59, 59, 59); 
+    cursor: pointer;
+  }
+
+  .handwriting {
+    font-family: 'Indie Flower', cursive;
+    color:rgb(51, 51, 51);
+    font-size: x-large;
+  }
+
+  
+  .heading-small {
+    font-size: 15px;
+    color: #333;
+    
+  }
+
+   
+  .line {
+    border: 0.5px solid black;
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
+
+  
+  .link-default {
+
+    color: black; 
+    &:hover {
+      text-decoration: underline;
+
+    }
+  }
