@@ -45,6 +45,14 @@ function App() {
     <div
       className={`main-page ${isDarkThemeSet ? "dark-theme" : "light-theme"}`}
     >
+      {isDarkThemeSet && (
+        <div class="bg-animation">
+          <div id="stars"></div>
+          <div id="stars2"></div>
+          <div id="stars3"></div>
+          <div id="stars4"></div>
+        </div>
+      )}
       <Header onReceive={handleRequest} onClick={handleThemeChange} />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
       <NoteList notes={notes} onDelete={handleDeleteFromState} />
