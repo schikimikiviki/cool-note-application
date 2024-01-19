@@ -12,6 +12,10 @@ const Header = (props) => {
     props.onClick();
   };
 
+  const handleSearch = (searchData) => {
+    props.onType(searchData);
+  };
+
   return (
     <div className="margin-decent header-main">
       <div className="header-item">
@@ -20,7 +24,7 @@ const Header = (props) => {
       </div>
 
       <div className="header-item">
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
         <ModeSwitcher onSwitch={handleSwitch} />
         <PlusButton onClick={handleData} />
       </div>

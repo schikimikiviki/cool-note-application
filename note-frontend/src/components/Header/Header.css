@@ -1,6 +1,6 @@
 .header-main {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-around; 
     background: rgba(84, 100, 118, 0.5);
     padding: 1%;
     border-radius: 20px
@@ -13,7 +13,7 @@
 .header-item {
     display: flex;
     justify-content: space-between;  
-    gap: 10px;
+    gap: 5px;
 }
 
 .heading-main {

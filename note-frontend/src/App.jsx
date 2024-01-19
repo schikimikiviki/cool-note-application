@@ -41,6 +41,19 @@ function App() {
     setIsDarkThemeSet(!isDarkThemeSet);
   };
 
+  const handleSearch = async (searchTerm) => {
+    const originalNotes = await api.get("").then((result) => result.data);
+
+    if (searchTerm === "") {
+      setNotes(originalNotes);
+    } else {
+      const filteredNotes = originalNotes.filter((note) =>
+        note.name.includes(searchTerm)
+      );
+      setNotes(filteredNotes);
+    }
+  };
+
   return (
     <div
       className={`main-page ${isDarkThemeSet ? "dark-theme" : "light-theme"}`}
@@ -76,7 +89,11 @@ function App() {
         </div>
       )}
 
-      <Header onReceive={handleRequest} onClick={handleThemeChange} />
+      <Header
+        onReceive={handleRequest}
+        onClick={handleThemeChange}
+        onType={handleSearch}
+      />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
       <NoteList notes={notes} onDelete={handleDeleteFromState} />
     </div>

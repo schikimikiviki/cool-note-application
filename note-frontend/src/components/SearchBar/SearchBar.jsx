@@ -1,23 +1,19 @@
 import "./SearchBar.css";
 import React, { useState } from "react";
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchInputChange = (event) => {
-    setSearchQuery(event.target.value);
+    const newSearchQuery = event.target.value;
+    setSearchQuery(newSearchQuery);
+    onSearch(newSearchQuery);
   };
 
   // filtering should be in time with typing in stuff
 
-  //   const handleSearchSubmit = (event) => {
-  //     event.preventDefault();
-  //     console.log(`Searching for: ${searchQuery}`);
-  //     // Add your search functionality here
-  //   };
-
   return (
-    <form className="search-form" onSubmit={handleSearchSubmit}>
+    <form className="search-form">
       <input
         className="search-input"
         type="text"
