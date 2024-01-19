@@ -1,8 +1,12 @@
 .header-main {
     display: flex;
-    justify-content: space-between;  
-   
+    justify-content: space-between; 
+    background: rgba(84, 100, 118, 0.5);
+    padding: 1%;
+    border-radius: 20px
 }
+
+
 
 .margin-decent {
     margin: 20px;
