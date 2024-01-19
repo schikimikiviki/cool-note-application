@@ -5,6 +5,7 @@ import "./index.css";
 import NoteList from "./components/NoteList/NoteList.jsx";
 import Header from "./components/Header/Header.jsx";
 import Popup from "./components/Popup/Popup.jsx";
+import Footer from "./components/Footer/Footer.jsx";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -96,6 +97,7 @@ function App() {
       />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
       <NoteList notes={notes} onDelete={handleDeleteFromState} />
+      <Footer />
     </div>
   );
 }

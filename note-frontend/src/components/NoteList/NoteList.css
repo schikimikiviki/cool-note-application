@@ -3,6 +3,9 @@
     flex-wrap: wrap;
     gap: 20px;
     padding: 3%;
+    flex: 1; /* Make the notes container flexible to take up available space */
+  overflow-y: auto; /
+    
   }
 
   .note-container {

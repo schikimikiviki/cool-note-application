@@ -1,0 +1,10 @@
+.footer-main {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(84, 100, 118, 0.5);
+    padding: 1%;
+    border-radius: 20px;
+    margin: 20px;
+    margin-top: auto; /* Push the footer to the bottom */
+  }
+  
