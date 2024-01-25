@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../../api/axiosConfig";
 import "./NoteList.css";
 
-const NoteList = ({ notes, onDelete }) => {
+const NoteList = ({ notes, onDelete, titles }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [editedContent, setEditedContent] = useState("");
+  const [areTitlesVisible, setAreTitlesVisible] = useState(true);
+
+  useEffect(() => {
+    setAreTitlesVisible(titles);
+  }, [titles]);
 
   const handleEdit = async (noteId) => {
     try {
@@ -63,7 +68,13 @@ const NoteList = ({ notes, onDelete }) => {
               >
                 X
               </span>
-              <h2 className="handwriting">{note.name}</h2>
+
+              {areTitlesVisible ? (
+                <h2 className="handwriting">{note.name}</h2>
+              ) : (
+                <h2></h2>
+              )}
+
               <div className="handwriting">{note.content}</div>
               <hr className="line"></hr>
               <div className="heading-small">Note-id: {note.id}</div>

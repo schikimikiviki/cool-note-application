@@ -11,6 +11,7 @@ function App() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
+  const [areTitlesVisible, setAreTitlesVisible] = useState(true);
 
   useEffect(() => {
     (async () => await load())();
@@ -55,6 +56,11 @@ function App() {
     }
   };
 
+  const changeTitles = (data) => {
+    console.log(data);
+    setAreTitlesVisible(data);
+  };
+
   return (
     <div
       className={`main-page ${isDarkThemeSet ? "dark-theme" : "light-theme"}`}
@@ -96,8 +102,12 @@ function App() {
         onType={handleSearch}
       />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
-      <NoteList notes={notes} onDelete={handleDeleteFromState} />
-      <Footer />
+      <NoteList
+        notes={notes}
+        onDelete={handleDeleteFromState}
+        titles={areTitlesVisible}
+      />
+      <Footer onTitleChange={changeTitles} />
     </div>
   );
 }
