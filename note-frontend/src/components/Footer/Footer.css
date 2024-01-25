@@ -1,10 +1,19 @@
 .footer-main {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(84, 100, 118, 0.5);
-    padding: 1%;
-    border-radius: 20px;
-    margin: 20px;
-    margin-top: auto; /* Push the footer to the bottom */
-  }
-  
+  display: flex;
+  justify-content: space-around;
+  background: rgba(84, 100, 118, 0.5);
+  padding: 1%;
+  border-radius: 20px;
+  margin: 20px;
+  margin-top: auto; 
+}
+
+.footer-button {
+  flex: 1; /* Equal distribution of space among the buttons */
+  background: transparent;
+  border: none;
+}
+
+.footer-button:hover {
+  background: rgba(58, 68, 78, 0.5); 
+}

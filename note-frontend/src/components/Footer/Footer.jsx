@@ -9,12 +9,18 @@ const Footer = (props) => {
     props.onTitleChange(!areTitlesDisplayed);
   };
 
+  const handleAbout = () => {
+    props.onAbout();
+  };
+
   return (
     <div className="footer-main">
-      <div>About</div>
-      <div onClick={manageTitles}>
+      <button className="footer-button" onClick={handleAbout}>
+        About
+      </button>
+      <button className="footer-button" onClick={manageTitles}>
         {areTitlesDisplayed ? "Hide" : "Show"} note titles
-      </div>
+      </button>
     </div>
   );
 };

@@ -6,10 +6,12 @@ import NoteList from "./components/NoteList/NoteList.jsx";
 import Header from "./components/Header/Header.jsx";
 import Popup from "./components/Popup/Popup.jsx";
 import Footer from "./components/Footer/Footer.jsx";
+import About from "./components/About/About.jsx";
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isAboutPopupOpen, setIsAboutPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
 
@@ -35,8 +37,20 @@ function App() {
     setIsPopupOpen(false);
   };
 
+  const openAboutPopup = () => {
+    setIsAboutPopupOpen(true);
+  };
+
+  const closeAboutPopup = () => {
+    setIsAboutPopupOpen(false);
+  };
+
   const handleRequest = () => {
     openPopup();
+  };
+
+  const handleAboutPopup = () => {
+    openAboutPopup();
   };
 
   const handleThemeChange = () => {
@@ -102,12 +116,14 @@ function App() {
         onType={handleSearch}
       />
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
+
+      {isAboutPopupOpen && <About onClose={closeAboutPopup} />}
       <NoteList
         notes={notes}
         onDelete={handleDeleteFromState}
         titles={areTitlesVisible}
       />
-      <Footer onTitleChange={changeTitles} />
+      <Footer onTitleChange={changeTitles} onAbout={handleAboutPopup} />
     </div>
   );
 }
