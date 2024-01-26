@@ -55,3 +55,21 @@
 
     }
   }
+
+  .note-footer {
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+  }
+
+  .done-button {
+    background-color: rgb(16, 170, 59);
+    border: 0.5px black solid;
+    padding: 10px;
+    color:rgb(52, 12, 80);
+    border-radius: 20px;
+  }
+
+  .done-button:hover {
+    background-color: rgb(21, 202, 73);
+  }

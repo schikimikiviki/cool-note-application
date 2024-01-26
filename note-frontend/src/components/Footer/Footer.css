@@ -6,9 +6,11 @@
   border-radius: 20px;
   margin: 20px;
   border: 0.5px black solid; 
+  color: white;
 }
 
 .footer-button:first-child {
+  color: white;
   flex: 1; 
   margin: -17px 0px -17px -17px; 
   padding: -1%;
@@ -18,6 +20,7 @@
 }
 
 .footer-button:last-child {
+  color: white;
   flex: 1; 
   margin: -17px -17px -17px 0px; 
   padding: -1%;

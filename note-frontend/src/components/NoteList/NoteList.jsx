@@ -79,12 +79,17 @@ const NoteList = ({ notes, onDelete, titles }) => {
               <hr className="line"></hr>
               <div className="heading-small">Note-id: {note.id}</div>
               <br />
-              <span
-                className="link-default"
-                onClick={() => handleEdit(note.id)}
-              >
-                Edit
-              </span>
+
+              <div className="note-footer">
+                <span
+                  className="link-default"
+                  onClick={() => handleEdit(note.id)}
+                >
+                  Edit
+                </span>
+
+                <button className="done-button">Done ✔️</button>
+              </div>
             </div>
           )}
         </div>
