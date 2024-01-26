@@ -40,4 +40,16 @@
     color: #333;
     padding: 2%;
   }
+
+  .about-container {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    gap: 20px
+  }
+
+  .container-text {
+    text-align: justify;
+    color: #333;
+  }
   
