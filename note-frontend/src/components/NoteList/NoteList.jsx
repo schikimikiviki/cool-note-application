@@ -6,10 +6,13 @@ const NoteList = ({ notes, onDelete, titles }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [editedContent, setEditedContent] = useState("");
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
+  const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
     setAreTitlesVisible(titles);
   }, [titles]);
+
+  console.log(notes);
 
   const handleEdit = async (noteId) => {
     try {
@@ -42,6 +45,12 @@ const NoteList = ({ notes, onDelete, titles }) => {
     } catch (error) {
       console.error("Error while deleting note:", error);
     }
+  };
+
+  const handleDone = () => {
+    setIsDone(true);
+
+    //add check for each note id here
   };
 
   return (
@@ -88,7 +97,9 @@ const NoteList = ({ notes, onDelete, titles }) => {
                   Edit
                 </span>
 
-                <button className="done-button">Done ✔️</button>
+                <button onClick={handleDone} className="done-button">
+                  Done ✔️
+                </button>
               </div>
             </div>
           )}
