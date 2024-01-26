@@ -6,7 +6,7 @@ const NoteList = ({ notes, onDelete, titles }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [editedContent, setEditedContent] = useState("");
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
-  const [isDone, setIsDone] = useState(false);
+  const [isDoneList, setIsDoneList] = useState(Array(notes.length).fill(false));
 
   useEffect(() => {
     setAreTitlesVisible(titles);
@@ -47,62 +47,76 @@ const NoteList = ({ notes, onDelete, titles }) => {
     }
   };
 
-  const handleDone = () => {
-    setIsDone(true);
-
-    //add check for each note id here
+  const handleDone = (index) => {
+    const updatedIsDoneList = [...isDoneList];
+    updatedIsDoneList[index] = true;
+    setIsDoneList(updatedIsDoneList);
   };
 
   return (
     <div className="main-container">
-      {notes.map((note) => (
+      {notes.map((note, index) => (
         <div
           key={note.id}
           className="note-container"
-          style={{ backgroundColor: note.color }}
+          style={{ position: "relative" }}
         >
-          {editingNote === note.id ? (
-            <div>
-              <textarea
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-              ></textarea>
-              <button onClick={() => handleSave(note.id)}>Save</button>
-            </div>
-          ) : (
-            <div>
-              <span
-                className="close-button"
-                onClick={() => handleDelete(note.id)}
-              >
-                X
-              </span>
+          {isDoneList[index] && <div className="overlay"></div>}
 
-              {areTitlesVisible ? (
-                <h2 className="handwriting">{note.name}</h2>
-              ) : (
-                <h2></h2>
-              )}
-
-              <div className="handwriting">{note.content}</div>
-              <hr className="line"></hr>
-              <div className="heading-small">Note-id: {note.id}</div>
-              <br />
-
-              <div className="note-footer">
+          <div
+            className="note-container"
+            style={
+              isDoneList[index]
+                ? { backgroundColor: "grey" }
+                : { backgroundColor: note.color }
+            }
+          >
+            {editingNote === note.id ? (
+              <div>
+                <textarea
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                ></textarea>
+                <button onClick={() => handleSave(note.id)}>Save</button>
+              </div>
+            ) : (
+              <div>
                 <span
-                  className="link-default"
-                  onClick={() => handleEdit(note.id)}
+                  className="close-button"
+                  onClick={() => handleDelete(note.id)}
                 >
-                  Edit
+                  X
                 </span>
 
-                <button onClick={handleDone} className="done-button">
-                  Done ✔️
-                </button>
+                {areTitlesVisible ? (
+                  <h2 className="handwriting">{note.name}</h2>
+                ) : (
+                  <h2></h2>
+                )}
+
+                <div className="handwriting">{note.content}</div>
+                <hr className="line"></hr>
+                <div className="heading-small">Note-id: {note.id}</div>
+                <br />
+
+                <div className="note-footer">
+                  <span
+                    className="link-default"
+                    onClick={() => handleEdit(note.id)}
+                  >
+                    Edit
+                  </span>
+
+                  <button
+                    onClick={() => handleDone(index)}
+                    className="done-button"
+                  >
+                    Done ✔️
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       ))}
     </div>
