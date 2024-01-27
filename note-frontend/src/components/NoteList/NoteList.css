@@ -60,6 +60,7 @@
     display: flex;
     justify-content: space-between;
     justify-items: center;
+    gap: 10px
   }
 
   .done-button {

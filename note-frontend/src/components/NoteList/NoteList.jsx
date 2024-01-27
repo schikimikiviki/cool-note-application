@@ -10,7 +10,11 @@ const NoteList = ({ notes, onDelete, titles }) => {
 
   useEffect(() => {
     setAreTitlesVisible(titles);
-  }, [titles]);
+
+    const initialIsDoneList = notes.map((note) => note.done);
+    console.log("initialIsDoneList:", initialIsDoneList);
+    setIsDoneList(initialIsDoneList);
+  }, [titles, notes]);
 
   console.log(notes);
 
@@ -47,14 +51,21 @@ const NoteList = ({ notes, onDelete, titles }) => {
     }
   };
 
-  const handleDone = (index) => {
-    if (!isDoneList[index]) {
-      const updatedIsDoneList = [...isDoneList];
-      updatedIsDoneList[index] = true;
-      setIsDoneList(updatedIsDoneList);
+  const handleDone = async (noteId, index) => {
+    try {
+      const updatedNote = await api.patch(`/${noteId}`, {
+        done: !isDoneList[index],
+      });
+
+      if (updatedNote) {
+        const updatedIsDoneList = [...isDoneList];
+        updatedIsDoneList[index] = !isDoneList[index];
+        setIsDoneList(updatedIsDoneList);
+      }
+    } catch (error) {
+      console.error("Error while changing note state:", error);
     }
   };
-
   return (
     <div className="main-container">
       {notes.map((note, index) => (
@@ -101,7 +112,7 @@ const NoteList = ({ notes, onDelete, titles }) => {
                     Edit
                   </span>
                   <button
-                    onClick={() => handleDone(index)}
+                    onClick={() => handleDone(note.id, index)}
                     className={`done-button ${
                       isDoneList[index] ? "disabled" : ""
                     }`}

@@ -42,6 +42,7 @@ const Popup = ({ onClose, onAdd }) => {
       const dataToSubmit = {
         ...noteData,
         color: selectedColor,
+        done: false,
       };
 
       const jsonString = JSON.stringify(dataToSubmit);
