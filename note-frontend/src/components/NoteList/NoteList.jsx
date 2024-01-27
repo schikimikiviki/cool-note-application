@@ -12,11 +12,8 @@ const NoteList = ({ notes, onDelete, titles }) => {
     setAreTitlesVisible(titles);
 
     const initialIsDoneList = notes.map((note) => note.done);
-    console.log("initialIsDoneList:", initialIsDoneList);
     setIsDoneList(initialIsDoneList);
   }, [titles, notes]);
-
-  console.log(notes);
 
   const handleEdit = async (noteId) => {
     try {
@@ -106,7 +103,6 @@ const NoteList = ({ notes, onDelete, titles }) => {
 
                 <div className="note-footer">
                   <span
-                    // className="link-default"
                     className={isDoneList[index] ? "invisible" : "link-default"}
                     disabled={isDoneList[index]}
                     onClick={() => handleEdit(note.id)}

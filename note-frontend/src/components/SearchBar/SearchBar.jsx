@@ -10,8 +10,6 @@ const SearchBar = ({ onSearch }) => {
     onSearch(newSearchQuery);
   };
 
-  // filtering should be in time with typing in stuff
-
   return (
     <form className="search-form">
       <input

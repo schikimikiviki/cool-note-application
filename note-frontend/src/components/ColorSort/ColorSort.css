@@ -1,0 +1,26 @@
+
+  .heading-medium {
+    font-size: 20px;
+    color: #333;
+    
+  }
+
+
+  .colorPicker-header {
+    display: flex;
+    justify-content: center ;
+    align-content: center;
+    
+  }
+
+  .before-after {
+    height: 20px;
+    width: 120px;
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    color: #333;
+    cursor: pointer;
+    padding: 3px;
+    font-size: 15px;
+    border: 0.5px black solid
+  }

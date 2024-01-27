@@ -7,6 +7,7 @@ import Header from "./components/Header/Header.jsx";
 import Popup from "./components/Popup/Popup.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import About from "./components/About/About.jsx";
+import ColorSort from "./components/ColorSort/ColorSort.jsx";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -75,6 +76,22 @@ function App() {
     setAreTitlesVisible(data);
   };
 
+  const handleColorSort = async (color) => {
+    try {
+      const result = await api.get(""); // Assuming this fetches all notes from the API
+      const allNotes = result.data;
+
+      if (color) {
+        const filteredNotes = allNotes.filter((note) => note.color === color);
+        setNotes(filteredNotes);
+      } else {
+        setNotes(allNotes);
+      }
+    } catch (error) {
+      console.error("Error while sorting notes by color:", error);
+    }
+  };
+
   return (
     <div
       className={`main-page ${isDarkThemeSet ? "dark-theme" : "light-theme"}`}
@@ -118,6 +135,7 @@ function App() {
       {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
 
       {isAboutPopupOpen && <About onClose={closeAboutPopup} />}
+      <ColorSort onColorSort={handleColorSort} />
       <NoteList
         notes={notes}
         onDelete={handleDeleteFromState}
