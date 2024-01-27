@@ -48,28 +48,22 @@ const NoteList = ({ notes, onDelete, titles }) => {
   };
 
   const handleDone = (index) => {
-    const updatedIsDoneList = [...isDoneList];
-    updatedIsDoneList[index] = true;
-    setIsDoneList(updatedIsDoneList);
+    if (!isDoneList[index]) {
+      const updatedIsDoneList = [...isDoneList];
+      updatedIsDoneList[index] = true;
+      setIsDoneList(updatedIsDoneList);
+    }
   };
 
   return (
     <div className="main-container">
       {notes.map((note, index) => (
-        <div
-          key={note.id}
-          className="note-container"
-          style={{ position: "relative" }}
-        >
-          {isDoneList[index] && <div className="overlay"></div>}
-
+        <div key={note.id} style={{ position: "relative" }}>
           <div
-            className="note-container"
-            style={
-              isDoneList[index]
-                ? { backgroundColor: "grey" }
-                : { backgroundColor: note.color }
-            }
+            className={`note-container ${isDoneList[index] ? "overlay" : ""}`}
+            style={{
+              backgroundColor: isDoneList[index] ? "grey" : note.color,
+            }}
           >
             {editingNote === note.id ? (
               <div>
@@ -106,12 +100,14 @@ const NoteList = ({ notes, onDelete, titles }) => {
                   >
                     Edit
                   </span>
-
                   <button
                     onClick={() => handleDone(index)}
-                    className="done-button"
+                    className={`done-button ${
+                      isDoneList[index] ? "disabled" : ""
+                    }`}
+                    disabled={isDoneList[index]}
                   >
-                    Done ✔️
+                    {isDoneList[index] ? "✔️" : "Done ✔️"}
                   </button>
                 </div>
               </div>
