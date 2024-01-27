@@ -106,7 +106,9 @@ const NoteList = ({ notes, onDelete, titles }) => {
 
                 <div className="note-footer">
                   <span
-                    className="link-default"
+                    // className="link-default"
+                    className={isDoneList[index] ? "invisible" : "link-default"}
+                    disabled={isDoneList[index]}
                     onClick={() => handleEdit(note.id)}
                   >
                     Edit

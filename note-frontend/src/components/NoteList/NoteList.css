@@ -86,3 +86,7 @@
     background-color: rgb(21, 202, 73);
     cursor: not-allowed; 
   }
+
+  .invisible {
+    visibility: hidden;
+  }
