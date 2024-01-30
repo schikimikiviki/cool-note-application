@@ -78,7 +78,7 @@ function App() {
 
   const handleColorSort = async (color) => {
     try {
-      const result = await api.get(""); // Assuming this fetches all notes from the API
+      const result = await api.get("");
       const allNotes = result.data;
 
       if (color) {

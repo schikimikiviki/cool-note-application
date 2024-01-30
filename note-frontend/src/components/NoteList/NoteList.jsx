@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import api from "../../api/axiosConfig";
 import "./NoteList.css";
 
@@ -63,6 +63,7 @@ const NoteList = ({ notes, onDelete, titles }) => {
       console.error("Error while changing note state:", error);
     }
   };
+
   return (
     <div className="main-container">
       {notes.map((note, index) => (
