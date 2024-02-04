@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 import "./EditPopup.css";
+import colors from "../../assets/imports.js";
 
 const EditPopup = ({ note, onSave, onCancel }) => {
   const [editedContent, setEditedContent] = useState(note.content);
   const [selectedColor, setSelectedColor] = useState(note.color);
   const [editedName, setEditedName] = useState(note.name);
-
-  const colors = [
-    "#FF595E", // Coral Red
-    "#FFCA3A", // Happy Yellow
-    "#8AC926", // Grass Green
-    "#1982C4", // Sky Blue
-    "#6A4C93", // Grape Violet
-  ];
 
   const handleSave = () => {
     onSave(note.id, editedContent, selectedColor, editedName);
