@@ -23,11 +23,17 @@ const NoteList = ({ notes, onDelete, titles }) => {
     setEditingNote(null);
   };
 
-  const handleSave = async (noteId, editedContent, selectedColor) => {
+  const handleSave = async (
+    noteId,
+    editedContent,
+    selectedColor,
+    editedName
+  ) => {
     try {
       const editedNote = notes.find((note) => note.id === noteId);
       editedNote.content = editedContent;
       editedNote.color = selectedColor;
+      editedNote.name = editedName;
 
       console.log(editedNote);
 

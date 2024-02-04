@@ -4,6 +4,7 @@ import "./EditPopup.css";
 const EditPopup = ({ note, onSave, onCancel }) => {
   const [editedContent, setEditedContent] = useState(note.content);
   const [selectedColor, setSelectedColor] = useState(note.color);
+  const [editedName, setEditedName] = useState(note.name);
 
   const colors = [
     "#FF595E", // Coral Red
@@ -14,7 +15,7 @@ const EditPopup = ({ note, onSave, onCancel }) => {
   ];
 
   const handleSave = () => {
-    onSave(note.id, editedContent, selectedColor);
+    onSave(note.id, editedContent, selectedColor, editedName);
   };
 
   const handleColorClick = (color) => {
@@ -60,6 +61,12 @@ const EditPopup = ({ note, onSave, onCancel }) => {
           className="text-field"
           value={editedContent}
           onChange={(e) => setEditedContent(e.target.value)}
+        ></textarea>
+        <h1 className="heading-edit">Edit name: </h1>
+        <textarea
+          className="text-field"
+          value={editedName}
+          onChange={(e) => setEditedName(e.target.value)}
         ></textarea>
 
         <button className="submit-button" onClick={handleSave}>
