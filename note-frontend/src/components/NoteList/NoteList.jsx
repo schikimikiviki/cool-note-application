@@ -23,10 +23,13 @@ const NoteList = ({ notes, onDelete, titles }) => {
     setEditingNote(null);
   };
 
-  const handleSave = async (noteId, editedContent) => {
+  const handleSave = async (noteId, editedContent, selectedColor) => {
     try {
       const editedNote = notes.find((note) => note.id === noteId);
       editedNote.content = editedContent;
+      editedNote.color = selectedColor;
+
+      console.log(editedNote);
 
       await api.put(`/${noteId}`, editedNote);
 
