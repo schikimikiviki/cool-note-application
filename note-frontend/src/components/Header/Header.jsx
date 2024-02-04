@@ -1,6 +1,7 @@
 import PlusButton from "../PlusButton/PlusButton";
 import ModeSwitcher from "../ModeSwitcher/ModeSwitcher";
 import SearchBar from "../SearchBar/SearchBar";
+import LogoutButton from "../LogoutButton/LogoutButton";
 import "./Header.css";
 
 const Header = (props) => {
@@ -27,6 +28,7 @@ const Header = (props) => {
         <SearchBar onSearch={handleSearch} />
         <ModeSwitcher onSwitch={handleSwitch} />
         <PlusButton onClick={handleData} />
+        <LogoutButton />
       </div>
     </div>
   );

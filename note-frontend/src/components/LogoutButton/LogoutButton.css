@@ -1,0 +1,19 @@
+
+.button-hover {
+    background-color: #2d8ec3; 
+    color: #fff; 
+    font-weight: bold;
+    padding: 10px 20px;
+    margin: 30px 0px 30px 0px;
+    border: white 1px solid;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+  
+    &:hover {
+      transform: scale(1.1); 
+    }
+  }
