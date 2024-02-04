@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import api from "../../api/axiosConfig";
 import "./NoteList.css";
+import EditPopup from "../EditPopup/EditPopup";
 
 const NoteList = ({ notes, onDelete, titles }) => {
   const [editingNote, setEditingNote] = useState(null);
-  const [editedContent, setEditedContent] = useState("");
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const [isDoneList, setIsDoneList] = useState(Array(notes.length).fill(false));
 
@@ -15,17 +15,15 @@ const NoteList = ({ notes, onDelete, titles }) => {
     setIsDoneList(initialIsDoneList);
   }, [titles, notes]);
 
-  const handleEdit = async (noteId) => {
-    try {
-      const noteToEdit = notes.find((note) => note.id === noteId);
-      setEditingNote(noteId);
-      setEditedContent(noteToEdit.content);
-    } catch (error) {
-      console.error("Error while editing note:", error);
-    }
+  const handleEdit = (noteId) => {
+    setEditingNote(noteId);
   };
 
-  const handleSave = async (noteId) => {
+  const handleCancelEdit = () => {
+    setEditingNote(null);
+  };
+
+  const handleSave = async (noteId, editedContent) => {
     try {
       const editedNote = notes.find((note) => note.id === noteId);
       editedNote.content = editedContent;
@@ -75,53 +73,50 @@ const NoteList = ({ notes, onDelete, titles }) => {
             }}
           >
             {editingNote === note.id ? (
-              <div>
-                <textarea
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                ></textarea>
-                <button onClick={() => handleSave(note.id)}>Save</button>
-              </div>
-            ) : (
-              <div>
+              <EditPopup
+                note={note}
+                onSave={handleSave}
+                onCancel={handleCancelEdit}
+              />
+            ) : null}
+            <div>
+              <span
+                className="close-button"
+                onClick={() => handleDelete(note.id)}
+              >
+                X
+              </span>
+
+              {areTitlesVisible ? (
+                <h2 className="handwriting">{note.name}</h2>
+              ) : (
+                <h2></h2>
+              )}
+
+              <div className="handwriting">{note.content}</div>
+              <hr className="line"></hr>
+              <div className="heading-small">Note-id: {note.id}</div>
+              <br />
+
+              <div className="note-footer">
                 <span
-                  className="close-button"
-                  onClick={() => handleDelete(note.id)}
+                  className={isDoneList[index] ? "invisible" : "link-default"}
+                  disabled={isDoneList[index]}
+                  onClick={() => handleEdit(note.id)}
                 >
-                  X
+                  Edit
                 </span>
-
-                {areTitlesVisible ? (
-                  <h2 className="handwriting">{note.name}</h2>
-                ) : (
-                  <h2></h2>
-                )}
-
-                <div className="handwriting">{note.content}</div>
-                <hr className="line"></hr>
-                <div className="heading-small">Note-id: {note.id}</div>
-                <br />
-
-                <div className="note-footer">
-                  <span
-                    className={isDoneList[index] ? "invisible" : "link-default"}
-                    disabled={isDoneList[index]}
-                    onClick={() => handleEdit(note.id)}
-                  >
-                    Edit
-                  </span>
-                  <button
-                    onClick={() => handleDone(note.id, index)}
-                    className={`done-button ${
-                      isDoneList[index] ? "disabled" : ""
-                    }`}
-                    disabled={isDoneList[index]}
-                  >
-                    {isDoneList[index] ? "✔️" : "Done ✔️"}
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleDone(note.id, index)}
+                  className={`done-button ${
+                    isDoneList[index] ? "disabled" : ""
+                  }`}
+                  disabled={isDoneList[index]}
+                >
+                  {isDoneList[index] ? "✔️" : "Done ✔️"}
+                </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       ))}
