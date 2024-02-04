@@ -46,9 +46,32 @@ public class NoteEndpoint {
         // Update the existing note with the data from updatedNote
         existingNote.setName(updatedNote.getName());
         existingNote.setContent(updatedNote.getContent());
-
+        existingNote.setColor(updatedNote.getColor());
         // Save the updated note
         return noteRepository.save(existingNote);
     }
+
+    @PatchMapping("/{id}")
+    Note partialUpdate(@PathVariable Long id, @RequestBody Note updatedNote) throws NoteNotFoundExpection {
+        Note existingNote = noteRepository.findById(id)
+                .orElseThrow(NoteNotFoundExpection::new);
+
+        if (updatedNote.getName() != null) {
+            existingNote.setName(updatedNote.getName());
+        }
+        if (updatedNote.getContent() != null) {
+            existingNote.setContent(updatedNote.getContent());
+        }
+        if (updatedNote.getColor() != null) {
+            existingNote.setColor(updatedNote.getColor());
+        }
+
+        if (updatedNote.getDone() != null){
+            existingNote.setDone((updatedNote.getDone()));
+        }
+
+        return noteRepository.save(existingNote);
+    }
+
 
 }

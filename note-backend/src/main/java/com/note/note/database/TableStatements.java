@@ -5,7 +5,8 @@ public interface TableStatements {
             "id SERIAL PRIMARY KEY," +
             "name VARCHAR(100)," +
             "contents TEXT," +
-            "color VARCHAR(100)" +
+            "color VARCHAR(100)," +
+            "done BOOLEAN" +
             ");";
 
 }

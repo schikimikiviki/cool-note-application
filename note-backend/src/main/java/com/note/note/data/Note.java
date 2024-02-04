@@ -18,6 +18,19 @@ public class Note {
     @Column(name = "color")
     private String color;
 
+    @Column(name="done")
+    private Boolean done;
+
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
+    }
+
+
+
     public long getId() {
         return id;
     }
