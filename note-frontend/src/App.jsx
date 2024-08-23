@@ -1,13 +1,13 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./components/Home/Home";
-import LoginPage from "./components/LoginPage/LoginPage";
+import { Routes, Route } from 'react-router-dom';
+import Home from './components/Home/Home';
+import LoginPage from './components/LoginPage/LoginPage';
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path='/home' element={<Home />} />
+        <Route path='/login' element={<LoginPage />} />
       </Routes>
     </div>
   );
@@ -17,4 +17,4 @@ function App() {
 
 export default App;
 
-// this is a test 
+// this is a test

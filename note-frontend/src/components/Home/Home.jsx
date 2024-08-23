@@ -1,13 +1,13 @@
-import api from "../../api/axiosConfig.js";
-import { useEffect, useState } from "react";
+import api from '../../api/axiosConfig.js';
+import { useEffect, useState } from 'react';
 
-import "../../index.css";
-import NoteList from "../NoteList/NoteList.jsx";
-import Header from "../Header/Header.jsx";
-import Popup from "../Popup/Popup.jsx";
-import Footer from "../Footer/Footer.jsx";
-import About from "../About/About.jsx";
-import ColorSort from "../ColorSort/ColorSort.jsx";
+import '../../index.css';
+import NoteList from '../NoteList/NoteList.jsx';
+import Header from '../Header/Header.jsx';
+import Popup from '../Popup/Popup.jsx';
+import Footer from '../Footer/Footer.jsx';
+import About from '../About/About.jsx';
+import ColorSort from '../ColorSort/ColorSort.jsx';
 
 function Home() {
   const [notes, setNotes] = useState([]);
@@ -21,13 +21,15 @@ function Home() {
   }, []);
 
   async function load() {
-    const result = await api.get("");
-    setNotes(result.data);
+    const result = await api.get('');
+    if (result.length > 0) {
+      setNotes(result.data);
+    }
   }
 
   const handleDeleteFromState = async (noteId) => {
     console.log(noteId);
-    await setNotes((notes) => notes.filter((note) => note.id !== noteId));
+    setNotes((notes) => notes.filter((note) => note.id !== noteId));
   };
 
   const openPopup = () => {
@@ -59,9 +61,9 @@ function Home() {
   };
 
   const handleSearch = async (searchTerm) => {
-    const originalNotes = await api.get("").then((result) => result.data);
+    const originalNotes = await api.get('').then((result) => result.data);
 
-    if (searchTerm === "") {
+    if (searchTerm === '') {
       setNotes(originalNotes);
     } else {
       const filteredNotes = originalNotes.filter((note) =>
@@ -78,7 +80,7 @@ function Home() {
 
   const handleColorSort = async (color) => {
     try {
-      const result = await api.get("");
+      const result = await api.get('');
       const allNotes = result.data;
 
       if (color) {
@@ -88,41 +90,41 @@ function Home() {
         setNotes(allNotes);
       }
     } catch (error) {
-      console.error("Error while sorting notes by color:", error);
+      console.error('Error while sorting notes by color:', error);
     }
   };
 
   return (
     <div
-      className={`main-page ${isDarkThemeSet ? "dark-theme" : "light-theme"}`}
+      className={`main-page ${isDarkThemeSet ? 'dark-theme' : 'light-theme'}`}
     >
       {isDarkThemeSet ? (
-        <div className="bg-animation">
-          <div id="stars"></div>
-          <div id="stars2"></div>
-          <div id="stars3"></div>
-          <div id="stars4"></div>
+        <div className='bg-animation'>
+          <div id='stars'></div>
+          <div id='stars2'></div>
+          <div id='stars3'></div>
+          <div id='stars4'></div>
         </div>
       ) : (
-        <div id="background-wrap">
-          <div className="x1">
-            <div className="cloud"></div>
+        <div id='background-wrap'>
+          <div className='x1'>
+            <div className='cloud'></div>
           </div>
 
-          <div className="x2">
-            <div className="cloud"></div>
+          <div className='x2'>
+            <div className='cloud'></div>
           </div>
 
-          <div className="x3">
-            <div className="cloud"></div>
+          <div className='x3'>
+            <div className='cloud'></div>
           </div>
 
-          <div className="x4">
-            <div className="cloud"></div>
+          <div className='x4'>
+            <div className='cloud'></div>
           </div>
 
-          <div className="x5">
-            <div className="cloud"></div>
+          <div className='x5'>
+            <div className='cloud'></div>
           </div>
         </div>
       )}

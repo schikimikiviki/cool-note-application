@@ -2,6 +2,7 @@ import './LoginPage.css';
 import noteIcon from '../../assets/note-icon.png';
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -10,6 +11,8 @@ const LoginPage = () => {
   // State for handling messages
   const [errorMessage, setErrorMessage] = useState('');
   const [logoutMessage, setLogoutMessage] = useState('');
+
+  const navigate = useNavigate();
 
   // Handle form submission
   const handleLogin = async (e) => {
@@ -22,7 +25,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/login',
+        'http://localhost:8080/login',
         `username=${username}&password=${password}`,
         {
           headers: {
@@ -32,6 +35,8 @@ const LoginPage = () => {
       );
       // Handle successful login
       console.log('Login successful:', response.data);
+
+      navigate('/home');
     } catch (error) {
       // Handle login error
       setErrorMessage('Invalid Username or Password');

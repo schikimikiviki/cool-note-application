@@ -1,4 +1,4 @@
-package com.note.note.data;
+package com.note.note.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.note.note.data.CustomUserDetailsService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -30,10 +32,10 @@ public class SecurityConfig {
         http.csrf().disable()
             .authorizeHttpRequests()
             .requestMatchers("/api/register", "/api/users").permitAll() // Allow public access to these endpoints
-            .requestMatchers("/api/home").authenticated() // Protect this endpoint
+            .requestMatchers("/").authenticated() // Protect this endpoint
             .and()
             .formLogin()
-            .loginProcessingUrl("/api/login") // Form login URL
+            .loginProcessingUrl("/login") // Form login URL
             .successHandler((req, res, auth) -> {
                 res.setStatus(HttpServletResponse.SC_OK);
                 res.getWriter().write("Login successful");
