@@ -1,10 +1,10 @@
-.login-header {
+.register-header {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.login-container {
+.register-container {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -13,26 +13,26 @@
   align-items: center;
 }
 
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.login-form input {
+.register-form input {
   margin: 5px;
   width: 100%;
   padding: 10px;
 }
 
-.login-body {
+.register-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.login-container button {
+.register-container button {
   width: 100%;
   margin: 5px;
   font-size: 18px;
@@ -40,6 +40,14 @@
 
 .error-message {
   background-color: #7e0505;
+  color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.registration-message {
+  background-color: #177e05;
   color: #fff;
   padding: 10px;
   border-radius: 3px;

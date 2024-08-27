@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/register", "/api/users").permitAll() // Allow public access to these endpoints
+            .requestMatchers("/register", "/api/users", "/verify").permitAll() // Allow public access to these endpoints
             .requestMatchers("/").authenticated() // Protect this endpoint
             .and()
             .formLogin()

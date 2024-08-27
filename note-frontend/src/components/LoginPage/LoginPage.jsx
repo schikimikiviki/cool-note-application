@@ -10,8 +10,6 @@ const LoginPage = () => {
 
   // State for handling messages
   const [errorMessage, setErrorMessage] = useState('');
-  const [logoutMessage, setLogoutMessage] = useState('');
-
   const navigate = useNavigate();
 
   // Handle form submission
@@ -19,7 +17,6 @@ const LoginPage = () => {
     e.preventDefault();
     console.log('Form submitted with:', { username, password });
     setErrorMessage('');
-    setLogoutMessage('');
 
     console.log('Logging in user ... ');
 
@@ -44,9 +41,7 @@ const LoginPage = () => {
   };
 
   const handleRegister = () => {
-    // logic for registration
-    // generate username and password
-    // save into db
+    navigate('/register');
   };
 
   const handleUserNameChange = (e) => {
@@ -68,12 +63,6 @@ const LoginPage = () => {
           {errorMessage && (
             <div className='error-message'>
               <p>{errorMessage}</p>
-            </div>
-          )}
-
-          {logoutMessage && (
-            <div className='logout-message'>
-              <p>{logoutMessage}</p>
             </div>
           )}
 
@@ -103,7 +92,6 @@ const LoginPage = () => {
             ---------------OR---------------
             <button onClick={handleRegister}>Register</button>
             <br />
-            No data is collected for registration.
           </form>
         </div>
       </div>
