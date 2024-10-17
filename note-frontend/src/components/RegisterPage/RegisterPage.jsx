@@ -3,6 +3,7 @@ import noteIcon from '../../assets/note-icon.png';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import fetchGetFromBackend from '../../features/helpers';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -24,12 +25,34 @@ const RegisterPage = () => {
     return true;
   };
 
+  const validateUsername = async () => {
+    let userArr = await fetchGetFromBackend('users', 'userFetch');
+    let userAlreadyExists = false;
+
+    console.log(userArr);
+
+    for (const user of userArr) {
+      if (user.username === username) {
+        userAlreadyExists = true;
+      }
+    }
+
+    return userAlreadyExists;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
 
     // Validate form fields
     if (!validateForm()) {
       return; // Stop form submission if validation fails
+    }
+
+    const userAlreadyExists = await validateUsername(); // Wait for username validation
+
+    if (userAlreadyExists) {
+      setErrorMessage('Username already exists!');
+      return; // Stop further execution if username exists
     }
 
     const captchaValue = recaptcha.current.getValue();
@@ -40,6 +63,7 @@ const RegisterPage = () => {
     }
 
     try {
+      // Verify captcha
       const res = await fetch('http://localhost:8080/verify', {
         method: 'POST',
         body: JSON.stringify({ captchaValue }),
@@ -49,12 +73,29 @@ const RegisterPage = () => {
       });
       const data = await res.json();
 
-      if (data.success) {
-        // Form submission logic here
+      if (!data.success) {
+        setErrorMessage('reCAPTCHA validation failed!');
+        return;
+      }
+
+      // If captcha is successful, proceed with registration
+      let userObj = { username: username, password: password };
+      const registerRes = await fetch('http://localhost:8080/register', {
+        method: 'POST',
+        body: JSON.stringify(userObj), // Make sure userObj is stringified
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const registerData = await registerRes.json();
+
+      console.log(registerData);
+
+      if (registerData.success) {
         setRegistrationMessage('Registration successful!');
         setErrorMessage('');
       } else {
-        setErrorMessage('reCAPTCHA validation failed!');
+        setErrorMessage('Registration failed!');
       }
     } catch (error) {
       setErrorMessage('An error occurred during registration.');
