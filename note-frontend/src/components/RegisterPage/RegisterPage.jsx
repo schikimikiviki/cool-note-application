@@ -11,6 +11,7 @@ const RegisterPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [registrationMessage, setRegistrationMessage] = useState('');
   const recaptcha = useRef();
+  const navigate = useNavigate();
 
   // Function to validate username and password lengths
   const validateForm = () => {
@@ -111,6 +112,10 @@ const RegisterPage = () => {
     setPassword(e.target.value);
   };
 
+  const redirectToLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <>
       <div className='register-container'>
@@ -156,6 +161,9 @@ const RegisterPage = () => {
               ref={recaptcha}
               sitekey={import.meta.env.VITE_REACT_APP_SITE_KEY}
             />
+            <br />
+            ---------------OR---------------
+            <button onClick={redirectToLogin}>Login</button>
             <br />
           </form>
         </div>

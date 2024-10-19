@@ -2,6 +2,7 @@ package com.note.note.data;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,30 +13,45 @@ import org.springframework.stereotype.Service;
 
 import com.note.note.repository.UserRepository;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
- private UserRepository userRepository;
+	private UserRepository userRepository;
 
- public CustomUserDetailsService(UserRepository userRepository) {
-  super();
-  this.userRepository = userRepository;
- }
+	private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
- @Override
- public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public CustomUserDetailsService(UserRepository userRepository) {
+		super();
+		this.userRepository = userRepository;
+	}
 
-  User user = userRepository.findByUsername(username);
-  if (user == null) {
-   throw new UsernameNotFoundException("Username or Password not found");
-  }
-  return new CustomUserDetails(user.getUsername(), user.getPassword(), authorities(), user.getFullname());
- }
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
- public Collection<? extends GrantedAuthority> authorities() {
-  return Arrays.asList(new SimpleGrantedAuthority("USER"));
- }
+		System.out.println("HELLLLLLO");
+		logger.info("Attempting to load user by username: {}", username);
+		User user = userRepository.findByUsername(username);
+		if (user == null) {
+			logger.warn("User not found: {}", username);
+			throw new UsernameNotFoundException("Username or Password not found");
+
+		}
+
+		logger.info("Loading user: {}", username);
+
+		var authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+				.collect(Collectors.toList());
+
+		logger.info("Authorities: ", authorities);
+
+		return new CustomUserDetails(user.getUsername(), user.getPassword(), authorities, user.getNotes());
+	}
+
+	public Collection<? extends GrantedAuthority> authorities() {
+		return Arrays.asList(new SimpleGrantedAuthority("USER"));
+	}
 
 }

@@ -1,6 +1,8 @@
 
 package com.note.note.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import com.note.note.data.CustomUserDetailsService;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
 import com.note.note.service.UserService;
@@ -24,6 +27,9 @@ public class UserController {
  private UserDetailsService userDetailsService;
 
  private final UserService userService;
+ 
+ private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
 
  public UserController(UserService userService) {
   this.userService = userService;
@@ -34,6 +40,14 @@ public class UserController {
   // Ensure principal is not null and return user details
   return userDetailsService.loadUserByUsername(principal.getName());
  }
+ 
+ @GetMapping("/test")
+ public ResponseEntity<String> testLogging() {
+	 System.out.println("testtt");
+     logger.info("Test endpoint called");
+     return ResponseEntity.ok("Test successful");
+ }
+
 
  @GetMapping("/users")
  public List<User> getAllUsers() {

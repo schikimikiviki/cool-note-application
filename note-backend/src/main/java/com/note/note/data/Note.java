@@ -42,6 +42,11 @@ public class Note {
         this.user = user;
         this.createdAt = LocalDateTime.now();
     }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
    
 }

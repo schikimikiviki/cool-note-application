@@ -1,9 +1,11 @@
 package com.note.note.data;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,19 +22,25 @@ public class User {
  private String username;
  private String password;
  private String fullname;
- @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+ 
+ @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
  private List<Note> notes;
+ 
+ 
+ private Set<String> roles;
 
 
  public User() {
 
  }
 
- public User(String username, String password, String fullname) {
+ public User(String username, String password, String fullname, List<Note> notes, Set<String> roles) {
   super();
   this.username = username;
   this.password = password;
   this.fullname = fullname;
+  this.notes = notes; 
+  this.roles = roles; 
  }
 
  public Long getId() {
@@ -71,9 +79,23 @@ public class User {
      return notes;
  }
 
+ 
  public void setNotes(List<Note> notes) {
      this.notes = notes;
+     for (Note note : notes) {
+         note.setUser(this);  // Ensure the bidirectional relationship is set
+     }
  }
+ 
+ public Set<String> getRoles() {
+     return roles;
+ }
+
+ public void setRoles(Set<String> roles) {
+     this.roles = roles;
+ }
+ 
+ 
 
  @Override
  public String toString() {

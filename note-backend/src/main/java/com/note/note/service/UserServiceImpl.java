@@ -10,37 +10,37 @@ import com.note.note.data.User;
 import com.note.note.data.UserDto;
 import com.note.note.repository.UserRepository;
 
-
-
 @Service
 public class UserServiceImpl implements UserService {
 
- @Autowired
- PasswordEncoder passwordEncoder;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
- private UserRepository userRepository;
+	private UserRepository userRepository;
 
- public UserServiceImpl(UserRepository userRepository) {
-  super();
-  this.userRepository = userRepository;
- }
+	public UserServiceImpl(UserRepository userRepository) {
+		super();
+		this.userRepository = userRepository;
+	}
 
- @Override
- public User findByUsername(String username) {
-  return userRepository.findByUsername(username);
- }
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
 
- @Override
- public User save(UserDto userDto) {
-  User user = new User(userDto.getUsername(), passwordEncoder.encode(userDto.getPassword()),
-    userDto.getFullname());
-  return userRepository.save(user);
- }
+	@Override
+	public User save(UserDto userDto) {
 
-@Override
-public List<User> findAllUsers() {
-	return userRepository.findAll();
-	
-}
+		User user = new User(userDto.getUsername(), passwordEncoder.encode(userDto.getPassword()),
+				userDto.getFullname(), userDto.getNotes(), userDto.getRoles());
+
+		return userRepository.save(user);
+	}
+
+	@Override
+	public List<User> findAllUsers() {
+		return userRepository.findAll();
+
+	}
 
 }

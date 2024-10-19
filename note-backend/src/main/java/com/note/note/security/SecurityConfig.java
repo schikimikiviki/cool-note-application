@@ -27,39 +27,27 @@ public class SecurityConfig {
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/register", "/users", "/verify").permitAll()// Allow public access to these endpoints
-            //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
-            .requestMatchers("/").authenticated() // Protect this endpoint
-            .and()
-            .formLogin()
-            .loginProcessingUrl("/login") // Form login URL
-            .successHandler((req, res, auth) -> {
-                res.setStatus(HttpServletResponse.SC_OK);
-                res.getWriter().write("Login successful");
-            })
-            .failureHandler((req, res, ex) -> {
-                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                res.getWriter().write("Invalid Username or Password");
-            })
-            .permitAll()
-            .and()
-            .logout()
-            .invalidateHttpSession(true)
-            .clearAuthentication(true)
-            .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
-            .logoutSuccessHandler((req, res, auth) -> {
-                res.setStatus(HttpServletResponse.SC_OK);
-                res.getWriter().write("Logout successful");
-            })
-            .permitAll();
-
+        http
+        	.csrf(csrf -> csrf.disable()) 
+            .authorizeHttpRequests((authz) -> authz
+            		
+            	.requestMatchers("/users").hasRole("ADMIN") 
+            	.requestMatchers("/register").anonymous()
+            	.requestMatchers("/test").anonymous()
+                
+                .anyRequest().authenticated()
+                
+                
+            );
+        
         return http.build();
     }
+
+	
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
