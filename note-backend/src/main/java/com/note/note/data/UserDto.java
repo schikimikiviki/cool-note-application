@@ -10,18 +10,28 @@ public class UserDto {
 	private String fullname;
 	private List<Note> notes;
 	private Set<String> roles;
+	private Long id;
 
 	public UserDto() {
 
 	}
 
-	public UserDto(String username, String password, String fullname, List<Note> notes, Set<String> roles) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles) {
 		super();
+		this.id = id; 
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.notes = notes;
 		this.roles = roles;
+	}
+	
+	public Long getId() {
+		return id; 
+	}
+	
+	public void setIdLong(Long id) {
+		this.id = id;
 	}
 
 	public String getUsername() {

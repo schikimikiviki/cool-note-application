@@ -1,13 +1,16 @@
 package com.note.note.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import com.note.note.data.CustomUserDetailsService;
 import com.note.note.data.Note;
 import com.note.note.data.NoteDto;
 import com.note.note.service.NoteService;
+import com.note.note.service.UserService;
 
 import java.security.Principal;
 import java.util.List;
@@ -21,15 +24,29 @@ public class NoteController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    
+    private final UserService userService;
+   
 
-    @GetMapping
-    public List<Note> getNotesForUser(Principal principal) {
-        return noteService.findNotesByUser(principal.getName());
+    public NoteController(UserService userService) {
+     this.userService = userService;
     }
 
-    @PostMapping
-    public Note createNote(@RequestBody NoteDto noteDto, Principal principal) {
-        return noteService.saveNoteForUser(principal.getName(), noteDto.getTitle(), noteDto.getContent());
+    
+    @GetMapping("/user/{userId}")
+    public List<Note> getNotesForUser(@PathVariable Long userId) {
+        return noteService.getNotesByUserId(userId);
+    }
+    
+    
+
+    @PostMapping("/{userId}")
+    public Note createNote(@PathVariable Long userId, @RequestBody Note note) {
+ 
+		/* return noteService.saveNoteForUser(userId, note); */
+    	Note savedNote = userService.addNoteToUser(userId, note);
+        return savedNote;
+
     }
 
     @DeleteMapping("/{id}")

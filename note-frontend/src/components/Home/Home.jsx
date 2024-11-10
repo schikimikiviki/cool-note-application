@@ -24,6 +24,8 @@ function Home() {
     const result = await api.get('');
     if (result.length > 0) {
       setNotes(result.data);
+    } else {
+      console.error('Error loading notes');
     }
   }
 

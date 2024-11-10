@@ -34,8 +34,9 @@ public class User {
 
  }
 
- public User(String username, String password, String fullname, List<Note> notes, Set<String> roles) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles) {
   super();
+  this.id = id; 
   this.username = username;
   this.password = password;
   this.fullname = fullname;

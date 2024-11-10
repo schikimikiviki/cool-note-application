@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.note.note.data.CustomUserDetailsService;
+import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
 import com.note.note.service.UserService;
@@ -25,13 +27,16 @@ public class UserController {
 
  @Autowired
  private UserDetailsService userDetailsService;
+ 
+ private final PasswordEncoder passwordEncoder; 
 
  private final UserService userService;
  
  private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 
- public UserController(UserService userService) {
+ public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+  this.passwordEncoder = passwordEncoder;
   this.userService = userService;
  }
 
@@ -54,25 +59,25 @@ public class UserController {
      // Return list of users from the database
      return userService.findAllUsers();
  }
-
-	/*
-	 * @PostMapping("/register") public User register(@RequestBody UserDto userDto)
-	 * { User user = userService.findByUsername(userDto.getUsername()); if (user !=
-	 * null) { // Handle user already exists case //throw new
-	 * UserAlreadyExistsException("User already exists"); } return
-	 * userService.save(userDto); }
-	 */
  
-	/*
-	 * @PostMapping("/register") public ResponseEntity<?> register(@RequestBody
-	 * UserDto userDto) { User existingUser =
-	 * userService.findByUsername(userDto.getUsername()); if (existingUser != null)
-	 * { // Handle user already exists case return ResponseEntity
-	 * .status(HttpStatus.CONFLICT) // Return a 409 Conflict status
-	 * .body("User already exists"); } User newUser = userService.save(userDto);
-	 * return ResponseEntity .status(HttpStatus.CREATED) // Return a 201 Created
-	 * status .body(newUser); }
-	 */
+ @PostMapping("/login")
+ public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
+     String username = loginData.get("username");
+     String password = loginData.get("password");
+
+     // Load user details by username
+     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+     if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
+         // Login successful
+         return ResponseEntity.ok(Map.of("success", true, "message", "Login successful"));
+     } else {
+         // Invalid credentials
+         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Invalid credentials"));
+     }
+ }
+
+
  
  @PostMapping("/register")
  public ResponseEntity<?> register(@RequestBody UserDto userDto) {

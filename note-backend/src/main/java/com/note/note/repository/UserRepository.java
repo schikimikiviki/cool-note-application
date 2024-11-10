@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
 
@@ -16,4 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
  User save(UserDto userDto);
 
  List<User> findAll();
+ 
+
+ 
 }
