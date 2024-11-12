@@ -3,6 +3,7 @@ package com.note.note.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import com.note.note.service.UserService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -46,6 +48,28 @@ public class NoteController {
 		/* return noteService.saveNoteForUser(userId, note); */
     	Note savedNote = userService.addNoteToUser(userId, note);
         return savedNote;
+
+    }
+    
+    @PatchMapping("/{noteId}")
+    public Note editNote(@PathVariable Long noteId, @RequestBody Note note) {
+    	 
+	// find the right note to edit
+    Optional<Note> foundNoteOptional = noteService.findNoteById(noteId);
+    
+    if (foundNoteOptional.isPresent()) {
+        Note foundNote = foundNoteOptional.get();
+        
+        foundNote.setTitle(note.getTitle());
+        foundNote.setContent(note.getContent());
+        //TODO: add color
+        // Save updated note
+        Note updatedNote = noteService.save(foundNote);
+
+        return updatedNote;
+    } else {
+        return null; 
+    }
 
     }
 

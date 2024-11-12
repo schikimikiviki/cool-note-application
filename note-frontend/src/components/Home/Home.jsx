@@ -1,5 +1,6 @@
 import api from '../../api/axiosConfig.js';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import '../../index.css';
 import NoteList from '../NoteList/NoteList.jsx';
@@ -15,19 +16,15 @@ function Home() {
   const [isAboutPopupOpen, setIsAboutPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
+  const location = useLocation();
+  const { userData } = location.state || {};
 
   useEffect(() => {
-    (async () => await load())();
-  }, []);
-
-  async function load() {
-    const result = await api.get('');
-    if (result.length > 0) {
-      setNotes(result.data);
-    } else {
-      console.error('Error loading notes');
+    if (userData?.notes?.length > 0) {
+      setNotes(userData.notes);
+      console.log(notes);
     }
-  }
+  }, [userData]);
 
   const handleDeleteFromState = async (noteId) => {
     console.log(noteId);

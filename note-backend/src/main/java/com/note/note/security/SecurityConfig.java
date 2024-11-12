@@ -1,5 +1,7 @@
 package com.note.note.security;
 
+import java.beans.Customizer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,17 +31,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+        
+				
         	.csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests((authz) -> authz
             		
-            	.requestMatchers("/users").anonymous()
+            	.requestMatchers("/users/**").anonymous()
             	.requestMatchers("{userId}/notes").anonymous()
             	.requestMatchers("/api/notes/**").anonymous()
             	.requestMatchers("/api/notes/user/**").anonymous()
             	.requestMatchers("/register").anonymous()
             	.requestMatchers("/test").anonymous()
             	.requestMatchers("/home").anonymous()
-            	.requestMatchers("/login").anonymous()
+				.requestMatchers("/login/**").anonymous() 
                 
                 .anyRequest().authenticated()
                 

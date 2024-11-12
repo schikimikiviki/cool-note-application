@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import api from "../../api/axiosConfig";
-import "./NoteList.css";
-import EditPopup from "../EditPopup/EditPopup";
+import React, { useState, useRef, useEffect } from 'react';
+import api from '../../api/axiosConfig';
+import './NoteList.css';
+import EditPopup from '../EditPopup/EditPopup';
 
 const NoteList = ({ notes, onDelete, titles }) => {
   const [editingNote, setEditingNote] = useState(null);
@@ -37,11 +37,11 @@ const NoteList = ({ notes, onDelete, titles }) => {
 
       console.log(editedNote);
 
-      await api.put(`/${noteId}`, editedNote);
+      await api.put(`/api/notes/${noteId}`, editedNote);
 
       setEditingNote(null);
     } catch (error) {
-      console.error("Error while saving note:", error);
+      console.error('Error while saving note:', error);
     }
   };
 
@@ -51,7 +51,7 @@ const NoteList = ({ notes, onDelete, titles }) => {
       console.log(`Note with id ${noteId} sucessfully deleted!`);
       onDelete(noteId);
     } catch (error) {
-      console.error("Error while deleting note:", error);
+      console.error('Error while deleting note:', error);
     }
   };
 
@@ -67,18 +67,18 @@ const NoteList = ({ notes, onDelete, titles }) => {
         setIsDoneList(updatedIsDoneList);
       }
     } catch (error) {
-      console.error("Error while changing note state:", error);
+      console.error('Error while changing note state:', error);
     }
   };
 
   return (
-    <div className="main-container">
+    <div className='main-container'>
       {notes.map((note, index) => (
-        <div key={note.id} style={{ position: "relative" }}>
+        <div key={note.id} style={{ position: 'relative' }}>
           <div
-            className={`note-container ${isDoneList[index] ? "overlay" : ""}`}
+            className={`note-container ${isDoneList[index] ? 'overlay' : ''}`}
             style={{
-              backgroundColor: isDoneList[index] ? "grey" : note.color,
+              backgroundColor: isDoneList[index] ? 'grey' : note.color,
             }}
           >
             {editingNote === note.id ? (
@@ -90,26 +90,26 @@ const NoteList = ({ notes, onDelete, titles }) => {
             ) : null}
             <div>
               <span
-                className="close-button"
+                className='close-button'
                 onClick={() => handleDelete(note.id)}
               >
                 X
               </span>
 
               {areTitlesVisible ? (
-                <h2 className="handwriting">{note.name}</h2>
+                <h2 className='handwriting'>{note.name}</h2>
               ) : (
                 <h2></h2>
               )}
 
-              <div className="handwriting">{note.content}</div>
-              <hr className="line"></hr>
-              <div className="heading-small">Note-id: {note.id}</div>
+              <div className='handwriting'>{note.content}</div>
+              <hr className='line'></hr>
+              <div className='heading-small'>Note-id: {note.id}</div>
               <br />
 
-              <div className="note-footer">
+              <div className='note-footer'>
                 <span
-                  className={isDoneList[index] ? "invisible" : "link-default"}
+                  className={isDoneList[index] ? 'invisible' : 'link-default'}
                   disabled={isDoneList[index]}
                   onClick={() => handleEdit(note.id)}
                 >
@@ -118,11 +118,11 @@ const NoteList = ({ notes, onDelete, titles }) => {
                 <button
                   onClick={() => handleDone(note.id, index)}
                   className={`done-button ${
-                    isDoneList[index] ? "disabled" : ""
+                    isDoneList[index] ? 'disabled' : ''
                   }`}
                   disabled={isDoneList[index]}
                 >
-                  {isDoneList[index] ? "✔️" : "Done ✔️"}
+                  {isDoneList[index] ? '✔️' : 'Done ✔️'}
                 </button>
               </div>
             </div>

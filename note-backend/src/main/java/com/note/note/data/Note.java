@@ -77,7 +77,7 @@ public class Note {
     	return this.title; 
     }
     
-    public void setTile(String title) {
+    public void setTitle(String title) {
     	this.title = title; 
     }
     

@@ -10,6 +10,7 @@ import com.note.note.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoteService {
@@ -39,19 +40,14 @@ public class NoteService {
         // Save the note with the user associated
         return noteRepository.save(note);
     }
-
-
-	/*
-	 * @Transactional public Note saveNoteForUser(Long userId, String title, String
-	 * content) { System.out.println("Saving with values:"+ userId+title+content);
-	 * User user = userService.findByID(userId); if (user == null) { // or handle
-	 * the error appropriately throw new RuntimeException("User not found with ID: "
-	 * + userId); } else { System.out.println("User: " + user); } Note note = new
-	 * Note(title, content, user); System.out.println("Note object: " +
-	 * note.toString()); Note savedNote = noteRepository.save(note);
-	 * System.out.println("Saved note: " + savedNote.toString()); return savedNote;
-	 * }
-	 */
+    
+    public Note save(Note note) {
+    	return noteRepository.save(note);
+    }
+    
+    public Optional<Note> findNoteById (Long id) {
+    	return noteRepository.findById(id);
+    }
 
     public void deleteNoteById(Long id) {
         noteRepository.deleteById(id);

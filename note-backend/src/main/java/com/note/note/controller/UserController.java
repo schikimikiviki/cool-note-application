@@ -60,8 +60,14 @@ public class UserController {
      return userService.findAllUsers();
  }
  
+ @GetMapping("/users/{userName}")
+ public User getUserData(@PathVariable String userName) {
+     // Return details of a single user
+     return userService.findByUsername(userName);
+ }
+ 
  @PostMapping("/login")
- public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
+ public ResponseEntity<?> login(@RequestParam Map<String, String> loginData) {
      String username = loginData.get("username");
      String password = loginData.get("password");
 

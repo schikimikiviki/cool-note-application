@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [userData, setUserData] = useState(null);
 
   // State for handling messages
   const [errorMessage, setErrorMessage] = useState('');
@@ -33,7 +34,18 @@ const LoginPage = () => {
       // Handle successful login
       console.log('Login successful:', response.data);
 
-      navigate('/home');
+      // UserDaten fetchen und in den State speichern, zB. für Settings
+      // und user-definierte Daten
+
+      const userData = await axios.get(
+        `http://localhost:8080/users/${username}`
+      );
+
+      setUserData(userData.data);
+
+      navigate('/home', { state: { userData: userData.data } });
+
+      console.log('Passing the following data to /home: ', userData.data);
     } catch (error) {
       // Handle login error
       setErrorMessage('Invalid Username or Password');
