@@ -32,13 +32,21 @@ const NoteList = ({ notes, onDelete, titles }) => {
     try {
       const editedNote = notes.find((note) => note.id === noteId);
       editedNote.content = editedContent;
-      editedNote.color = selectedColor;
-      editedNote.name = editedName;
+      // editedNote.color = selectedColor;
+      editedNote.title = editedName;
 
       console.log(editedNote);
+      console.log(api);
 
-      await api.put(`/api/notes/${noteId}`, editedNote);
-
+      await api.patch(
+        `/api/notes/${noteId}`,
+        { content: editedContent, title: editedName },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       setEditingNote(null);
     } catch (error) {
       console.error('Error while saving note:', error);
@@ -97,7 +105,7 @@ const NoteList = ({ notes, onDelete, titles }) => {
               </span>
 
               {areTitlesVisible ? (
-                <h2 className='handwriting'>{note.name}</h2>
+                <h2 className='handwriting'>{note.title}</h2>
               ) : (
                 <h2></h2>
               )}
