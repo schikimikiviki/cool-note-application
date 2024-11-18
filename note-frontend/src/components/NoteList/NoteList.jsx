@@ -55,7 +55,7 @@ const NoteList = ({ notes, onDelete, titles }) => {
 
   const handleDelete = async (noteId) => {
     try {
-      await api.delete(`/${noteId}`);
+      await api.delete(`api/notes/${noteId}`);
       console.log(`Note with id ${noteId} sucessfully deleted!`);
       onDelete(noteId);
     } catch (error) {
@@ -79,6 +79,22 @@ const NoteList = ({ notes, onDelete, titles }) => {
     }
   };
 
+  const turnEnumToHex = (color) => {
+    let hex;
+    if (color === 'RED') {
+      hex = '#FF595E';
+    } else if (color === 'YELLOW') {
+      hex = '#FFCA3A';
+    } else if (color === 'GREEN') {
+      hex = '#8AC926';
+    } else if (color === 'BLUE') {
+      hex = '#1982C4';
+    } else if (color === 'PURPLE') {
+      hex = '#6A4C93';
+    }
+    return hex;
+  };
+
   return (
     <div className='main-container'>
       {notes.map((note, index) => (
@@ -86,7 +102,9 @@ const NoteList = ({ notes, onDelete, titles }) => {
           <div
             className={`note-container ${isDoneList[index] ? 'overlay' : ''}`}
             style={{
-              backgroundColor: isDoneList[index] ? 'grey' : note.color,
+              backgroundColor: isDoneList[index]
+                ? 'grey'
+                : turnEnumToHex(note.color),
             }}
           >
             {editingNote === note.id ? (

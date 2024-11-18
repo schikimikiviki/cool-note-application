@@ -59,6 +59,10 @@ function Home() {
     setIsDarkThemeSet(!isDarkThemeSet);
   };
 
+  const load = () => {
+    // TODO: reload notes so that the state is correct
+  };
+
   const handleSearch = async (searchTerm) => {
     const originalNotes = await api.get('').then((result) => result.data);
 
@@ -133,7 +137,9 @@ function Home() {
         onClick={handleThemeChange}
         onType={handleSearch}
       />
-      {isPopupOpen && <Popup onClose={closePopup} onAdd={load} />}
+      {isPopupOpen && (
+        <Popup onClose={closePopup} onAdd={load} userId={userData.id} />
+      )}
 
       {isAboutPopupOpen && <About onClose={closeAboutPopup} />}
       <ColorSort onColorSort={handleColorSort} />

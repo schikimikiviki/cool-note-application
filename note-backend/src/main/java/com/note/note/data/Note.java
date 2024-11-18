@@ -34,6 +34,9 @@ public class Note {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+    
+    private Color color; 
+    private Boolean isDone; 
 
     // Constructors, getters and setters
 
@@ -41,12 +44,30 @@ public class Note {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Note(Long id, String title, String content, User user) {
+    public Note(Long id, String title, String content, User user, Color color, Boolean isDone) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.id = id; 
         this.createdAt = LocalDateTime.now();
+        this.color = color; 
+        this.isDone = isDone; 
+    }
+    
+    public Boolean getIsDone() {
+    	return this.isDone; 
+    }
+    
+    public void setIsDone(Boolean isDone) {
+    	this.isDone = isDone; 
+    }
+    
+    public Color getColor() {
+    	return this.color; 
+    }
+    
+    public void setColor(Color color) {
+    	this.color = color; 
     }
     
     public LocalDateTime getCreatedAt() {
