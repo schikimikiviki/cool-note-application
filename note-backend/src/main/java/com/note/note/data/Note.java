@@ -3,12 +3,15 @@ package com.note.note.data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -16,12 +19,14 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "note")
+@Table(name = "notes")
 public class Note {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "note_id_seq")
+	@SequenceGenerator(name = "note_id_seq", sequenceName = "note_id_seq", allocationSize = 1)
+	private Long id;
+
 
     private String title;
 
@@ -35,7 +40,9 @@ public class Note {
     @JsonIgnore
     private User user;
     
-    private Color color; 
+    @Enumerated(EnumType.STRING)
+    private Color color;
+
     private Boolean isDone; 
 
     // Constructors, getters and setters
