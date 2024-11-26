@@ -53,25 +53,55 @@ public class NoteController {
     
     @PatchMapping("/{noteId}")
     public Note editNote(@PathVariable Long noteId, @RequestBody Note note) {
-    	 
-	// find the right note to edit
-    Optional<Note> foundNoteOptional = noteService.findNoteById(noteId);
-    
-    if (foundNoteOptional.isPresent()) {
-        Note foundNote = foundNoteOptional.get();
+
+        // Find the note to edit
+        Optional<Note> foundNoteOptional = noteService.findNoteById(noteId);
         
-        foundNote.setTitle(note.getTitle());
-        foundNote.setContent(note.getContent());
-        //TODO: add color
-        // Save updated note
-        Note updatedNote = noteService.save(foundNote);
+        if (foundNoteOptional.isPresent()) {
+            Note foundNote = foundNoteOptional.get();
 
-        return updatedNote;
-    } else {
-        return null; 
+            // Only update fields that are not null
+            if (note.getTitle() != null) {
+                foundNote.setTitle(note.getTitle());
+            }
+            if (note.getContent() != null) {
+                foundNote.setContent(note.getContent());
+            }
+            if (note.getColor() != null) {
+                foundNote.setColor(note.getColor());
+            }
+            if (note.getIsDone() != null) {
+                foundNote.setIsDone(note.getIsDone());
+            }
+
+            // Save updated note
+            return noteService.save(foundNote);
+        }
+
+        // If the note isn't found, return null or throw an exception
+        return null;
     }
 
-    }
+    
+	/*
+	 * @PatchMapping("/{noteId}") public Note editNote(@PathVariable Long
+	 * noteId, @RequestBody Note note) {
+	 * 
+	 * // find the right note to edit Optional<Note> foundNoteOptional =
+	 * noteService.findNoteById(noteId);
+	 * 
+	 * if (foundNoteOptional.isPresent()) { Note foundNote =
+	 * foundNoteOptional.get();
+	 * 
+	 * foundNote.setTitle(note.getTitle()); foundNote.setContent(note.getContent());
+	 * foundNote.setColor(note.getColor()); foundNote.setIsDone(note.getIsDone());
+	 * 
+	 * // Save updated note Note updatedNote = noteService.save(foundNote);
+	 * 
+	 * return updatedNote; } else { return null; }
+	 * 
+	 * }
+	 */
 
     @DeleteMapping("/{id}")
     public void deleteNoteById(@PathVariable Long id) {

@@ -41,6 +41,7 @@ public class SecurityConfig {
             	.requestMatchers("/api/notes/**").anonymous()
             	.requestMatchers("/api/notes/user/**").anonymous()
             	.requestMatchers("/register").anonymous()
+            	.requestMatchers("/verify").anonymous()
             	.requestMatchers("/test").anonymous()
             	.requestMatchers("/home").anonymous()
 				.requestMatchers("/login/**").anonymous() 

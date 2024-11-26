@@ -32,21 +32,22 @@ const NoteList = ({ notes, onDelete, titles }) => {
     try {
       const editedNote = notes.find((note) => note.id === noteId);
       editedNote.content = editedContent;
-      // editedNote.color = selectedColor;
+      editedNote.color = selectedColor;
       editedNote.title = editedName;
 
-      console.log(editedNote);
-      console.log(api);
+      let editedBody = {
+        content: editedContent,
+        title: editedName,
+        color: turnHexToEnum(selectedColor),
+      };
 
-      await api.patch(
-        `/api/notes/${noteId}`,
-        { content: editedContent, title: editedName },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      console.log(editedBody);
+
+      await api.patch(`/api/notes/${noteId}`, editedBody, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       setEditingNote(null);
     } catch (error) {
       console.error('Error while saving note:', error);
@@ -62,21 +63,66 @@ const NoteList = ({ notes, onDelete, titles }) => {
       console.error('Error while deleting note:', error);
     }
   };
-
   const handleDone = async (noteId, index) => {
     try {
-      const updatedNote = await api.patch(`/${noteId}`, {
-        done: !isDoneList[index],
-      });
+      // Toggle the current state
+      const newDoneState = !isDoneList[index];
 
-      if (updatedNote) {
+      console.log('IS DONE STATE: ');
+      // Send the PATCH request to update the `done` state
+      const response = await api.patch(
+        `/api/notes/${noteId}`,
+        { isDone: newDoneState },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // If the update is successful, update the local state
+      if (response.status === 200) {
         const updatedIsDoneList = [...isDoneList];
-        updatedIsDoneList[index] = !isDoneList[index];
+        updatedIsDoneList[index] = newDoneState;
         setIsDoneList(updatedIsDoneList);
       }
     } catch (error) {
       console.error('Error while changing note state:', error);
     }
+  };
+
+  // const handleDone = async (noteId, index) => {
+  //   try {
+  //     const noteToChange = notes.find((note) => note.id === noteId);
+  //     const updatedNote = await api.patch(`/api/notes/${noteId}`, {
+  //       ...noteToChange,
+  //       done: !isDoneList[index],
+  //     });
+
+  //     if (updatedNote) {
+  //       const updatedIsDoneList = [...isDoneList];
+  //       updatedIsDoneList[index] = !isDoneList[index];
+  //       setIsDoneList(updatedIsDoneList);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error while changing note state:', error);
+  //   }
+  // };
+
+  const turnHexToEnum = (hex) => {
+    let enumVal;
+    if (hex === '#FF595E') {
+      enumVal = 'RED';
+    } else if (hex === '#FFCA3A') {
+      enumVal = 'YELLOW';
+    } else if (hex === '#8AC926') {
+      enumVal = 'GREEN';
+    } else if (hex === '#1982C4') {
+      enumVal = 'BLUE';
+    } else if (hex === '#6A4C93') {
+      enumVal = 'PURPLE';
+    }
+    return enumVal;
   };
 
   const turnEnumToHex = (color) => {

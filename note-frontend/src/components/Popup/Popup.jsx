@@ -47,7 +47,8 @@ const Popup = ({ onClose, onAdd, userId }) => {
       }
 
       const dataToSubmit = {
-        ...noteData,
+        title: noteData.name,
+        content: noteData.content,
         color: enumColor,
         done: false,
       };
