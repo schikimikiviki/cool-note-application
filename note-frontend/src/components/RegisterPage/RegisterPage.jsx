@@ -3,11 +3,12 @@ import noteIcon from '../../assets/note-icon.png';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
-import fetchGetFromBackend from '../features/helpers';
+import { fetchGetFromBackend } from '../features/helpers.js';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [fullname, setFullname] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [registrationMessage, setRegistrationMessage] = useState('');
   const recaptcha = useRef();
@@ -35,6 +36,7 @@ const RegisterPage = () => {
     for (const user of userArr) {
       if (user.username === username) {
         userAlreadyExists = true;
+        console.log('User already exits!');
       }
     }
 
@@ -80,7 +82,13 @@ const RegisterPage = () => {
       }
 
       // If captcha is successful, proceed with registration
-      let userObj = { username: username, password: password };
+      let userObj = {
+        username: username,
+        password: password,
+        fullname: fullname,
+        roles: ['USER'], // admin users cannot be registered via frontend
+      };
+      console.log('POSTING the following user to the db: ', userObj);
       const registerRes = await fetch('http://localhost:8080/register', {
         method: 'POST',
         body: JSON.stringify(userObj), // Make sure userObj is stringified
@@ -106,6 +114,10 @@ const RegisterPage = () => {
 
   const handleUserNameChange = (e) => {
     setUsername(e.target.value);
+  };
+
+  const handleFullNameChange = (e) => {
+    setFullname(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -153,6 +165,15 @@ const RegisterPage = () => {
               placeholder='Enter your Password'
               value={password}
               onChange={handlePasswordChange}
+              required
+            />
+            <input
+              type='fullname'
+              id='fullname'
+              name='fullname'
+              placeholder='Enter your full name'
+              value={fullname}
+              onChange={handleFullNameChange}
               required
             />
             <br />

@@ -14,7 +14,6 @@ import { loadUserNotes, turnHexToEnum } from '../features/helpers.js';
 function Home() {
   const [originalNotes, setOriginalNotes] = useState([]);
   const [userData, setUserData] = useState(null);
-  // const [userName, setUserName] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isAboutPopupOpen, setIsAboutPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
@@ -190,7 +189,11 @@ function Home() {
       ) : (
         <p>Loading notes...</p>
       )}
-      <Footer onTitleChange={changeTitles} onAbout={handleAboutPopup} />
+      <Footer
+        onTitleChange={changeTitles}
+        onAbout={handleAboutPopup}
+        userDetails={userData}
+      />
     </div>
   );
 }

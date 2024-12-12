@@ -20,6 +20,7 @@ import com.note.note.service.UserService;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("")
@@ -97,6 +98,46 @@ public class UserController {
      return ResponseEntity
              .status(HttpStatus.CREATED)
              .body(Map.of("success", true, "user", newUser));
+ }
+ 
+ 
+ @PatchMapping("/users/{userId}")
+ public User editUser(@PathVariable Long userId, @RequestBody User user) {
+
+     // Find the note to edit
+     Optional<User> foundUserOptional = userService.findUserById(userId);
+     
+     if (foundUserOptional.isPresent()) {
+         User foundUser = foundUserOptional.get();
+
+         // Only update fields that are not null
+         if (user.getUsername() != null) {
+             foundUser.setUsername(user.getUsername());
+         }
+         if (user.getFullname() != null) {
+        	 foundUser.setFullname(user.getFullname());
+         }
+         
+         if (user.getPassword() != null) {
+        	 foundUser.setPassword(user.getPassword());
+         }
+        
+
+         UserDto userDto = new UserDto(
+                 foundUser.getId(),
+                 foundUser.getUsername(),
+                 foundUser.getPassword(), 
+                 foundUser.getFullname(),
+                 foundUser.getNotes(),
+                 foundUser.getRoles()
+             );
+
+       
+             return userService.save(userDto);
+     }
+
+     // If the user isn't found, return null or throw an exception
+     return null;
  }
 
 

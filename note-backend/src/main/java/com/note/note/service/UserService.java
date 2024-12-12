@@ -1,6 +1,7 @@
 package com.note.note.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.note.note.data.Note;
 import com.note.note.data.User;
@@ -16,8 +17,10 @@ public interface UserService {
  List<User> findAllUsers();
 
 Note addNoteToUser(Long userId, Note note);
+
+Optional<User> findUserById (Long Id);
  
-	/* public List<Note> getAllNotesForUser(Long userId); */
+
 
 
 }

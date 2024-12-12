@@ -16,6 +16,7 @@ const LoginPage = () => {
 
   // Handle form submission
   const handleLogin = async (e) => {
+    localStorage.removeItem('userData');
     e.preventDefault();
     console.log('Form submitted with:', { username, password });
     setErrorMessage('');

@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
-import { loadUserNotes } from '../features/helpers';
 import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
 const NoteList = ({ notes, onDelete, titles, onLoad }) => {

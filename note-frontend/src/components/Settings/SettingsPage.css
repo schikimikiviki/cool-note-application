@@ -1,0 +1,139 @@
+.settings-background {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #759eb5;
+}
+
+.settings-box {
+  background-color: #f5f54d;
+  width: 90vw;
+  height: 90vh;
+  border: white 1px solid;
+  padding: 40px;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.rwt__tabs[data-rwt-vertical='true'] {
+  display: flex;
+}
+
+.rwt__tablist:not([aria-orientation='vertical']) {
+  border-bottom: 1px solid #ddd;
+}
+
+.rwt__tablist[aria-orientation='vertical'] {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-right: 1px solid #ddd;
+  margin-right: 1rem;
+}
+
+.rwt__tab {
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1rem 2rem;
+  transition: background 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.rwt__tab[aria-selected='false']:hover,
+.rwt__tab:focus {
+  outline: 0;
+  background-color: #d7d7d7;
+}
+
+.rwt__tab[aria-selected='true'] {
+  position: relative;
+}
+
+.rwt__tab[aria-selected='true']:after {
+  content: '';
+  position: absolute;
+}
+
+.rwt__tablist:not([aria-orientation='vertical'])
+  .rwt__tab[aria-selected='true']:after {
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  border-bottom: 3px solid #1982c4;
+}
+
+.rwt__tablist[aria-orientation='vertical']
+  .rwt__tab[aria-selected='true']:after {
+  right: -1px;
+  top: 0;
+  height: 100%;
+  border-right: 3px solid #1982c4;
+}
+
+.rwt__tabpanel {
+  padding-left: 30px;
+}
+
+.save-settings {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s ease;
+  display: flex;
+  justify-content: center;
+}
+
+.exit {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s ease;
+  display: flex;
+  justify-content: center;
+  border: 1px solid black;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.error-message {
+  background-color: #7e0505;
+  color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #177e05;
+  color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  text-align: center;
+  animation: fadeAndScale 5s ease forwards;
+}
+
+@keyframes fadeAndScale {
+  0% {
+    opacity: 1;
+    /* transform: scale(1); */
+  }
+  100% {
+    opacity: 0;
+    /* transform: scale(0.95); */
+  }
+}

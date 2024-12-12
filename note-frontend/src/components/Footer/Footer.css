@@ -5,24 +5,35 @@
   padding: 1%;
   border-radius: 20px;
   margin: 20px;
-  border: 0.5px black solid; 
+  border: 0.5px black solid;
   color: white;
 }
 
 .footer-button:first-child {
   color: white;
-  flex: 1; 
-  margin: -17px 0px -17px -17px; 
+  flex: 1;
+  margin: -17px 0px -17px -17px;
   padding: -1%;
   border-radius: 20px 0px 0px 20px;
   background: transparent;
   border: none;
 }
 
+.footer-button:nth-child(2) {
+  color: white;
+  flex: 1;
+  margin: -17px 0px -17px 0px;
+  padding: -1%;
+  width: auto;
+  /* border-radius: 0px 20px 20px 0px; */
+  background: transparent;
+  border: none;
+}
+
 .footer-button:last-child {
   color: white;
-  flex: 1; 
-  margin: -17px -17px -17px 0px; 
+  flex: 1;
+  margin: -17px -17px -17px 0px;
   padding: -1%;
   border-radius: 0px 20px 20px 0px;
   background: transparent;
@@ -30,5 +41,6 @@
 }
 
 .footer-button:hover {
-  background: rgba(58, 68, 78, 0.5); 
+  background: rgba(58, 68, 78, 0.5);
+  width: auto;
 }

@@ -1,6 +1,7 @@
 package com.note.note.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +47,11 @@ public class UserServiceImpl implements UserService {
 		return userRepository.getReferenceById(ID);
 
 	}
+	
+	@Override
+	  public Optional<User> findUserById (Long id) {
+	    	return userRepository.findById(id);
+	    }
 
 	@Override
 	public List<User> findAllUsers() {
@@ -65,16 +71,7 @@ public class UserServiceImpl implements UserService {
         return noteRepository.save(note);
     }
 
-	/*
-	 * @Override public List<Note> getAllNotesForUser(Long userId) { // TODO
-	 * Auto-generated method stub return null; }
-	 */
 	
-
-	/*
-	 * @Override public List<Note> getAllNotesForUser(Long userId) { return
-	 * noteRepository.findAllByUserId(userId); }
-	 */
 
 
 }

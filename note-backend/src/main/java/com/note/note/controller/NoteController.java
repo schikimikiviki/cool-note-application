@@ -83,25 +83,6 @@ public class NoteController {
     }
 
     
-	/*
-	 * @PatchMapping("/{noteId}") public Note editNote(@PathVariable Long
-	 * noteId, @RequestBody Note note) {
-	 * 
-	 * // find the right note to edit Optional<Note> foundNoteOptional =
-	 * noteService.findNoteById(noteId);
-	 * 
-	 * if (foundNoteOptional.isPresent()) { Note foundNote =
-	 * foundNoteOptional.get();
-	 * 
-	 * foundNote.setTitle(note.getTitle()); foundNote.setContent(note.getContent());
-	 * foundNote.setColor(note.getColor()); foundNote.setIsDone(note.getIsDone());
-	 * 
-	 * // Save updated note Note updatedNote = noteService.save(foundNote);
-	 * 
-	 * return updatedNote; } else { return null; }
-	 * 
-	 * }
-	 */
 
     @DeleteMapping("/{id}")
     public void deleteNoteById(@PathVariable Long id) {
