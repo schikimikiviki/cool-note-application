@@ -9,27 +9,37 @@ import Popup from '../Popup/Popup.jsx';
 import Footer from '../Footer/Footer.jsx';
 import About from '../About/About.jsx';
 import ColorSort from '../ColorSort/ColorSort.jsx';
+import { loadUserNotes, turnHexToEnum } from '../features/helpers.js';
 
 function Home() {
-  const [notes, setNotes] = useState([]);
+  const [originalNotes, setOriginalNotes] = useState([]);
+  const [userData, setUserData] = useState(null);
+  // const [userName, setUserName] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isAboutPopupOpen, setIsAboutPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const location = useLocation();
-  const { userData } = location.state || {};
+  const { applicationState } = location.state || {};
 
   useEffect(() => {
-    if (userData?.notes?.length > 0) {
-      setNotes(userData.notes);
-      console.log(notes);
+    if (userData) {
+      localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
     }
   }, [userData]);
 
-  const handleDeleteFromState = async (noteId) => {
-    console.log(noteId);
-    setNotes((notes) => notes.filter((note) => note.id !== noteId));
-  };
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      console.log('loading user data from localstorage');
+      setUserData(JSON.parse(storedUserData));
+      setOriginalNotes(storedUserData.notes);
+    } else if (applicationState) {
+      console.log('loading user data from applicationState');
+      setUserData(applicationState); // Fall back to applicationState if no data in localStorage
+      setOriginalNotes(applicationState.notes);
+    }
+  }, [applicationState]);
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -59,20 +69,40 @@ function Home() {
     setIsDarkThemeSet(!isDarkThemeSet);
   };
 
-  const load = () => {
-    // TODO: reload notes so that the state is correct
+  const updateUserDataState = (stateToUpdate, newData) => {
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      [stateToUpdate]: newData,
+    }));
+  };
+
+  const load = async () => {
+    try {
+      console.log(`Executing load for user ${userData.username}...`);
+      const newUserData = await loadUserNotes(userData.username);
+      console.log('New user data: ', newUserData);
+      updateUserDataState('notes', newUserData.notes);
+      setOriginalNotes(newUserData.notes);
+    } catch (error) {
+      console.error('Error loading notes:', error);
+    }
   };
 
   const handleSearch = async (searchTerm) => {
-    const originalNotes = await api.get('').then((result) => result.data);
-
+    console.log('SEARCH TERM: ', searchTerm);
+    console.log('NOTES STATE', userData.notes);
+    console.log('ORIGINALNOTES', originalNotes);
     if (searchTerm === '') {
-      setNotes(originalNotes);
+      updateUserDataState('notes', originalNotes);
     } else {
-      const filteredNotes = originalNotes.filter((note) =>
-        note.name.includes(searchTerm)
+      const filteredNotes = userData.notes.filter(
+        (note) =>
+          note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          note.content.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setNotes(filteredNotes);
+      console.log(filteredNotes);
+
+      updateUserDataState('notes', filteredNotes);
     }
   };
 
@@ -83,14 +113,21 @@ function Home() {
 
   const handleColorSort = async (color) => {
     try {
-      const result = await api.get('');
-      const allNotes = result.data;
+      if (!originalNotes.length && userData.notes.length) {
+        // Store the original notes if not already stored
+        setOriginalNotes(userData.notes);
+      }
+
+      color = turnHexToEnum(color);
 
       if (color) {
-        const filteredNotes = allNotes.filter((note) => note.color === color);
-        setNotes(filteredNotes);
+        const filteredNotes = originalNotes.filter(
+          (note) => note.color === color
+        );
+        updateUserDataState('notes', filteredNotes);
       } else {
-        setNotes(allNotes);
+        // Reset the notes to the original ones
+        updateUserDataState('notes', originalNotes);
       }
     } catch (error) {
       console.error('Error while sorting notes by color:', error);
@@ -143,11 +180,16 @@ function Home() {
 
       {isAboutPopupOpen && <About onClose={closeAboutPopup} />}
       <ColorSort onColorSort={handleColorSort} />
-      <NoteList
-        notes={notes}
-        onDelete={handleDeleteFromState}
-        titles={areTitlesVisible}
-      />
+      {userData ? (
+        <NoteList
+          notes={userData.notes}
+          onDelete={load}
+          titles={areTitlesVisible}
+          onLoad={load}
+        />
+      ) : (
+        <p>Loading notes...</p>
+      )}
       <Footer onTitleChange={changeTitles} onAbout={handleAboutPopup} />
     </div>
   );

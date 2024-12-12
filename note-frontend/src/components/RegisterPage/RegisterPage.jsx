@@ -3,7 +3,7 @@ import noteIcon from '../../assets/note-icon.png';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
-import fetchGetFromBackend from '../../features/helpers';
+import fetchGetFromBackend from '../features/helpers';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');

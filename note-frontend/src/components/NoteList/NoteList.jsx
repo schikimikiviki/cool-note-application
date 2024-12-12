@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
+import { loadUserNotes } from '../features/helpers';
+import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
-const NoteList = ({ notes, onDelete, titles }) => {
+const NoteList = ({ notes, onDelete, titles, onLoad }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const [isDoneList, setIsDoneList] = useState(Array(notes.length).fill(false));
@@ -49,6 +51,9 @@ const NoteList = ({ notes, onDelete, titles }) => {
         },
       });
       setEditingNote(null);
+
+      // load ausführen, damit die edited note im state ist
+      onLoad();
     } catch (error) {
       console.error('Error while saving note:', error);
     }
@@ -108,38 +113,6 @@ const NoteList = ({ notes, onDelete, titles }) => {
   //     console.error('Error while changing note state:', error);
   //   }
   // };
-
-  const turnHexToEnum = (hex) => {
-    let enumVal;
-    if (hex === '#FF595E') {
-      enumVal = 'RED';
-    } else if (hex === '#FFCA3A') {
-      enumVal = 'YELLOW';
-    } else if (hex === '#8AC926') {
-      enumVal = 'GREEN';
-    } else if (hex === '#1982C4') {
-      enumVal = 'BLUE';
-    } else if (hex === '#6A4C93') {
-      enumVal = 'PURPLE';
-    }
-    return enumVal;
-  };
-
-  const turnEnumToHex = (color) => {
-    let hex;
-    if (color === 'RED') {
-      hex = '#FF595E';
-    } else if (color === 'YELLOW') {
-      hex = '#FFCA3A';
-    } else if (color === 'GREEN') {
-      hex = '#8AC926';
-    } else if (color === 'BLUE') {
-      hex = '#1982C4';
-    } else if (color === 'PURPLE') {
-      hex = '#6A4C93';
-    }
-    return hex;
-  };
 
   return (
     <div className='main-container'>

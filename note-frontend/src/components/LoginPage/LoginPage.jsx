@@ -3,6 +3,7 @@ import noteIcon from '../../assets/note-icon.png';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { loadUserNotes } from '../features/helpers';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -35,17 +36,14 @@ const LoginPage = () => {
       console.log('Login successful:', response.data);
 
       // UserDaten fetchen und in den State speichern, zB. für Settings
-      // und user-definierte Daten
+      // und user-definierte Daten und Notes
 
-      const userData = await axios.get(
-        `http://localhost:8080/users/${username}`
-      );
+      const userData = await loadUserNotes(username);
+      setUserData(userData);
 
-      setUserData(userData.data);
+      navigate('/home', { state: { applicationState: userData } });
 
-      navigate('/home', { state: { userData: userData.data } });
-
-      console.log('Passing the following data to /home: ', userData.data);
+      console.log('Passing the following data to /home: ', userData);
     } catch (error) {
       // Handle login error
       setErrorMessage('Invalid Username or Password');

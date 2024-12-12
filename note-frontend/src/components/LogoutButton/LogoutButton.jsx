@@ -5,7 +5,8 @@ const LogoutButton = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    //logout user
+    //logout user and renove userData from localstorage
+    localStorage.removeItem('userData');
     navigate('/login');
   };
   return (

@@ -48,18 +48,18 @@ const EditPopup = ({ note, onSave, onCancel }) => {
             ))}
           </div>
         </div>
+        <h1 className='heading-edit'>Edit title: </h1>
+        <textarea
+          className='text-field'
+          value={editedName}
+          onChange={(e) => setEditedName(e.target.value)}
+        ></textarea>
 
         <h1 className='heading-edit'>Edit contents: </h1>
         <textarea
           className='text-field'
           value={editedContent}
           onChange={(e) => setEditedContent(e.target.value)}
-        ></textarea>
-        <h1 className='heading-edit'>Edit name: </h1>
-        <textarea
-          className='text-field'
-          value={editedName}
-          onChange={(e) => setEditedName(e.target.value)}
         ></textarea>
 
         <button className='submit-button' onClick={handleSave}>
