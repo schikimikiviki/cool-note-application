@@ -16,7 +16,7 @@ const Footer = (props) => {
   };
 
   const handleSettings = () => {
-    navigate('/settings', { state: { userData: props.userDetails } });
+    navigate('/settings');
   };
 
   return (

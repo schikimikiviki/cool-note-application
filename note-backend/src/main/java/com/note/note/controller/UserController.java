@@ -67,6 +67,12 @@ public class UserController {
      return userService.findByUsername(userName);
  }
  
+ @GetMapping("/users/id/{Id}")
+ public Optional<User> getUserDataById(@PathVariable Long Id) {
+     // Return details of a single user
+     return userService.findUserById(Id);
+ }
+ 
  @PostMapping("/login")
  public ResponseEntity<?> login(@RequestParam Map<String, String> loginData) {
      String username = loginData.get("username");

@@ -7,25 +7,19 @@ import api from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
 const SettingsPage = () => {
-  const location = useLocation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
-  const [userFullData, setUserFullData] = useState();
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const { userData } = location.state || {};
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState(() => {
+    const savedData = localStorage.getItem('userData');
+    return savedData ? JSON.parse(savedData) : null;
+  });
 
-  useEffect(() => {
-    if (userData) {
-      console.log('Got the following userdata: ', userData);
-      setFullname(userData.fullname);
-      setUsername(userData.username);
-      setPassword(userData.password);
-      setUserFullData(userData);
-    }
-  }, [userData]);
+  console.log('USERDATA from localstorge: ', userData);
+
+  const navigate = useNavigate();
 
   const handleUserDataChange = async (e) => {
     // save new data to db
@@ -45,9 +39,12 @@ const SettingsPage = () => {
 
     // Create user object with only changed fields
     let userObj = {};
-    if (username !== userData.username) userObj.username = username;
-    if (password !== userData.password) userObj.password = password;
-    if (fullname !== userData.fullname) userObj.fullname = fullname;
+    if (username !== userData.username && username != '')
+      userObj.username = username;
+    if (password !== userData.password && password != '')
+      userObj.password = password;
+    if (fullname !== userData.fullname && fullname != '')
+      userObj.fullname = fullname;
 
     // If no fields have changed, do nothing
     if (Object.keys(userObj).length === 0) {
@@ -58,7 +55,7 @@ const SettingsPage = () => {
     console.log('Submitting the following updated user data:', userObj);
 
     try {
-      const response = await api.patch(`/users/${userFullData.id}`, userObj, {
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -71,6 +68,21 @@ const SettingsPage = () => {
         setTimeout(() => {
           setSuccessMessage('');
         }, 5000);
+
+        // now, get the whole new user object and save it to the localstorage and to the state
+        try {
+          const response = await api.get(`/users/id/${userData.id}`, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          console.log('Got the following user data: ', response.data);
+          localStorage.setItem('userData', JSON.stringify(response.data));
+          setUserData(response.data);
+        } catch (err) {
+          console.log('Failed to GET user data');
+        }
       } else {
         setErrorMessage('Could not update user data');
         setTimeout(() => {
@@ -160,45 +172,50 @@ const SettingsPage = () => {
               <h2>Update your user data</h2>
               <br />
               <br />
-              <form
-                className='register-form'
-                onSubmit={handleUserDataChange}
-                role='form'
-              >
-                <input
-                  type='text'
-                  id='username'
-                  name='username'
-                  placeholder='Enter new Username'
-                  value={username}
-                  onChange={handleUserNameChange}
-                  required
-                />
-                <input
-                  type='password'
-                  id='password'
-                  name='password'
-                  placeholder='Enter your Password'
-                  value={password}
-                  onChange={handlePasswordChange}
-                  required
-                />
-                <input
-                  type='fullname'
-                  id='fullname'
-                  name='fullname'
-                  placeholder='Enter your full name'
-                  value={fullname}
-                  onChange={handleFullNameChange}
-                  required
-                />
 
-                <br />
-                <button class='save-settings' type='submit'>
-                  Save
-                </button>
-                <br />
-              </form>
+              {userData ? (
+                <form
+                  className='register-form'
+                  onSubmit={handleUserDataChange}
+                  role='form'
+                >
+                  <input
+                    type='text'
+                    id='username'
+                    name='username'
+                    placeholder='Enter new Username'
+                    defaultValue={userData.username}
+                    onChange={handleUserNameChange}
+                    required
+                  />
+                  <input
+                    type='password'
+                    id='password'
+                    name='password'
+                    placeholder='Enter your Password'
+                    defaultValue={userData.password}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                  <input
+                    type='fullname'
+                    id='fullname'
+                    name='fullname'
+                    placeholder='Enter your full name'
+                    defaultValue={userData.fullname}
+                    onChange={handleFullNameChange}
+                    required
+                  />
+
+                  <br />
+                  <button class='save-settings' type='submit'>
+                    Save
+                  </button>
+                  <br />
+                </form>
+              ) : (
+                <p>Loading user...</p>
+              )}
             </TabPanel>
             <TabPanel tabId='vertical-tab-two'>
               <p>Tab 2 content</p>
