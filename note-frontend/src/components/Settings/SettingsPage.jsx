@@ -11,13 +11,98 @@ const SettingsPage = () => {
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [deleteClicked, setDeleteClicked] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
     return savedData ? JSON.parse(savedData) : null;
   });
+  const [isChecked, setIsChecked] = useState(userData.isAuthActive);
+  const [email, setEmail] = useState('');
 
-  console.log('USERDATA from localstorge: ', userData);
+  const handleMailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleAuthSubmit = async (e) => {
+    // save into db
+
+    e.preventDefault();
+    let userObj = {};
+    if (email !== userData.email && email != '') {
+      userObj.email = email;
+    }
+
+    console.log('Submitting the following updated user data:', userObj);
+
+    try {
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // now, get the whole new user object and save it to the localstorage and to the state
+      try {
+        const response = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', response.data);
+        localStorage.setItem('userData', JSON.stringify(response.data));
+        setUserData(response.data);
+      } catch (err) {
+        console.log('Failed to GET user data');
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
+  };
+
+  const handleOnChange = async () => {
+    // Toggle the checkbox state
+    const newIsChecked = !isChecked;
+    setIsChecked(newIsChecked);
+
+    // Check if the checkbox is checked or unchecked, then update the backend
+    console.log(newIsChecked ? 'Activating 2fa .. ' : 'Deactivating 2fa .. ');
+
+    let userObj = {};
+    userObj.isAuthActive = newIsChecked; // Use the updated value
+
+    try {
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        setUserData(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -101,6 +186,26 @@ const SettingsPage = () => {
     }
   };
 
+  const initDelete = () => {
+    setDeleteClicked(!deleteClicked);
+  };
+
+  const deleteProfile = async () => {
+    // first make a delete request to the backend
+    try {
+      const response = await api.delete(`/users/${userData.id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    // then, redirect to the login page
+    navigate('/login');
+  };
+
   const validateUsername = async () => {
     let userArr = await fetchGetFromBackend('users', 'userFetch');
     let userAlreadyExists = false;
@@ -136,7 +241,7 @@ const SettingsPage = () => {
           <br />
           <br />
           <button
-            class='exit'
+            className='exit'
             type='submit'
             onClick={() => {
               navigate('/home');
@@ -208,7 +313,7 @@ const SettingsPage = () => {
                   />
 
                   <br />
-                  <button class='save-settings' type='submit'>
+                  <button className='save-settings' type='submit'>
                     Save
                   </button>
                   <br />
@@ -221,7 +326,69 @@ const SettingsPage = () => {
               <p>Tab 2 content</p>
             </TabPanel>
             <TabPanel tabId='vertical-tab-three'>
-              <p>Tab 3 content</p>
+              <h2>Advanced settings</h2>
+              <br />
+
+              <div className='delete-form'>
+                <button
+                  className='delete'
+                  type='submit'
+                  onClick={() => initDelete()}
+                >
+                  Delete user profile
+                </button>
+
+                <div className={` ${deleteClicked ? '' : 'hidden'}`}>
+                  <div className='delete-form'>
+                    <p id='warning'>
+                      Are you sure ? This action will permanently delete your
+                      user profile and log you out immediately. To proceed,
+                      click on the button to the right.
+                    </p>
+                    <button
+                      className='delete'
+                      type='submit'
+                      onClick={() => deleteProfile()}
+                    >
+                      Yes, delete my profile and log me out
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div className='delete-form'>
+                <input
+                  type='checkbox'
+                  id='auth'
+                  name='auth'
+                  value='Activate-2-factor authentication'
+                  checked={isChecked}
+                  onChange={handleOnChange}
+                />
+                Activate-2-factor authentication
+                <div className={` ${isChecked ? 'visible' : 'hidden'}`}>
+                  <form
+                    className='delete-form'
+                    onSubmit={handleAuthSubmit}
+                    role='form'
+                  >
+                    <input
+                      type='email'
+                      id='email'
+                      name='email'
+                      placeholder='Enter e-mail adress for 2-factor authentication'
+                      defaultValue={userData.email}
+                      onChange={handleMailChange}
+                      required
+                    />
+
+                    <button className='delete' type='submit'>
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
             </TabPanel>
           </Tabs>
         </div>

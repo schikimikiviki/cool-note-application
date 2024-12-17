@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	public User save(UserDto userDto) {
 
 		User user = new User(userDto.getId(), userDto.getUsername(), userDto.getPassword(),
-				userDto.getFullname(), userDto.getNotes(), userDto.getRoles());
+				userDto.getFullname(), userDto.getNotes(), userDto.getRoles(), userDto.getEmail(), userDto.getIsAuthActive());
 
 		return userRepository.save(user);
 	}
@@ -70,6 +70,16 @@ public class UserServiceImpl implements UserService {
         // Save the note and return it
         return noteRepository.save(note);
     }
+	
+	@Override
+	public void deleteUserById(Long id) {
+	    if (userRepository.existsById(id)) { // Check if user exists
+	        userRepository.deleteById(id);
+	    } else {
+	        throw new IllegalArgumentException("User with ID " + id + " does not exist");
+	    }
+	}
+
 
 	
 

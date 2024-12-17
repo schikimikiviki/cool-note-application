@@ -129,8 +129,14 @@ public class UserController {
         	 foundUser.setPassword(passwordEncoder.encode(user.getPassword()));
         	 System.out.println(foundUser.getPassword());    
         	}
+         
+         if (user.getEmail() != null) {
+        	 foundUser.setEmail(user.getEmail());
+         }
 
-
+         if (user.getIsAuthActive() != null) {
+        	 foundUser.setIsAuthActive(user.getIsAuthActive());
+         }
         
 
          UserDto userDto = new UserDto(
@@ -139,7 +145,9 @@ public class UserController {
                  foundUser.getPassword(), 
                  foundUser.getFullname(),
                  foundUser.getNotes(),
-                 foundUser.getRoles()
+                 foundUser.getRoles(),
+                 foundUser.getEmail(),
+                 foundUser.getIsAuthActive()
              );
 
        
@@ -149,6 +157,19 @@ public class UserController {
      // If the user isn't found, return null or throw an exception
      return null;
  }
+ 
+ @DeleteMapping("/users/{userId}")
+ public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+     try {
+         userService.deleteUserById(userId);
+         return ResponseEntity.ok(Map.of("success", true, "message", "User deleted successfully"));
+     } catch (Exception e) {
+         return ResponseEntity
+                 .status(HttpStatus.NOT_FOUND)
+                 .body(Map.of("success", false, "message", "User not found"));
+     }
+ }
+
 
 
 }

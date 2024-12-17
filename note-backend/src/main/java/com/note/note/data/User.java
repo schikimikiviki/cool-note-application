@@ -3,6 +3,8 @@ package com.note.note.data;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,6 +24,11 @@ public class User {
  private String username;
  private String password;
  private String fullname;
+ private String email; 
+ 
+
+ private Boolean isAuthActive;
+
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
  private List<Note> notes;
@@ -34,7 +41,7 @@ public class User {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive) {
   super();
   this.id = id; 
   this.username = username;
@@ -42,8 +49,26 @@ public class User {
   this.fullname = fullname;
   this.notes = notes; 
   this.roles = roles; 
+  this.email = email; 
+  this.isAuthActive = isAuthActive; 
+ }
+ 
+ public void setIsAuthActive(Boolean isAuthActive) {
+	 this.isAuthActive = isAuthActive; 
+ }
+ 
+ public Boolean getIsAuthActive() {
+	 return isAuthActive; 
+ }
+ 
+ public String getEmail() {
+	 return email; 
  }
 
+ public void setEmail(String email) {
+	 this.email = email; 
+ }
+ 
  public Long getId() {
   return id;
  }
@@ -100,7 +125,7 @@ public class User {
 
  @Override
  public String toString() {
-  return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullname=" + fullname + "]";
+  return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullname=" + fullname + ", email=" + email + "]";
  }
 
 }

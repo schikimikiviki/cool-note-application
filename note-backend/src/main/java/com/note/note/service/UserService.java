@@ -19,6 +19,8 @@ public interface UserService {
 Note addNoteToUser(Long userId, Note note);
 
 Optional<User> findUserById (Long Id);
+
+void deleteUserById (Long Id);
  
 
 

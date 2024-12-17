@@ -9,11 +9,22 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState(null);
+  const [authenticationActive, setAuthenticationActive] = useState(false);
+  const [code, setCode] = useState('');
 
   // State for handling messages
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  const handleCodeChange = (e) => {
+    setCode(e.target.value);
+  };
+
+  const handleAuthCheck = () => {
+    // check if code is valid
+  };
+
+  const sendMailToUser = (mailadress) => {};
   // Handle form submission
   const handleLogin = async (e) => {
     localStorage.removeItem('userData');
@@ -42,9 +53,15 @@ const LoginPage = () => {
       const userData = await loadUserNotes(username);
       setUserData(userData);
 
-      navigate('/home', { state: { applicationState: userData } });
+      if (userData.isAuthActive) {
+        // send user to 2 fa first
+        setAuthenticationActive(true);
+        sendMailToUser(userData.email);
+      } else {
+        navigate('/home', { state: { applicationState: userData } });
 
-      console.log('Passing the following data to /home: ', userData);
+        console.log('Passing the following data to /home: ', userData);
+      }
     } catch (error) {
       // Handle login error
       setErrorMessage('Invalid Username or Password');
@@ -70,40 +87,61 @@ const LoginPage = () => {
           <img src={noteIcon} alt='note-logo' width={150} height={150} />
           <h1>! my very important notes !</h1>
         </div>
-        <div className='login-body'>
-          {errorMessage && (
-            <div className='error-message'>
-              <p>{errorMessage}</p>
-            </div>
-          )}
+        <div className='page-container'>
+          <div className={`login-body ${authenticationActive ? '' : 'toLeft'}`}>
+            {errorMessage && (
+              <div className='error-message'>
+                <p>{errorMessage}</p>
+              </div>
+            )}
 
-          <h2>Login</h2>
+            <h2>Login</h2>
 
-          <form className='login-form' onSubmit={handleLogin} role='form'>
-            <input
-              type='text'
-              id='username'
-              name='username'
-              placeholder='Enter your Username'
-              value={username}
-              onChange={handleUserNameChange}
-              required
-            />
-            <input
-              type='password'
-              id='password'
-              name='password'
-              placeholder='Enter your Password'
-              value={password}
-              onChange={handlePasswordChange}
-              required
-            />
-            <br />
-            <button type='submit'>Login</button>
-            ---------------OR---------------
-            <button onClick={handleRegister}>Register</button>
-            <br />
-          </form>
+            <form className='login-form' onSubmit={handleLogin} role='form'>
+              <input
+                type='text'
+                id='username'
+                name='username'
+                placeholder='Enter your Username'
+                value={username}
+                onChange={handleUserNameChange}
+                required
+              />
+              <input
+                type='password'
+                id='password'
+                name='password'
+                placeholder='Enter your Password'
+                value={password}
+                onChange={handlePasswordChange}
+                required
+              />
+              <br />
+              <button type='submit'>Login</button>
+              ---------------OR---------------
+              <button onClick={handleRegister}>Register</button>
+              <br />
+            </form>
+          </div>
+
+          <div className={` ${authenticationActive ? '' : 'hidden'}`}>
+            <h2>Authentication</h2>
+
+            <form className='login-form' onSubmit={handleAuthCheck} role='form'>
+              <input
+                type='text'
+                id='code'
+                name='code'
+                placeholder='Enter your Code'
+                value={code}
+                onChange={handleCodeChange}
+                required
+              />
+
+              <button type='submit'>Submit</button>
+              <br />
+            </form>
+          </div>
         </div>
       </div>
     </>

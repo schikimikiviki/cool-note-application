@@ -11,12 +11,15 @@ public class UserDto {
 	private List<Note> notes;
 	private Set<String> roles;
 	private Long id;
+	private String email; 
+	private Boolean isAuthActive;
+
 
 	public UserDto() {
 
 	}
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -24,6 +27,24 @@ public class UserDto {
 		this.fullname = fullname;
 		this.notes = notes;
 		this.roles = roles;
+		this.email = email; 
+		this.isAuthActive = isAuthActive; 
+	}
+	
+	public Boolean getIsAuthActive() {
+		return isAuthActive; 
+	}
+	
+	public void setIsAuthActive(Boolean isAuthActive) {
+		this.isAuthActive = isAuthActive; 
+	}
+	
+	public String getEmail() {
+		return email; 
+	}
+	
+	public void setEmail(String email) {
+		this.email = email; 
 	}
 	
 	public Long getId() {
@@ -76,6 +97,6 @@ public class UserDto {
 
 	@Override
 	public String toString() {
-		return "UserDto [username=" + username + ", password=" + password + ", fullname=" + fullname + "]";
+		return "UserDto [username=" + username + ", password=" + password + ", fullname=" + fullname + ", email=" + email + "]";
 	}
 }
