@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { loadUserNotes } from '../features/helpers';
+import emailjs from '@emailjs/browser';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -11,9 +12,12 @@ const LoginPage = () => {
   const [userData, setUserData] = useState(null);
   const [authenticationActive, setAuthenticationActive] = useState(false);
   const [code, setCode] = useState('');
+  const [isLoginCorrect, setIsLoginCorrect] = useState(false);
+  const [generatedAuthCode, setGeneratedAuthCode] = useState('');
 
   // State for handling messages
   const [errorMessage, setErrorMessage] = useState('');
+  const [secondErrorMessage, setSecondErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleCodeChange = (e) => {
@@ -22,9 +26,52 @@ const LoginPage = () => {
 
   const handleAuthCheck = () => {
     // check if code is valid
+    if (code === generatedAuthCode) {
+      navigate('/home', { state: { applicationState: userData } });
+    } else {
+      setSecondErrorMessage('AuthCode is not correct, please re-check!');
+    }
   };
 
-  const sendMailToUser = (mailadress) => {};
+  const generateCode = () => {
+    let length = 5;
+    let result = '';
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    // Loop to generate characters for the specified length
+    for (let i = 0; i < length; i++) {
+      const randomInd = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomInd);
+    }
+    console.log('Generated code: ', result);
+    return result;
+  };
+
+  const sendMailToUser = (mailadress, authCode, fullname) => {
+    emailjs
+      .send(
+        import.meta.env.VITE_EMAIL_SERVICE_ID,
+        import.meta.env.VITE_EMAIL_TEMPLATE_ID,
+        {
+          to_email: mailadress,
+          to_name: fullname,
+          from_name: 'Blitznotiz.at',
+          message: `Here is your authentication code: ${authCode}`,
+        },
+        import.meta.env.VITE_EMAIL_USER_ID
+      )
+      .then(
+        (result) => {
+          console.log('Email sent successfully!', result.text);
+          alert('Email sent successfully!');
+        },
+        (error) => {
+          console.error('Failed to send email:', error.text);
+          alert('Failed to send email.');
+        }
+      );
+  };
+
   // Handle form submission
   const handleLogin = async (e) => {
     localStorage.removeItem('userData');
@@ -52,11 +99,16 @@ const LoginPage = () => {
 
       const userData = await loadUserNotes(username);
       setUserData(userData);
+      setIsLoginCorrect(true);
 
       if (userData.isAuthActive) {
         // send user to 2 fa first
         setAuthenticationActive(true);
-        sendMailToUser(userData.email);
+
+        let generatedCode = generateCode();
+        setGeneratedAuthCode(generatedCode);
+        console.log(userData);
+        sendMailToUser(userData.email, generatedCode, userData.username);
       } else {
         navigate('/home', { state: { applicationState: userData } });
 
@@ -64,7 +116,8 @@ const LoginPage = () => {
       }
     } catch (error) {
       // Handle login error
-      setErrorMessage('Invalid Username or Password');
+      console.error('Login failed:', error.message || error);
+      setErrorMessage('Invalid username or password');
     }
   };
 
@@ -124,7 +177,16 @@ const LoginPage = () => {
             </form>
           </div>
 
-          <div className={` ${authenticationActive ? '' : 'hidden'}`}>
+          <div
+            className={` ${
+              authenticationActive && isLoginCorrect ? '' : 'hidden'
+            }`}
+          >
+            {secondErrorMessage && (
+              <div className='error-message'>
+                <p>{secondErrorMessage}</p>
+              </div>
+            )}
             <h2>Authentication</h2>
 
             <form className='login-form' onSubmit={handleAuthCheck} role='form'>
