@@ -125,8 +125,12 @@ public class UserController {
          }
          
          if (user.getPassword() != null) {
-        	 foundUser.setPassword(user.getPassword());
-         }
+        	 System.out.println(user.getPassword());
+        	 foundUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        	 System.out.println(foundUser.getPassword());    
+        	}
+
+
         
 
          UserDto userDto = new UserDto(
