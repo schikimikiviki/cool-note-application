@@ -2,6 +2,7 @@ import './LoginPage.css';
 import noteIcon from '../../assets/note-icon.png';
 import { useState } from 'react';
 import axios from 'axios';
+import api from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { loadUserNotes } from '../features/helpers';
 import emailjs from '@emailjs/browser';
@@ -28,9 +29,60 @@ const LoginPage = () => {
     // check if code is valid
     if (code === generatedAuthCode) {
       navigate('/home', { state: { applicationState: userData } });
+      writeDateTimeToDb();
     } else {
       setSecondErrorMessage('AuthCode is not correct, please re-check!');
     }
+  };
+
+  const writeDateTimeToDb = async () => {
+    // for our login history, we log the last 10 logins into the db
+    let currTime = getDateTime();
+    let userObj = {};
+    userObj.loginList = [currTime];
+
+    // our object has to look something like:
+    //     {
+    //   "loginList": ["2024-06-17T13:55:00"]
+    // }
+
+    try {
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('Request failed:', error.message || error);
+    }
+  };
+
+  const getDateTime = () => {
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let day = now.getDate();
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    let second = now.getSeconds();
+    if (month.toString().length == 1) {
+      month = '0' + month;
+    }
+    if (day.toString().length == 1) {
+      day = '0' + day;
+    }
+    if (hour.toString().length == 1) {
+      hour = '0' + hour;
+    }
+    if (minute.toString().length == 1) {
+      minute = '0' + minute;
+    }
+    if (second.toString().length == 1) {
+      second = '0' + second;
+    }
+    let dateTime =
+      year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+    return dateTime;
   };
 
   const generateCode = () => {
@@ -111,7 +163,7 @@ const LoginPage = () => {
         sendMailToUser(userData.email, generatedCode, userData.username);
       } else {
         navigate('/home', { state: { applicationState: userData } });
-
+        writeDateTimeToDb();
         console.log('Passing the following data to /home: ', userData);
       }
     } catch (error) {

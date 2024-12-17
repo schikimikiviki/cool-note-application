@@ -13,13 +13,14 @@ public class UserDto {
 	private Long id;
 	private String email; 
 	private Boolean isAuthActive;
+	private List<String> loginList; 
 
 
 	public UserDto() {
 
 	}
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -29,6 +30,15 @@ public class UserDto {
 		this.roles = roles;
 		this.email = email; 
 		this.isAuthActive = isAuthActive; 
+		this.loginList = loginList; 
+	}
+	
+	public List<String> getLoginList() {
+		return loginList;
+	}
+	
+	public void setLoginList(List<String> loginList) {
+		this.loginList = loginList; 
 	}
 	
 	public Boolean getIsAuthActive() {

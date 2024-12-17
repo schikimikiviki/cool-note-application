@@ -18,6 +18,7 @@ import com.note.note.data.UserDto;
 import com.note.note.service.UserService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -138,6 +139,20 @@ public class UserController {
         	 foundUser.setIsAuthActive(user.getIsAuthActive());
          }
         
+         if (user.getLoginList() != null && !user.getLoginList().isEmpty()) {
+        	    // Append new values to the existing login list
+        	    if (foundUser.getLoginList() == null) {
+        	        foundUser.setLoginList(new ArrayList<>(user.getLoginList())); // Initialize if null
+        	    } else {
+        	        foundUser.getLoginList().addAll(user.getLoginList()); // Append new entries
+        	        
+        	     // Enforce a maximum of 10 entries by removing the oldest ones
+        	        while (foundUser.getLoginList().size() > 10) {
+        	            foundUser.getLoginList().remove(0); // Remove the first (oldest) entry
+        	        }
+        	    }
+        	}
+
 
          UserDto userDto = new UserDto(
                  foundUser.getId(),
@@ -147,7 +162,8 @@ public class UserController {
                  foundUser.getNotes(),
                  foundUser.getRoles(),
                  foundUser.getEmail(),
-                 foundUser.getIsAuthActive()
+                 foundUser.getIsAuthActive(), 
+                 foundUser.getLoginList()
              );
 
        

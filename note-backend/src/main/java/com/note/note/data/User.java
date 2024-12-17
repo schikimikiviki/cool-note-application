@@ -28,6 +28,7 @@ public class User {
  
 
  private Boolean isAuthActive;
+ private List<String> loginList; 
 
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -41,7 +42,7 @@ public class User {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList) {
   super();
   this.id = id; 
   this.username = username;
@@ -51,6 +52,15 @@ public class User {
   this.roles = roles; 
   this.email = email; 
   this.isAuthActive = isAuthActive; 
+  this.loginList = loginList; 
+ }
+ 
+ public void setLoginList (List<String> loginList) {
+	 this.loginList = loginList;
+ }
+ 
+ public List<String> getLoginList () {
+	 return loginList; 
  }
  
  public void setIsAuthActive(Boolean isAuthActive) {

@@ -181,3 +181,13 @@
   height: 0;
   overflow: hidden;
 }
+
+.login-list {
+  font-size: 16px;
+  font-style: normal;
+}
+
+.login-list li,
+.login-list li p {
+  font-weight: normal;
+}

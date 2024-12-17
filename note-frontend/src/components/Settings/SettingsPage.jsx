@@ -323,11 +323,12 @@ const SettingsPage = () => {
               )}
             </TabPanel>
             <TabPanel tabId='vertical-tab-two'>
-              <p>Tab 2 content</p>
+              <h2>Note settings</h2>
             </TabPanel>
             <TabPanel tabId='vertical-tab-three'>
-              <h2>Advanced settings</h2>
-              <br />
+              <h2>
+                <u>Delete user account</u>
+              </h2>
 
               <div className='delete-form'>
                 <button
@@ -357,6 +358,9 @@ const SettingsPage = () => {
               </div>
               <br />
 
+              <h2>
+                <u>Two-Factor-Authentication</u>
+              </h2>
               <div className='delete-form'>
                 <input
                   type='checkbox'
@@ -389,6 +393,21 @@ const SettingsPage = () => {
                   </form>
                 </div>
               </div>
+
+              <h2>
+                <u>Login history</u>
+                <br />
+                <br />
+                <div className='login-list'>
+                  <ul>
+                    {userData.loginList.map((txt) => (
+                      <li>
+                        <p>{txt}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </h2>
             </TabPanel>
           </Tabs>
         </div>
