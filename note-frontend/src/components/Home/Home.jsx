@@ -24,6 +24,9 @@ function Home() {
   useEffect(() => {
     if (userData) {
       localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
+      if (userData.theme == 'NIGHT') {
+        setIsDarkThemeSet(true);
+      }
     }
   }, [userData]);
 

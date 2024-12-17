@@ -19,6 +19,84 @@ const SettingsPage = () => {
   });
   const [isChecked, setIsChecked] = useState(userData.isAuthActive);
   const [email, setEmail] = useState('');
+  const [theme, setTheme] = useState(userData.theme);
+  const [fontSize, setFontSize] = useState(userData.fontSize.toLowerCase());
+
+  const handleFontSizeChange = async (e) => {
+    setFontSize(e.target.value);
+
+    // also, patch to the db
+
+    let userObj = {};
+    userObj.fontSize = e.target.value.toUpperCase();
+
+    try {
+      console.log('patching user with data: ', userObj);
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        setUserData(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
+  };
+
+  const handleThemeChange = async (e) => {
+    setTheme(e.target.value);
+
+    // also, patch to the db
+
+    let userObj = {};
+    userObj.theme = e.target.value.toUpperCase();
+
+    try {
+      console.log('patching user with data: ', userObj);
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        setUserData(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
+  };
 
   const handleMailChange = (e) => {
     setEmail(e.target.value);
@@ -323,7 +401,37 @@ const SettingsPage = () => {
               )}
             </TabPanel>
             <TabPanel tabId='vertical-tab-two'>
-              <h2>Note settings</h2>
+              <div>
+                <h2>
+                  <u>Preferred theme</u>
+                </h2>
+                <br />
+
+                <select value={theme} onChange={handleThemeChange}>
+                  <option value='day'>Day</option>
+                  <option value='night'>Night</option>
+                </select>
+                <br />
+                <br />
+
+                <h2>
+                  <u>Preferred font Size</u>
+                </h2>
+                <br />
+
+                <select value={fontSize} onChange={handleFontSizeChange}>
+                  <option value='small'>small</option>
+                  <option value='medium'>medium</option>
+                  <option value='big'>big</option>
+                </select>
+
+                <br />
+                <br />
+
+                <h2>
+                  <u>Custom values for colors</u>
+                </h2>
+              </div>
             </TabPanel>
             <TabPanel tabId='vertical-tab-three'>
               <h2>

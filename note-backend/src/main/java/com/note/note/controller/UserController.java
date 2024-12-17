@@ -152,6 +152,14 @@ public class UserController {
         	        }
         	    }
         	}
+         
+         if (user.getTheme() != null) {
+        	 foundUser.setTheme(user.getTheme());
+         }
+         
+         if (user.getFontSize() != null) {
+        	 foundUser.setFontSize(user.getFontSize());
+         }
 
 
          UserDto userDto = new UserDto(
@@ -163,7 +171,9 @@ public class UserController {
                  foundUser.getRoles(),
                  foundUser.getEmail(),
                  foundUser.getIsAuthActive(), 
-                 foundUser.getLoginList()
+                 foundUser.getLoginList(), 
+                 foundUser.getTheme(), 
+                 foundUser.getFontSize()
              );
 
        

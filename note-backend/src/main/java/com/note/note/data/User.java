@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,10 +27,14 @@ public class User {
  private String password;
  private String fullname;
  private String email; 
- 
-
  private Boolean isAuthActive;
  private List<String> loginList; 
+ 
+ @Enumerated(EnumType.STRING)
+ private Theme theme;
+ 
+ @Enumerated(EnumType.STRING)
+ private FontSize fontSize; 
 
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -42,7 +48,7 @@ public class User {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize) {
   super();
   this.id = id; 
   this.username = username;
@@ -53,6 +59,24 @@ public class User {
   this.email = email; 
   this.isAuthActive = isAuthActive; 
   this.loginList = loginList; 
+  this.theme = theme; 
+  this.fontSize = fontSize; 
+ }
+ 
+ public void setFontSize(FontSize fontSize) {
+	 this.fontSize = fontSize; 
+ }
+ 
+ public FontSize getFontSize() {
+	 return fontSize; 
+ }
+ 
+ public void setTheme (Theme theme) {
+	 this.theme = theme; 
+ }
+ 
+ public Theme getTheme() {
+	 return theme; 
  }
  
  public void setLoginList (List<String> loginList) {

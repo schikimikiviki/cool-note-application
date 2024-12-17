@@ -3,6 +3,9 @@ package com.note.note.data;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 public class UserDto {
 
 	private String username;
@@ -14,13 +17,18 @@ public class UserDto {
 	private String email; 
 	private Boolean isAuthActive;
 	private List<String> loginList; 
+	 @Enumerated(EnumType.STRING)
+	 private Theme theme;
+	 
+	 @Enumerated(EnumType.STRING)
+	 private FontSize fontSize; 
 
 
 	public UserDto() {
 
 	}
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -31,7 +39,25 @@ public class UserDto {
 		this.email = email; 
 		this.isAuthActive = isAuthActive; 
 		this.loginList = loginList; 
+		this.theme = theme; 
+		this.fontSize = fontSize; 
 	}
+	
+	public void setFontSize(FontSize fontSize) {
+		 this.fontSize = fontSize; 
+	 }
+	 
+	 public FontSize getFontSize() {
+		 return fontSize; 
+	 }
+	 
+	 public void setTheme (Theme theme) {
+		 this.theme = theme; 
+	 }
+	 
+	 public Theme getTheme() {
+		 return theme; 
+	 }
 	
 	public List<String> getLoginList() {
 		return loginList;
