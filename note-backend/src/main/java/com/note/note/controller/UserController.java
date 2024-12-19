@@ -160,6 +160,10 @@ public class UserController {
          if (user.getFontSize() != null) {
         	 foundUser.setFontSize(user.getFontSize());
          }
+         
+         if (user.getColorPalette() != null) {
+        	 foundUser.setColorPalette(user.getColorPalette());
+         }
 
 
          UserDto userDto = new UserDto(
@@ -173,7 +177,8 @@ public class UserController {
                  foundUser.getIsAuthActive(), 
                  foundUser.getLoginList(), 
                  foundUser.getTheme(), 
-                 foundUser.getFontSize()
+                 foundUser.getFontSize(), 
+                 foundUser.getColorPalette()
              );
 
        

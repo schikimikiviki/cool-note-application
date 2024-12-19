@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,6 +36,9 @@ public class User {
  
  @Enumerated(EnumType.STRING)
  private FontSize fontSize; 
+ 
+ @OneToOne
+ private ColorPalette colorPalette;
 
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -48,7 +52,7 @@ public class User {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette) {
   super();
   this.id = id; 
   this.username = username;
@@ -60,7 +64,16 @@ public class User {
   this.isAuthActive = isAuthActive; 
   this.loginList = loginList; 
   this.theme = theme; 
-  this.fontSize = fontSize; 
+  this.fontSize = fontSize;
+  this.colorPalette = colorPalette; 
+ }
+ 
+ public void setColorPalette(ColorPalette colorPalette) {
+	 this.colorPalette = colorPalette; 
+ }
+ 
+ public ColorPalette getColorPalette() {
+	 return colorPalette;
  }
  
  public void setFontSize(FontSize fontSize) {

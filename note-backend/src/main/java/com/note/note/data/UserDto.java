@@ -5,6 +5,7 @@ import java.util.Set;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToOne;
 
 public class UserDto {
 
@@ -22,13 +23,16 @@ public class UserDto {
 	 
 	 @Enumerated(EnumType.STRING)
 	 private FontSize fontSize; 
+	 
+	 @OneToOne
+	 private ColorPalette colorPalette;
 
 
 	public UserDto() {
 
 	}
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -41,7 +45,16 @@ public class UserDto {
 		this.loginList = loginList; 
 		this.theme = theme; 
 		this.fontSize = fontSize; 
+		this.colorPalette = colorPalette; 
 	}
+	
+	 public void setColorPalette(ColorPalette colorPalette) {
+		 this.colorPalette = colorPalette; 
+	 }
+	 
+	 public ColorPalette getColorPalette() {
+		 return colorPalette;
+	 }
 	
 	public void setFontSize(FontSize fontSize) {
 		 this.fontSize = fontSize; 
