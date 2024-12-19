@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './ColorSort.css';
-import colors from '../../assets/imports.js';
+import { turnEnumToHex } from '../features/helpers';
 
-const ColorSort = ({ onColorSort, fontSize }) => {
+const ColorSort = ({ onColorSort, fontSize, colors }) => {
+  console.log(colors);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [translatedColors, setTranslatedColors] = useState([]);
+
+  useEffect(() => {
+    if (colors) {
+      const hexColors = colors.map(turnEnumToHex);
+      setTranslatedColors(hexColors);
+    }
+  }, []);
 
   const handleColorClick = (color) => {
     setSelectedColor(color);
@@ -33,7 +42,7 @@ const ColorSort = ({ onColorSort, fontSize }) => {
           >
             Filter by color
           </div>
-          {colors.map((color, index) => (
+          {translatedColors.map((color, index) => (
             <div
               key={index}
               onClick={() => handleColorClick(color)}

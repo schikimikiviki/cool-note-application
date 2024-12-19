@@ -349,9 +349,14 @@ const SettingsPage = () => {
     setPassword(e.target.value);
   };
 
-  const midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
-  const firstHalf = userData.loginList.slice(0, midIndex);
-  const secondHalf = userData.loginList.slice(midIndex);
+  let firstHalf = [];
+  let secondHalf = [];
+
+  if (userData.loginList?.length > 1) {
+    const midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
+    const firstHalf = userData.loginList.slice(0, midIndex);
+    const secondHalf = userData.loginList.slice(midIndex);
+  }
 
   return (
     <>
@@ -651,20 +656,28 @@ const SettingsPage = () => {
                 <div className='login-list'>
                   <div>
                     <ul>
-                      {firstHalf.map((txt) => (
-                        <li style={{ fontSize: fontSize }}>
-                          <p>{txt}</p>
-                        </li>
-                      ))}
+                      {firstHalf.length > 0 && (
+                        <>
+                          {firstHalf.map((txt) => (
+                            <li style={{ fontSize: fontSize }}>
+                              <p>{txt}</p>
+                            </li>
+                          ))}
+                        </>
+                      )}
                     </ul>
                   </div>
                   <div>
                     <ul>
-                      {secondHalf.map((txt) => (
-                        <li style={{ fontSize: fontSize }}>
-                          <p>{txt}</p>
-                        </li>
-                      ))}
+                      {secondHalf.length > 0 && (
+                        <>
+                          {secondHalf.map((txt) => (
+                            <li style={{ fontSize: fontSize }}>
+                              <p>{txt}</p>
+                            </li>
+                          ))}{' '}
+                        </>
+                      )}
                     </ul>
                   </div>
                 </div>

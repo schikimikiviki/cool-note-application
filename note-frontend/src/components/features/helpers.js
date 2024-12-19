@@ -33,36 +33,46 @@ export const loadUserNotes = async (userName) => {
   }
 };
 
-export const turnHexToEnum = (hex) => {
-  let enumVal;
-  if (hex === '#FF595E') {
-    enumVal = 'RED';
-  } else if (hex === '#FFCA3A') {
-    enumVal = 'YELLOW';
-  } else if (hex === '#8AC926') {
-    enumVal = 'GREEN';
-  } else if (hex === '#1982C4') {
-    enumVal = 'BLUE';
-  } else if (hex === '#6A4C93') {
-    enumVal = 'PURPLE';
-  }
-  return enumVal;
+const colorMapping = {
+  RED: '#FF595E',
+  YELLOW: '#FFCA3A',
+  GREEN: '#8AC926',
+  BLUE: '#1982C4',
+  PURPLE: '#6A4C93',
+  COTTONCANDY: '#ffd6ff',
+  MAGNOLIA: '#E7C6FF',
+  LAVENDER: '#C8B6FF',
+  SKY: '#b8c0ff',
+  MEDIUMBLUE: '#BBD0FF',
+  MOSS: '#606C38',
+  OGRE: '#283618',
+  CREME: '#FEFAE0',
+  BEIGE: '#DDA15E',
+  PUMPKIN: '#BC6C25',
+  MARINE: '#26547C',
+  FUCHSIA: '#EF476F',
+  EGG: '#FFD166',
+  TURQUOISE: '#06D6A0',
+  WHITE: '#FFFCF9',
+  BROWN: '#825F45',
+  GREENISH: '#797D62',
+  OCRE: '#D08C60',
+  BRIGHT: '#FFCB69',
+  COOL: '#997B66',
+  NEON_YELLOW: '#FFDD00',
+  NEON_ORANGE: '#FF7D00',
+  NEON_PINK: '#FF006D',
+  NEON_GREEN: '#ADFF02',
+  NEON_PURPLE: '#8F00FF',
 };
 
-export const turnEnumToHex = (color) => {
-  let hex;
-  if (color === 'RED') {
-    hex = '#FF595E';
-  } else if (color === 'YELLOW') {
-    hex = '#FFCA3A';
-  } else if (color === 'GREEN') {
-    hex = '#8AC926';
-  } else if (color === 'BLUE') {
-    hex = '#1982C4';
-  } else if (color === 'PURPLE') {
-    hex = '#6A4C93';
-  }
-  return hex;
+export const turnEnumToHex = (color) => colorMapping[color] || null;
+
+// Convert hex to enum
+export const turnHexToEnum = (hex) => {
+  const entries = Object.entries(colorMapping);
+  const match = entries.find(([_, value]) => value === hex);
+  return match ? match[0] : null;
 };
 
 export default {

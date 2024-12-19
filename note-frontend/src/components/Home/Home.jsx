@@ -21,6 +21,7 @@ function Home() {
   const location = useLocation();
   const { applicationState } = location.state || {};
   const [fontSize, setFontSize] = useState(); // put css prop in here
+  const [userColors, setUserColors] = useState();
 
   useEffect(() => {
     if (userData) {
@@ -36,6 +37,15 @@ function Home() {
         } else {
           setFontSize('var(--font-size-medium)');
         }
+      }
+
+      if (userData.colorPalette) {
+        setUserColors(userData.colorPalette.colorList);
+      } else {
+        // use default colors if none are set
+
+        let defaultColors = ['RED', 'YELLOW', 'GREEN', 'BLUE', 'PURPLE'];
+        setUserColors(defaultColors);
       }
     }
   }, [userData]);
@@ -208,7 +218,11 @@ function Home() {
       {isAboutPopupOpen && (
         <About onClose={closeAboutPopup} fontSize={fontSize} />
       )}
-      <ColorSort onColorSort={handleColorSort} fontSize={fontSize} />
+      <ColorSort
+        colors={userColors}
+        onColorSort={handleColorSort}
+        fontSize={fontSize}
+      />
       {userData ? (
         <NoteList
           notes={userData.notes}

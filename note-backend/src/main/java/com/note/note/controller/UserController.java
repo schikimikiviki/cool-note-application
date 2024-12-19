@@ -11,10 +11,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.note.note.data.ColorPalette;
 import com.note.note.data.CustomUserDetailsService;
 import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
+import com.note.note.repository.ColorPaletteRepository;
+import com.note.note.service.ColorPaletteService;
 import com.note.note.service.UserService;
 
 import java.security.Principal;
@@ -34,12 +37,15 @@ public class UserController {
 
  private final UserService userService;
  
+ private final ColorPaletteService colorPaletteService; 
+ 
  private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 
- public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+ public UserController(UserService userService, PasswordEncoder passwordEncoder, ColorPaletteService colorPaletteService) {
   this.passwordEncoder = passwordEncoder;
   this.userService = userService;
+  this.colorPaletteService = colorPaletteService; 
  }
 
  @GetMapping("/home")
@@ -162,7 +168,23 @@ public class UserController {
          }
          
          if (user.getColorPalette() != null) {
-        	 foundUser.setColorPalette(user.getColorPalette());
+             ColorPalette newPalette = user.getColorPalette();
+
+             // Fetch the full ColorPalette entity if only the ID is provided
+             if (newPalette.getId() != null) {
+            	 
+ 
+                
+				Optional<ColorPalette> paletteOptional = colorPaletteService.findPalettesById(newPalette.getId());
+                 if (paletteOptional.isPresent()) {
+                     foundUser.setColorPalette(paletteOptional.get());
+                 } else {
+                     System.out.println("ColorPalette not found with ID: " + newPalette.getId());
+                 }
+             } else {
+                 // Validate or save new palettes, if necessary
+                 foundUser.setColorPalette(newPalette);
+             }
          }
 
 
