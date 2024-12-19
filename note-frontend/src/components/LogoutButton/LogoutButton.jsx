@@ -1,7 +1,7 @@
 import './LogoutButton.css';
 import { useNavigate } from 'react-router-dom';
 
-const LogoutButton = () => {
+const LogoutButton = (props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -11,7 +11,11 @@ const LogoutButton = () => {
   };
   return (
     <>
-      <button className='button-hover' onClick={handleLogout}>
+      <button
+        className='button-hover'
+        style={{ fontSize: props.fontSize }}
+        onClick={handleLogout}
+      >
         Logout →
       </button>
     </>

@@ -1,8 +1,8 @@
-import "./SearchBar.css";
-import React, { useState } from "react";
+import './SearchBar.css';
+import React, { useState } from 'react';
 
-const SearchBar = ({ onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+const SearchBar = ({ onSearch, fontSize }) => {
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchInputChange = (event) => {
     const newSearchQuery = event.target.value;
@@ -11,11 +11,12 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <form className="search-form">
+    <form className='search-form'>
       <input
-        className="search-input"
-        type="text"
-        placeholder="Search..."
+        className='search-input'
+        style={{ fontSize: fontSize }}
+        type='text'
+        placeholder='Search...'
         value={searchQuery}
         onChange={handleSearchInputChange}
       />

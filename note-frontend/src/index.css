@@ -1,16 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 
-:root {
-  --font-size-small: 12px;
-  --font-size-medium: 16px;
-  --font-size-big: 20px;
-}
-
-body {
-  font-size: var(--font-size-medium); /* Default font size */
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -21,6 +11,12 @@ body {
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
   scroll-behavior: smooth;
+}
+
+:root {
+  --font-size-small: 15px;
+  --font-size-medium: 20px;
+  --font-size-big: 25px;
 }
 
 .main-page {

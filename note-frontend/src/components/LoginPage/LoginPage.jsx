@@ -28,14 +28,15 @@ const LoginPage = () => {
   const handleAuthCheck = () => {
     // check if code is valid
     if (code === generatedAuthCode) {
+      console.log('Appliying font size: ', userData.fontSize);
       navigate('/home', { state: { applicationState: userData } });
-      writeDateTimeToDb();
+      writeDateTimeToDb(userData.id);
     } else {
       setSecondErrorMessage('AuthCode is not correct, please re-check!');
     }
   };
 
-  const writeDateTimeToDb = async () => {
+  const writeDateTimeToDb = async (id) => {
     // for our login history, we log the last 10 logins into the db
     let currTime = getDateTime();
     let userObj = {};
@@ -47,7 +48,7 @@ const LoginPage = () => {
     // }
 
     try {
-      const response = await api.patch(`/users/${userData.id}`, userObj, {
+      const response = await api.patch(`/users/${id}`, userObj, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -162,8 +163,9 @@ const LoginPage = () => {
         console.log(userData);
         sendMailToUser(userData.email, generatedCode, userData.username);
       } else {
+        console.log('Appliying font size: ', userData.fontSize);
         navigate('/home', { state: { applicationState: userData } });
-        writeDateTimeToDb();
+        writeDateTimeToDb(userData.id);
         console.log('Passing the following data to /home: ', userData);
       }
     } catch (error) {

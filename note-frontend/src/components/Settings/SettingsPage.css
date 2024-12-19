@@ -185,9 +185,17 @@
 .login-list {
   font-size: 16px;
   font-style: normal;
+  display: flex;
+  gap: 50px;
 }
 
 .login-list li,
 .login-list li p {
   font-weight: normal;
+}
+.color-div {
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  padding: 2% 2% 2% 0%;
 }

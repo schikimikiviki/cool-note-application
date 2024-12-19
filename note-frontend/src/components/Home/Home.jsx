@@ -20,12 +20,22 @@ function Home() {
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const location = useLocation();
   const { applicationState } = location.state || {};
+  const [fontSize, setFontSize] = useState(); // put css prop in here
 
   useEffect(() => {
     if (userData) {
       localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
       if (userData.theme == 'NIGHT') {
         setIsDarkThemeSet(true);
+      }
+      if (userData.fontSize) {
+        if (userData.fontSize == 'SMALL') {
+          setFontSize('var(--font-size-small)');
+        } else if (userData.fontSize == 'BIG') {
+          setFontSize('var(--font-size-big)');
+        } else {
+          setFontSize('var(--font-size-medium)');
+        }
       }
     }
   }, [userData]);
@@ -36,6 +46,15 @@ function Home() {
       console.log('loading user data from localstorage');
       setUserData(JSON.parse(storedUserData));
       setOriginalNotes(storedUserData.notes);
+      if (storedUserData.fontSize) {
+        if (storedUserData.fontSize == 'SMALL') {
+          setFontSize('var(--font-size-small)');
+        } else if (storedUserData.fontSize == 'BIG') {
+          setFontSize('var(--font-size-big)');
+        } else {
+          setFontSize('var(--font-size-medium)');
+        }
+      }
     } else if (applicationState) {
       console.log('loading user data from applicationState');
       setUserData(applicationState); // Fall back to applicationState if no data in localStorage
@@ -175,19 +194,28 @@ function Home() {
         onReceive={handleRequest}
         onClick={handleThemeChange}
         onType={handleSearch}
+        fontSize={fontSize}
       />
       {isPopupOpen && (
-        <Popup onClose={closePopup} onAdd={load} userId={userData.id} />
+        <Popup
+          onClose={closePopup}
+          onAdd={load}
+          userId={userData.id}
+          fontSize={fontSize}
+        />
       )}
 
-      {isAboutPopupOpen && <About onClose={closeAboutPopup} />}
-      <ColorSort onColorSort={handleColorSort} />
+      {isAboutPopupOpen && (
+        <About onClose={closeAboutPopup} fontSize={fontSize} />
+      )}
+      <ColorSort onColorSort={handleColorSort} fontSize={fontSize} />
       {userData ? (
         <NoteList
           notes={userData.notes}
           onDelete={load}
           titles={areTitlesVisible}
           onLoad={load}
+          fontSize={fontSize}
         />
       ) : (
         <p>Loading notes...</p>
@@ -196,6 +224,7 @@ function Home() {
         onTitleChange={changeTitles}
         onAbout={handleAboutPopup}
         userDetails={userData}
+        fontSize={fontSize}
       />
     </div>
   );

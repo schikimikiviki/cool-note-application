@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './EditPopup.css';
 import colors from '../../assets/imports.js';
 
-const EditPopup = ({ note, onSave, onCancel }) => {
+const EditPopup = ({ note, onSave, onCancel, fontSize }) => {
   const [editedContent, setEditedContent] = useState(note.content);
   const [selectedColor, setSelectedColor] = useState(note.color);
   const [editedName, setEditedName] = useState(note.title);
@@ -21,8 +21,13 @@ const EditPopup = ({ note, onSave, onCancel }) => {
         <button className='close-button' onClick={onCancel}>
           X
         </button>
-        <h1 className='popup-title'>Edit note</h1>
-        <p className='heading-edit' style={{ paddingTop: '1%' }}>
+        <h1 className='popup-title' style={{ fontSize: fontSize }}>
+          Edit note
+        </h1>
+        <p
+          className='heading-edit'
+          style={{ paddingTop: '1%', fontSize: fontSize }}
+        >
           Edit color:
         </p>
         <div className='color-picker'>
@@ -48,21 +53,31 @@ const EditPopup = ({ note, onSave, onCancel }) => {
             ))}
           </div>
         </div>
-        <h1 className='heading-edit'>Edit title: </h1>
+        <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+          Edit title:{' '}
+        </h1>
         <textarea
           className='text-field'
           value={editedName}
+          style={{ fontSize: fontSize }}
           onChange={(e) => setEditedName(e.target.value)}
         ></textarea>
 
-        <h1 className='heading-edit'>Edit contents: </h1>
+        <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+          Edit contents:
+        </h1>
         <textarea
           className='text-field'
           value={editedContent}
+          style={{ fontSize: fontSize }}
           onChange={(e) => setEditedContent(e.target.value)}
         ></textarea>
 
-        <button className='submit-button' onClick={handleSave}>
+        <button
+          className='submit-button'
+          style={{ fontSize: fontSize }}
+          onClick={handleSave}
+        >
           Save
         </button>
       </div>

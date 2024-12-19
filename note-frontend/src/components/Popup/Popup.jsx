@@ -3,7 +3,7 @@ import api from '../../api/axiosConfig';
 import './Popup.css';
 import colors from '../../assets/imports.js';
 
-const Popup = ({ onClose, onAdd, userId }) => {
+const Popup = ({ onClose, onAdd, userId, fontSize }) => {
   const [noteData, setNoteData] = useState({
     name: '',
     content: '',
@@ -79,10 +79,13 @@ const Popup = ({ onClose, onAdd, userId }) => {
         </button>
 
         <form className='popup-form' onSubmit={submitForm}>
-          <h2 className='popup-title'>New Note</h2>
+          <h2 className='popup-title' style={{ fontSize: fontSize }}>
+            New Note
+          </h2>
           <input
             type='text'
             name='name'
+            style={{ fontSize: fontSize }}
             placeholder='Please type in a note heading'
             value={noteData.name}
             onChange={handleInputChange}
@@ -91,13 +94,17 @@ const Popup = ({ onClose, onAdd, userId }) => {
           <input
             type='text'
             name='content'
+            style={{ fontSize: fontSize }}
             placeholder='Please type note contents'
             value={noteData.content}
             onChange={handleInputChange}
           />
 
           <div className='colorPicker'>
-            <p className='heading-medium' style={{ paddingTop: '1%' }}>
+            <p
+              className='heading-medium'
+              style={{ paddingTop: '1%', fontSize: fontSize }}
+            >
               Select a color:
             </p>
             <div
@@ -124,7 +131,11 @@ const Popup = ({ onClose, onAdd, userId }) => {
             </div>
           </div>
 
-          <button type='submit' className='submit-button'>
+          <button
+            type='submit'
+            className='submit-button'
+            style={{ fontSize: fontSize }}
+          >
             Submit
           </button>
         </form>

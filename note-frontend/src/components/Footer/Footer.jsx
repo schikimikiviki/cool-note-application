@@ -19,15 +19,29 @@ const Footer = (props) => {
     navigate('/settings');
   };
 
+  console.log(props.userDetails);
+
   return (
     <div className='footer-main'>
-      <button className='footer-button' onClick={handleAbout}>
+      <button
+        className='footer-button'
+        style={{ fontSize: props.fontSize }}
+        onClick={handleAbout}
+      >
         About
       </button>
-      <button className='footer-button' onClick={handleSettings}>
+      <button
+        className='footer-button'
+        style={{ fontSize: props.fontSize }}
+        onClick={handleSettings}
+      >
         Settings
       </button>
-      <button className='footer-button' onClick={manageTitles}>
+      <button
+        className='footer-button'
+        style={{ fontSize: props.fontSize }}
+        onClick={manageTitles}
+      >
         {areTitlesDisplayed ? 'Hide' : 'Show'} note titles
       </button>
     </div>

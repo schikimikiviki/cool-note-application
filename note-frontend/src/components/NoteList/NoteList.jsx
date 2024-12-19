@@ -4,7 +4,7 @@ import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
 import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
-const NoteList = ({ notes, onDelete, titles, onLoad }) => {
+const NoteList = ({ notes, onDelete, titles, onLoad, fontSize }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const [isDoneList, setIsDoneList] = useState(Array(notes.length).fill(false));
@@ -95,24 +95,6 @@ const NoteList = ({ notes, onDelete, titles, onLoad }) => {
     }
   };
 
-  // const handleDone = async (noteId, index) => {
-  //   try {
-  //     const noteToChange = notes.find((note) => note.id === noteId);
-  //     const updatedNote = await api.patch(`/api/notes/${noteId}`, {
-  //       ...noteToChange,
-  //       done: !isDoneList[index],
-  //     });
-
-  //     if (updatedNote) {
-  //       const updatedIsDoneList = [...isDoneList];
-  //       updatedIsDoneList[index] = !isDoneList[index];
-  //       setIsDoneList(updatedIsDoneList);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error while changing note state:', error);
-  //   }
-  // };
-
   return (
     <div className='main-container'>
       {notes.map((note, index) => (
@@ -130,6 +112,7 @@ const NoteList = ({ notes, onDelete, titles, onLoad }) => {
                 note={note}
                 onSave={handleSave}
                 onCancel={handleCancelEdit}
+                fontSize={fontSize}
               />
             ) : null}
             <div>
@@ -141,19 +124,32 @@ const NoteList = ({ notes, onDelete, titles, onLoad }) => {
               </span>
 
               {areTitlesVisible ? (
-                <h2 className='handwriting'>{note.title}</h2>
+                <h2 className='handwriting' style={{ fontSize: fontSize }}>
+                  {note.title}
+                </h2>
               ) : (
                 <h2></h2>
               )}
 
-              <div className='handwriting'>{note.content}</div>
+              <div className='handwriting' style={{ fontSize: fontSize }}>
+                {note.content}
+              </div>
               <hr className='line'></hr>
-              <div className='heading-small'>Note-id: {note.id}</div>
+              <div
+                className='heading-small'
+                style={{
+                  fontSize:
+                    fontSize === 'var(--font-size-big)' ? '20px' : '15px',
+                }}
+              >
+                Note-id: {note.id}
+              </div>
               <br />
 
               <div className='note-footer'>
                 <span
                   className={isDoneList[index] ? 'invisible' : 'link-default'}
+                  style={{ fontSize: fontSize }}
                   disabled={isDoneList[index]}
                   onClick={() => handleEdit(note.id)}
                 >

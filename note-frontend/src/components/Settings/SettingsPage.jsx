@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { fetchGetFromBackend } from '../features/helpers';
 import api from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import colors from '../../assets/imports.js';
 
 const SettingsPage = () => {
   const [username, setUsername] = useState('');
@@ -20,10 +21,46 @@ const SettingsPage = () => {
   const [isChecked, setIsChecked] = useState(userData.isAuthActive);
   const [email, setEmail] = useState('');
   const [theme, setTheme] = useState(userData.theme);
-  const [fontSize, setFontSize] = useState(userData.fontSize.toLowerCase());
+  const [fontSizeInput, setFontSizeInput] = useState(
+    userData.fontSize.toLowerCase()
+  );
+  const [fontSize, setFontSize] = useState(() => {
+    if (userData?.fontSize === 'SMALL') {
+      return 'var(--font-size-small)';
+    } else if (userData?.fontSize === 'BIG') {
+      return 'var(--font-size-big)';
+    } else {
+      return 'var(--font-size-medium)'; // Default value
+    }
+  });
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [customMeaning, setCustomMeaning] = useState();
+  const [colorMeanings, setColorMeanings] = useState({});
+
+  useEffect(() => {
+    if (userData?.fontSize === 'SMALL') {
+      setFontSize('var(--font-size-small)');
+    } else if (userData?.fontSize === 'BIG') {
+      setFontSize('var(--font-size-big)');
+    } else {
+      setFontSize('var(--font-size-medium)');
+    }
+  }, [userData]);
+
+  const handleColorCustomMeaning = (e) => {
+    const value = e.target.value;
+    setColorMeanings((prev) => ({
+      ...prev,
+      [selectedColor]: value, // Update meaning for the selected color
+    }));
+  };
+
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
+  };
 
   const handleFontSizeChange = async (e) => {
-    setFontSize(e.target.value);
+    setFontSizeInput(e.target.value);
 
     // also, patch to the db
 
@@ -312,6 +349,10 @@ const SettingsPage = () => {
     setPassword(e.target.value);
   };
 
+  const midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
+  const firstHalf = userData.loginList.slice(0, midIndex);
+  const secondHalf = userData.loginList.slice(midIndex);
+
   return (
     <>
       <div className='settings-background'>
@@ -321,6 +362,7 @@ const SettingsPage = () => {
           <button
             className='exit'
             type='submit'
+            style={{ fontSize: fontSize }}
             onClick={() => {
               navigate('/home');
             }}
@@ -334,9 +376,15 @@ const SettingsPage = () => {
           <br />
           <Tabs defaultTab='vertical-tab-one' vertical>
             <TabList>
-              <Tab tabFor='vertical-tab-one'>User profile</Tab>
-              <Tab tabFor='vertical-tab-two'>Notes</Tab>
-              <Tab tabFor='vertical-tab-three'>Advanced settings</Tab>
+              <Tab tabFor='vertical-tab-one' style={{ fontSize: fontSize }}>
+                User profile
+              </Tab>
+              <Tab tabFor='vertical-tab-two' style={{ fontSize: fontSize }}>
+                Notes
+              </Tab>
+              <Tab tabFor='vertical-tab-three' style={{ fontSize: fontSize }}>
+                Advanced settings
+              </Tab>
             </TabList>
             <TabPanel tabId='vertical-tab-one'>
               {errorMessage && (
@@ -365,6 +413,7 @@ const SettingsPage = () => {
                   <input
                     type='text'
                     id='username'
+                    style={{ fontSize: fontSize }}
                     name='username'
                     placeholder='Enter new Username'
                     defaultValue={userData.username}
@@ -375,6 +424,7 @@ const SettingsPage = () => {
                     type='password'
                     id='password'
                     name='password'
+                    style={{ fontSize: fontSize }}
                     placeholder='Enter your Password'
                     defaultValue={userData.password}
                     onChange={handlePasswordChange}
@@ -383,6 +433,7 @@ const SettingsPage = () => {
                   <input
                     type='fullname'
                     id='fullname'
+                    style={{ fontSize: fontSize }}
                     name='fullname'
                     placeholder='Enter your full name'
                     defaultValue={userData.fullname}
@@ -391,7 +442,11 @@ const SettingsPage = () => {
                   />
 
                   <br />
-                  <button className='save-settings' type='submit'>
+                  <button
+                    style={{ fontSize: fontSize }}
+                    className='save-settings'
+                    type='submit'
+                  >
                     Save
                   </button>
                   <br />
@@ -407,7 +462,11 @@ const SettingsPage = () => {
                 </h2>
                 <br />
 
-                <select value={theme} onChange={handleThemeChange}>
+                <select
+                  style={{ fontSize: fontSize }}
+                  value={theme}
+                  onChange={handleThemeChange}
+                >
                   <option value='day'>Day</option>
                   <option value='night'>Night</option>
                 </select>
@@ -418,19 +477,77 @@ const SettingsPage = () => {
                   <u>Preferred font Size</u>
                 </h2>
                 <br />
+                <div style={{ display: 'flex', gap: '20px' }}>
+                  <select
+                    style={{ fontSize: fontSize }}
+                    value={fontSizeInput}
+                    onChange={handleFontSizeChange}
+                  >
+                    <option value='small'>small</option>
+                    <option value='medium'>medium</option>
+                    <option value='big'>big</option>
+                  </select>
 
-                <select value={fontSize} onChange={handleFontSizeChange}>
-                  <option value='small'>small</option>
-                  <option value='medium'>medium</option>
-                  <option value='big'>big</option>
-                </select>
-
+                  <p style={{ fontSize: fontSize }}>
+                    The preferred font size will be applied to the notes page
+                    and the settings page
+                  </p>
+                </div>
                 <br />
                 <br />
 
                 <h2>
-                  <u>Custom values for colors</u>
+                  <u>Custom color palettes and custom values for colors</u>
                 </h2>
+
+                <p style={{ fontSize: fontSize }}>
+                  You can give colors a custom meaning or even change your color
+                  palette. Type in your own ideas for colors and filter your
+                  notes according to your own values in the notes page!
+                </p>
+                <div className='color-div'>
+                  <div
+                    style={{
+                      display: 'flex',
+
+                      alignItems: 'center',
+                    }}
+                  >
+                    {colors.map((color, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleColorClick(color)}
+                        style={{
+                          width: '80px',
+                          height: '30px',
+                          backgroundColor: color,
+                          marginRight: '10px',
+                          cursor: 'pointer',
+                          border:
+                            selectedColor === color ? '2px solid #000' : 'none',
+                        }}
+                      >
+                        {colorMeanings[color] || ''}
+                      </div>
+                    ))}
+
+                    <input
+                      type='text'
+                      id='customMeaning'
+                      name='customMeaning'
+                      placeholder='Enter a new name for the selected color: '
+                      value={
+                        selectedColor ? colorMeanings[selectedColor] || '' : ''
+                      }
+                      onChange={handleColorCustomMeaning}
+                      style={{
+                        marginLeft: '20px',
+                        width: '300px',
+                        visibility: selectedColor ? 'visible' : 'hidden',
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             </TabPanel>
             <TabPanel tabId='vertical-tab-three'>
@@ -443,13 +560,23 @@ const SettingsPage = () => {
                   className='delete'
                   type='submit'
                   onClick={() => initDelete()}
+                  style={{
+                    fontSize:
+                      fontSize === 'var(--font-size-big)' ? '17px' : '15px',
+                  }}
                 >
                   Delete user profile
                 </button>
 
                 <div className={` ${deleteClicked ? '' : 'hidden'}`}>
                   <div className='delete-form'>
-                    <p id='warning'>
+                    <p
+                      id='warning'
+                      style={{
+                        fontSize:
+                          fontSize === 'var(--font-size-big)' ? '17px' : '15px',
+                      }}
+                    >
                       Are you sure ? This action will permanently delete your
                       user profile and log you out immediately. To proceed,
                       click on the button to the right.
@@ -458,6 +585,10 @@ const SettingsPage = () => {
                       className='delete'
                       type='submit'
                       onClick={() => deleteProfile()}
+                      style={{
+                        fontSize:
+                          fontSize === 'var(--font-size-big)' ? '17px' : '15px',
+                      }}
                     >
                       Yes, delete my profile and log me out
                     </button>
@@ -469,7 +600,13 @@ const SettingsPage = () => {
               <h2>
                 <u>Two-Factor-Authentication</u>
               </h2>
-              <div className='delete-form'>
+              <div
+                className='delete-form'
+                style={{
+                  fontSize:
+                    fontSize === 'var(--font-size-big)' ? '17px' : '15px',
+                }}
+              >
                 <input
                   type='checkbox'
                   id='auth'
@@ -492,10 +629,15 @@ const SettingsPage = () => {
                       placeholder='Enter e-mail adress for 2-factor authentication'
                       defaultValue={userData.email}
                       onChange={handleMailChange}
+                      style={{ fontSize: fontSize }}
                       required
                     />
 
-                    <button className='delete' type='submit'>
+                    <button
+                      className='delete'
+                      type='submit'
+                      style={{ fontSize: fontSize }}
+                    >
                       Submit
                     </button>
                   </form>
@@ -507,13 +649,24 @@ const SettingsPage = () => {
                 <br />
                 <br />
                 <div className='login-list'>
-                  <ul>
-                    {userData.loginList.map((txt) => (
-                      <li>
-                        <p>{txt}</p>
-                      </li>
-                    ))}
-                  </ul>
+                  <div>
+                    <ul>
+                      {firstHalf.map((txt) => (
+                        <li style={{ fontSize: fontSize }}>
+                          <p>{txt}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <ul>
+                      {secondHalf.map((txt) => (
+                        <li style={{ fontSize: fontSize }}>
+                          <p>{txt}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </h2>
             </TabPanel>
