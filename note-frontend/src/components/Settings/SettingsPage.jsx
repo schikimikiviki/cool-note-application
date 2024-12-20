@@ -1,11 +1,10 @@
 import './SettingsPage.css';
 import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { fetchGetFromBackend } from '../features/helpers';
 import api from '../../api/axiosConfig';
+import { turnEnumToHex, getAllColorPalettes } from '../features/helpers';
 import { useNavigate } from 'react-router-dom';
-import colors from '../../assets/imports.js';
 
 const SettingsPage = () => {
   const [username, setUsername] = useState('');
@@ -34,18 +33,52 @@ const SettingsPage = () => {
     }
   });
   const [selectedColor, setSelectedColor] = useState(null);
-  const [customMeaning, setCustomMeaning] = useState();
   const [colorMeanings, setColorMeanings] = useState({});
+  const [colorPalette, setColorPalette] = useState(); // saving id here
+  const [paletteCollection, setPaletteCollection] = useState();
+  const [chosenPalette, setChosenPalette] = useState();
 
   useEffect(() => {
-    if (userData?.fontSize === 'SMALL') {
-      setFontSize('var(--font-size-small)');
-    } else if (userData?.fontSize === 'BIG') {
-      setFontSize('var(--font-size-big)');
-    } else {
-      setFontSize('var(--font-size-medium)');
-    }
+    const fetchData = async () => {
+      if (userData?.fontSize === 'SMALL') {
+        setFontSize('var(--font-size-small)');
+      } else if (userData?.fontSize === 'BIG') {
+        setFontSize('var(--font-size-big)');
+      } else {
+        setFontSize('var(--font-size-medium)');
+      }
+
+      try {
+        const palettes = await getAllColorPalettes();
+        console.log('Palettes:', palettes);
+        setPaletteCollection(palettes);
+      } catch (error) {
+        console.error('Error fetching palettes:', error);
+      }
+
+      if (userData.colorPalette) {
+        // this is the case where the user already had a patch request for this
+        console.log(
+          'User has saved this palette as favorite: ',
+          userData.colorPalette
+        );
+        setColorPalette(userData.colorPalette.id);
+      } else {
+        // look for default palette id
+        let filteredPalette = paletteCollection.find(
+          (palette) => palette.name == 'Default'
+        );
+        setChosenPalette(filteredPalette.id);
+        console.log('Setting default palette for user', filteredPalette.id);
+      }
+    };
+
+    fetchData();
   }, [userData]);
+
+  const handleSelectPalette = (e) => {
+    setChosenPalette(e);
+  };
 
   const handleColorCustomMeaning = (e) => {
     const value = e.target.value;
@@ -364,16 +397,18 @@ const SettingsPage = () => {
         <div className='settings-box'>
           <br />
           <br />
-          <button
-            className='exit'
-            type='submit'
-            style={{ fontSize: fontSize }}
-            onClick={() => {
-              navigate('/home');
-            }}
-          >
-            ⬅️ Back to home page
-          </button>
+          <div style={{ display: 'flex' }}>
+            <button
+              className='exit'
+              type='submit'
+              style={{ fontSize: fontSize }}
+              onClick={() => {
+                navigate('/home');
+              }}
+            >
+              ⬅️ Back to home page
+            </button>
+          </div>
           <br />
           <br />
           <h1>User settings</h1>
@@ -514,43 +549,77 @@ const SettingsPage = () => {
                   <div
                     style={{
                       display: 'flex',
-
                       alignItems: 'center',
                     }}
                   >
-                    {colors.map((color, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleColorClick(color)}
-                        style={{
-                          width: '80px',
-                          height: '30px',
-                          backgroundColor: color,
-                          marginRight: '10px',
-                          cursor: 'pointer',
-                          border:
-                            selectedColor === color ? '2px solid #000' : 'none',
-                        }}
-                      >
-                        {colorMeanings[color] || ''}
-                      </div>
-                    ))}
+                    <div>
+                      {paletteCollection &&
+                        paletteCollection.map((palette, paletteIndex) => (
+                          <div
+                            key={paletteIndex}
+                            style={{
+                              gap: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'flex-start',
+                              paddingBottom: '10px',
+                            }}
+                          >
+                            <input
+                              type='checkbox'
+                              id={`palette-${palette.id}`}
+                              name={`palette-${palette.id}`}
+                              value={palette.id}
+                              checked={chosenPalette === palette.id}
+                              onChange={() => handleSelectPalette(palette.id)}
+                            />
+                            <label htmlFor={`palette-${palette.id}`}>
+                              {palette.name || `Palette ${paletteIndex + 1}`}
+                            </label>
+                            <div>
+                              {palette.colorList.map((color, colorIndex) => (
+                                <div
+                                  key={colorIndex}
+                                  onClick={() => handleColorClick(color)}
+                                  style={{
+                                    width: '70px',
+                                    height: '30px',
+                                    backgroundColor: turnEnumToHex(color),
+                                    cursor: 'pointer',
+                                    border:
+                                      selectedColor === color
+                                        ? '2px solid #000'
+                                        : 'none',
+                                    display: 'inline-block',
+                                  }}
+                                >
+                                  {colorMeanings[color] || ''}
+                                </div>
+                              ))}
+                            </div>
 
-                    <input
-                      type='text'
-                      id='customMeaning'
-                      name='customMeaning'
-                      placeholder='Enter a new name for the selected color: '
-                      value={
-                        selectedColor ? colorMeanings[selectedColor] || '' : ''
-                      }
-                      onChange={handleColorCustomMeaning}
-                      style={{
-                        marginLeft: '20px',
-                        width: '300px',
-                        visibility: selectedColor ? 'visible' : 'hidden',
-                      }}
-                    />
+                            <div>
+                              {chosenPalette === palette.id && ( // Input field only for the chosen palette
+                                <input
+                                  type='text'
+                                  id={`customMeaning-${palette.id}`}
+                                  name={`customMeaning-${palette.id}`}
+                                  placeholder='Enter a new name'
+                                  value={
+                                    selectedColor
+                                      ? colorMeanings[selectedColor] || ''
+                                      : ''
+                                  }
+                                  onChange={handleColorCustomMeaning}
+                                  style={{
+                                    marginTop: '20px',
+                                  }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </div>
               </div>

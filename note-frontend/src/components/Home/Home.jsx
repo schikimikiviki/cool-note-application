@@ -9,7 +9,11 @@ import Popup from '../Popup/Popup.jsx';
 import Footer from '../Footer/Footer.jsx';
 import About from '../About/About.jsx';
 import ColorSort from '../ColorSort/ColorSort.jsx';
-import { loadUserNotes, turnHexToEnum } from '../features/helpers.js';
+import {
+  loadUserNotes,
+  turnHexToEnum,
+  getAllColorPalettes,
+} from '../features/helpers.js';
 
 function Home() {
   const [originalNotes, setOriginalNotes] = useState([]);
@@ -24,30 +28,53 @@ function Home() {
   const [userColors, setUserColors] = useState();
 
   useEffect(() => {
-    if (userData) {
-      localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
-      if (userData.theme == 'NIGHT') {
-        setIsDarkThemeSet(true);
-      }
-      if (userData.fontSize) {
-        if (userData.fontSize == 'SMALL') {
-          setFontSize('var(--font-size-small)');
-        } else if (userData.fontSize == 'BIG') {
-          setFontSize('var(--font-size-big)');
+    const fetchData = async () => {
+      if (userData) {
+        localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
+        if (userData.theme == 'NIGHT') {
+          setIsDarkThemeSet(true);
+        }
+        if (userData.fontSize) {
+          if (userData.fontSize == 'SMALL') {
+            setFontSize('var(--font-size-small)');
+          } else if (userData.fontSize == 'BIG') {
+            setFontSize('var(--font-size-big)');
+          } else {
+            setFontSize('var(--font-size-medium)');
+          }
+        }
+
+        if (userData.colorPalette != null) {
+          setUserColors(userData.colorPalette.colorList);
         } else {
-          setFontSize('var(--font-size-medium)');
+          // use default colors if none are set
+
+          try {
+            // Fetch all palettes
+            const palettes = await getAllColorPalettes();
+            // console.log('Palettes:', palettes);
+
+            // Search for the "Default" palette
+            const foundPalette = palettes.find(
+              (palette) => palette.name === 'Default'
+            );
+
+            if (foundPalette) {
+              // console.log('Filtered: ', foundPalette);
+
+              // Set colors for the user
+              setUserColors(foundPalette.colorList);
+            } else {
+              console.warn('No "Default" palette found.');
+            }
+          } catch (error) {
+            console.error('Error fetching palettes:', error);
+          }
         }
       }
+    };
 
-      if (userData.colorPalette) {
-        setUserColors(userData.colorPalette.colorList);
-      } else {
-        // use default colors if none are set
-
-        let defaultColors = ['RED', 'YELLOW', 'GREEN', 'BLUE', 'PURPLE'];
-        setUserColors(defaultColors);
-      }
-    }
+    fetchData();
   }, [userData]);
 
   useEffect(() => {

@@ -9,7 +9,11 @@ const ColorSort = ({ onColorSort, fontSize, colors }) => {
 
   useEffect(() => {
     if (colors) {
+      console.log('Colors_', colors);
       const hexColors = colors.map(turnEnumToHex);
+
+      console.log('hex', hexColors);
+
       setTranslatedColors(hexColors);
     }
   }, []);

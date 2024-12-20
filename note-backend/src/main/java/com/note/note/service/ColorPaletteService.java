@@ -1,5 +1,6 @@
 package com.note.note.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +22,10 @@ private final ColorPaletteRepository colorPaletteRepository;
     public Optional<ColorPalette> findPalettesById(Long id) {
         
         return colorPaletteRepository.findById(id);
+    }
+    
+    public List<ColorPalette> findAllPalettes(){
+    	return colorPaletteRepository.findAll();
     }
     
 	
