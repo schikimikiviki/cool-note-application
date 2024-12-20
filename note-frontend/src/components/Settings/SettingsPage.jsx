@@ -69,15 +69,51 @@ const SettingsPage = () => {
           (palette) => palette.name == 'Default'
         );
         setChosenPalette(filteredPalette.id);
-        console.log('Setting default palette for user', filteredPalette.id);
       }
     };
 
     fetchData();
   }, [userData]);
 
-  const handleSelectPalette = (e) => {
-    setChosenPalette(e);
+  const handleSelectPalette = async (e) => {
+    let palette = e;
+    setChosenPalette(palette);
+
+    console.log('CHOSEN PAL', palette);
+
+    // also, put this to the db :))))
+
+    let userObj = {};
+    userObj.colorPalette = { id: palette };
+
+    try {
+      console.log('patching user with data: ', userObj);
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        setUserData(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
   };
 
   const handleColorCustomMeaning = (e) => {
@@ -576,11 +612,21 @@ const SettingsPage = () => {
                             <label htmlFor={`palette-${palette.id}`}>
                               {palette.name || `Palette ${paletteIndex + 1}`}
                             </label>
-                            <div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                marginTop: '10px',
+                              }}
+                            >
                               {palette.colorList.map((color, colorIndex) => (
                                 <div
                                   key={colorIndex}
-                                  onClick={() => handleColorClick(color)}
+                                  onClick={
+                                    chosenPalette === palette.id
+                                      ? () => handleColorClick(color)
+                                      : null
+                                  }
                                   style={{
                                     width: '70px',
                                     height: '30px',
