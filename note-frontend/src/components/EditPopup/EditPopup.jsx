@@ -62,7 +62,7 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
           </div>
         </div>
         <h1 className='heading-edit' style={{ fontSize: fontSize }}>
-          Edit title:{' '}
+          Edit title:
         </h1>
         <textarea
           className='text-field'

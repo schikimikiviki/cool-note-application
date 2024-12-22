@@ -101,18 +101,32 @@ public class UserController {
  
  @PostMapping("/register")
  public ResponseEntity<?> register(@RequestBody UserDto userDto) {
+     // Check if the user already exists
      User existingUser = userService.findByUsername(userDto.getUsername());
      if (existingUser != null) {
          return ResponseEntity
                  .status(HttpStatus.CONFLICT)
                  .body(Map.of("success", false, "message", "User already exists"));
      }
-     User newUser = userService.save(userDto);
+     
+     // Hash the password
+     String hashedPw = passwordEncoder.encode(userDto.getPassword());
+     
+     // Copy UserDto fields and change the password to hashed password
+     UserDto newUserDto = new UserDto(); 
+     newUserDto.setUsername(userDto.getUsername());
+     newUserDto.setPassword(hashedPw); 
+     newUserDto.setFullname(userDto.getFullname());
+     newUserDto.setRoles(userDto.getRoles());
+     
+     // Save the user with hashed password
+     User newUser = userService.save(newUserDto);
+     
      return ResponseEntity
              .status(HttpStatus.CREATED)
              .body(Map.of("success", true, "user", newUser));
  }
- 
+
  
  @PatchMapping("/users/{userId}")
  public User editUser(@PathVariable Long userId, @RequestBody User user) {

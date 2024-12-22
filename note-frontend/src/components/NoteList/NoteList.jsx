@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
@@ -7,14 +7,16 @@ import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
-  const [isDoneList, setIsDoneList] = useState(Array(notes.length).fill(false));
+  const [isDoneList, setIsDoneList] = useState([]);
 
+  // Sync the `isDoneList` whenever `notes` change
   useEffect(() => {
     setAreTitlesVisible(titles);
 
-    const initialIsDoneList = notes.map((note) => note.done);
+    // Initialize `isDoneList` based on the `notes` prop
+    const initialIsDoneList = notes.map((note) => note.isDone); // Make sure `isDone` is the correct property
     setIsDoneList(initialIsDoneList);
-  }, [titles, notes]);
+  }, [notes, titles]); // Re-run when notes or titles change
 
   const handleEdit = (noteId) => {
     setEditingNote(noteId);
@@ -67,16 +69,18 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
       console.error('Error while deleting note:', error);
     }
   };
+
   const handleDone = async (noteId, index) => {
     try {
-      // Toggle the current state
+      // Toggle the current state (done <-> not done)
       const newDoneState = !isDoneList[index];
 
-      console.log('IS DONE STATE: ');
+      console.log('IS DONE STATE: ', newDoneState);
+
       // Send the PATCH request to update the `done` state
       const response = await api.patch(
         `/api/notes/${noteId}`,
-        { isDone: newDoneState },
+        { isDone: newDoneState }, // Send the updated 'done' state
         {
           headers: {
             'Content-Type': 'application/json',
@@ -90,6 +94,8 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
         updatedIsDoneList[index] = newDoneState;
         setIsDoneList(updatedIsDoneList);
       }
+
+      onLoad(); // Reload to reflect changes from DB
     } catch (error) {
       console.error('Error while changing note state:', error);
     }
@@ -158,12 +164,9 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
                 </span>
                 <button
                   onClick={() => handleDone(note.id, index)}
-                  className={`done-button ${
-                    isDoneList[index] ? 'disabled' : ''
-                  }`}
-                  disabled={isDoneList[index]}
+                  className={`done-button`}
                 >
-                  {isDoneList[index] ? '✔️' : 'Done ✔️'}
+                  {isDoneList[index] ? '✔️ ' : 'Done ✔️'}{' '}
                 </button>
               </div>
             </div>

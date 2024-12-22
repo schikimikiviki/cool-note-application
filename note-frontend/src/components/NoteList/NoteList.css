@@ -1,92 +1,83 @@
 .main-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 3%;
-    flex: 1; /* Make the notes container flexible to take up available space */
-  overflow-y: auto; /
-    
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 3%;
+  flex: 1; /* Make the notes container flexible to take up available space */
+  overflow-y: auto;
+}
 
-  .note-container {
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    border: 1px solid #ccc; 
-    padding: 2rem; 
-    margin: 2.5rem; 
-  }
+.note-container {
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  padding: 2rem;
+  margin: 2.5rem;
+}
 
-  .close-button {
-  
-    top: 0.5rem; 
-    margin-left: 90%; 
-    font-size: 1.2rem; 
-    color: rgb(59, 59, 59); 
-    cursor: pointer;
-  }
+.close-button {
+  top: 0.5rem;
+  margin-left: 90%;
+  font-size: 1.2rem;
+  color: rgb(59, 59, 59);
+  cursor: pointer;
+}
 
-  .handwriting {
-    font-family: 'Indie Flower', cursive;
-    color:rgb(51, 51, 51);
-    font-size: x-large;
-  }
+.handwriting {
+  font-family: 'Indie Flower', cursive;
+  color: rgb(51, 51, 51);
+  font-size: x-large;
+}
 
-  
-  .heading-small {
-    
-    color: #333;
-    
-  }
+.heading-small {
+  color: #333;
+}
 
-   
-  .line {
-    border: 0.5px solid black;
-    margin-top: 1%;
-    margin-bottom: 1%;
-  }
+.line {
+  border: 0.5px solid black;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
 
-  
-  .link-default {
-
-    color: black; 
-    &:hover {
-      text-decoration: underline;
-
-    }
+.link-default {
+  color: black;
+  &:hover {
+    text-decoration: underline;
   }
+}
 
-  .note-footer {
-    display: flex;
-    justify-content: space-between;
-    justify-items: center;
-    gap: 10px
-  }
+.note-footer {
+  display: flex;
+  justify-content: space-between;
+  justify-items: center;
+  gap: 10px;
+}
 
-  .done-button {
-    background-color: rgb(16, 170, 59);
-    border: 0.5px black solid;
-    padding: 10px;
-    color:rgb(52, 12, 80);
-    border-radius: 20px;
-    margin-top: -10px;
-  }
+.done-button {
+  background-color: rgb(16, 170, 59);
+  border: 0.5px black solid;
+  padding: 10px;
+  color: rgb(52, 12, 80);
+  border-radius: 20px;
+  margin-top: -10px;
+}
 
-  .done-button:hover {
-    background-color: rgb(21, 202, 73);
-  }
+.done-button:hover {
+  background-color: rgb(21, 202, 73);
+}
 
-  .overlay {
-    background-color: rgba(0, 0, 0, 0.9); 
-    z-index: 1; 
-  }
-  
-  .done-button.disabled {
-    pointer-events: none; 
-    background-color: rgb(21, 202, 73);
-    cursor: not-allowed; 
-  }
+.overlay {
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1;
+}
 
-  .invisible {
-    visibility: hidden;
-  }
+.done-button.disabled {
+  pointer-events: none;
+  background-color: rgb(21, 202, 73);
+  cursor: not-allowed;
+}
+
+.invisible {
+  visibility: hidden;
+}
