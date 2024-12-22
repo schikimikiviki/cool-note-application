@@ -17,7 +17,7 @@ export const getAllColorPalettes = async () => {
 
     const data = await res.json();
 
-    // console.log('DATA: ', data);
+    console.log('DATA: ', data);
 
     return data;
   } catch (error) {

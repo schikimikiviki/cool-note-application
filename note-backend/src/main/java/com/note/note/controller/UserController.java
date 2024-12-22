@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.note.note.data.Color;
 import com.note.note.data.ColorPalette;
 import com.note.note.data.CustomUserDetailsService;
 import com.note.note.data.Note;
@@ -22,6 +23,7 @@ import com.note.note.service.UserService;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -118,6 +120,7 @@ public class UserController {
      newUserDto.setPassword(hashedPw); 
      newUserDto.setFullname(userDto.getFullname());
      newUserDto.setRoles(userDto.getRoles());
+    
      
      // Save the user with hashed password
      User newUser = userService.save(newUserDto);

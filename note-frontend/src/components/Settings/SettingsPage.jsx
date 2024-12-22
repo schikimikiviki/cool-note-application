@@ -20,9 +20,7 @@ const SettingsPage = () => {
   const [isChecked, setIsChecked] = useState(userData.isAuthActive);
   const [email, setEmail] = useState('');
   const [theme, setTheme] = useState(userData.theme);
-  const [fontSizeInput, setFontSizeInput] = useState(
-    userData.fontSize.toLowerCase()
-  );
+
   const [fontSize, setFontSize] = useState(() => {
     if (userData?.fontSize === 'SMALL') {
       return 'var(--font-size-small)';
@@ -31,6 +29,12 @@ const SettingsPage = () => {
     } else {
       return 'var(--font-size-medium)'; // Default value
     }
+  });
+  const [fontSizeInput, setFontSizeInput] = useState(() => {
+    if (userData && userData.fontSize) {
+      return userData.fontSize.toLowerCase();
+    }
+    return 'medium'; // Default to medium if no fontSize or userData
   });
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorMeanings, setColorMeanings] = useState({});
@@ -52,20 +56,20 @@ const SettingsPage = () => {
         const palettes = await getAllColorPalettes();
 
         setPaletteCollection(palettes);
+
+        if (userData?.colorPalette) {
+          // this is the case where the user already had a patch request for this
+          setColorPalette(userData.colorPalette.id);
+        } else {
+          // look for default palette id
+          let filteredPalette = palettes.find(
+            (palette) => palette.name == 'Default'
+          );
+          setChosenPalette(filteredPalette.id);
+          setColorPalette(filteredPalette.id);
+        }
       } catch (error) {
         console.error('Error fetching palettes:', error);
-      }
-
-      if (userData.colorPalette) {
-        // this is the case where the user already had a patch request for this
-
-        setColorPalette(userData.colorPalette.id);
-      } else {
-        // look for default palette id
-        let filteredPalette = paletteCollection.find(
-          (palette) => palette.name == 'Default'
-        );
-        setChosenPalette(filteredPalette.id);
       }
     };
 
