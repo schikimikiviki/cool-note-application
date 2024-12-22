@@ -137,6 +137,17 @@ public class UserController {
         	 System.out.println(foundUser.getPassword());    
         	}
          
+         
+         if (user.getNotes() != null) {
+        	    foundUser.getNotes().clear(); // Clear existing notes
+
+        	    for (Note newNote : user.getNotes()) {
+        	        newNote.setUser(foundUser); // Establish the relationship
+        	        foundUser.getNotes().add(newNote); // Add the note
+        	    }
+        	}
+
+         
          if (user.getEmail() != null) {
         	 foundUser.setEmail(user.getEmail());
          }

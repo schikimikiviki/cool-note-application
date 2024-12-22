@@ -50,7 +50,7 @@ const SettingsPage = () => {
 
       try {
         const palettes = await getAllColorPalettes();
-        console.log('Palettes:', palettes);
+
         setPaletteCollection(palettes);
       } catch (error) {
         console.error('Error fetching palettes:', error);
@@ -58,10 +58,7 @@ const SettingsPage = () => {
 
       if (userData.colorPalette) {
         // this is the case where the user already had a patch request for this
-        console.log(
-          'User has saved this palette as favorite: ',
-          userData.colorPalette
-        );
+
         setColorPalette(userData.colorPalette.id);
       } else {
         // look for default palette id
@@ -79,12 +76,29 @@ const SettingsPage = () => {
     let palette = e;
     setChosenPalette(palette);
 
-    console.log('CHOSEN PAL', palette);
+    let newPalette = paletteCollection.find((item) => item.id == palette);
 
     // also, put this to the db :))))
+    // translate the users notes to have a new color of the new palette!
+
+    let userNotes = JSON.parse(localStorage.getItem('userData')).notes;
+
+    userNotes.forEach(function (note) {
+      if (!newPalette.colorList.includes(note.color)) {
+        let newColor =
+          newPalette.colorList[
+            Math.floor(Math.random() * newPalette.colorList.length)
+          ];
+
+        note.color = newColor;
+      }
+    });
+
+    console.log(userNotes);
 
     let userObj = {};
     userObj.colorPalette = { id: palette };
+    userObj.notes = userNotes;
 
     try {
       console.log('patching user with data: ', userObj);
@@ -422,7 +436,6 @@ const SettingsPage = () => {
   let secondHalf = [];
 
   if (userData.loginList?.length > 1) {
-    console.log('There is login data to display');
     let midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
     firstHalf = userData.loginList.slice(0, midIndex);
     secondHalf = userData.loginList.slice(midIndex);
@@ -581,6 +594,12 @@ const SettingsPage = () => {
                   You can give colors a custom meaning or even change your color
                   palette. Type in your own ideas for colors and filter your
                   notes according to your own values in the notes page!
+                </p>
+
+                <br />
+                <p>
+                  <u>Attention:</u> The color of your notes will change randomly
+                  to a new color if you choose a new palette!
                 </p>
                 <div className='color-div'>
                   <div
