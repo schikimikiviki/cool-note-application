@@ -31,13 +31,20 @@ function Home() {
     const fetchData = async () => {
       if (userData) {
         localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
-        if (userData.theme == 'NIGHT') {
+
+        // Ensure originalNotes is set from userData.notes once
+        if (userData.notes && originalNotes.length === 0) {
+          setOriginalNotes(userData.notes);
+        }
+
+        if (userData.theme === 'NIGHT') {
           setIsDarkThemeSet(true);
         }
+
         if (userData.fontSize) {
-          if (userData.fontSize == 'SMALL') {
+          if (userData.fontSize === 'SMALL') {
             setFontSize('var(--font-size-small)');
-          } else if (userData.fontSize == 'BIG') {
+          } else if (userData.fontSize === 'BIG') {
             setFontSize('var(--font-size-big)');
           } else {
             setFontSize('var(--font-size-medium)');
@@ -48,21 +55,13 @@ function Home() {
           setUserColors(userData.colorPalette.colorList);
         } else {
           // use default colors if none are set
-
           try {
-            // Fetch all palettes
             const palettes = await getAllColorPalettes();
-            // console.log('Palettes:', palettes);
-
-            // Search for the "Default" palette
             const foundPalette = palettes.find(
               (palette) => palette.name === 'Default'
             );
 
             if (foundPalette) {
-              // console.log('Filtered: ', foundPalette);
-
-              // Set colors for the user
               setUserColors(foundPalette.colorList);
             } else {
               console.warn('No "Default" palette found.');
@@ -80,22 +79,32 @@ function Home() {
   useEffect(() => {
     const storedUserData = localStorage.getItem('userData');
     if (storedUserData) {
-      console.log('loading user data from localstorage');
-      setUserData(JSON.parse(storedUserData));
-      setOriginalNotes(storedUserData.notes);
-      if (storedUserData.fontSize) {
-        if (storedUserData.fontSize == 'SMALL') {
+      let storedUserDataItem = JSON.parse(storedUserData);
+      console.log('loading user data from localstorage: ', storedUserDataItem);
+
+      setUserData(storedUserDataItem);
+
+      setOriginalNotes(storedUserDataItem.notes);
+      if (storedUserDataItem.fontSize) {
+        if (storedUserDataItem.fontSize == 'SMALL') {
           setFontSize('var(--font-size-small)');
-        } else if (storedUserData.fontSize == 'BIG') {
+        } else if (storedUserDataItem.fontSize == 'BIG') {
           setFontSize('var(--font-size-big)');
         } else {
           setFontSize('var(--font-size-medium)');
         }
       }
+
+      console.log('loading original notes: ', originalNotes);
     } else if (applicationState) {
-      console.log('loading user data from applicationState');
+      console.log(
+        'loading user data from applicationState: ',
+        applicationState
+      );
       setUserData(applicationState); // Fall back to applicationState if no data in localStorage
       setOriginalNotes(applicationState.notes);
+
+      console.log('loading original notes: ', originalNotes);
     }
   }, [applicationState]);
 
@@ -149,6 +158,7 @@ function Home() {
         });
 
         console.log('Got the following user data: ', userResponse.data);
+
         localStorage.setItem('userData', JSON.stringify(userResponse.data));
         setUserData(userResponse.data);
       } catch (err) {
@@ -206,21 +216,27 @@ function Home() {
 
   const handleColorSort = async (color) => {
     try {
-      if (!originalNotes.length && userData.notes.length) {
-        // Store the original notes if not already stored
-        setOriginalNotes(userData.notes);
+      console.log(color);
+
+      // Check if the color is null (reset filter case)
+      if (color === null) {
+        // Reset the notes to the original ones when filter is reset
+        updateUserDataState('notes', originalNotes);
+        console.log('Resetting notes to original ones');
+        return;
       }
 
+      // Proceed with color filtering if color is not null
       color = turnHexToEnum(color);
+      console.log(color);
 
       if (color) {
+        // Always filter from originalNotes to prevent notes from being deleted
         const filteredNotes = originalNotes.filter(
           (note) => note.color === color
         );
         updateUserDataState('notes', filteredNotes);
-      } else {
-        // Reset the notes to the original ones
-        updateUserDataState('notes', originalNotes);
+        console.log('Updating notes to filtered notes');
       }
     } catch (error) {
       console.error('Error while sorting notes by color:', error);

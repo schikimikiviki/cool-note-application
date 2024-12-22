@@ -92,12 +92,20 @@ const colorMapping = {
   NEON_PURPLE: '#8F00FF',
 };
 
-export const turnEnumToHex = (color) => colorMapping[color] || null;
+// Normalize all keys in the mapping to lowercase for comparison
+const normalizedColorMapping = Object.fromEntries(
+  Object.entries(colorMapping).map(([key, value]) => [key, value.toLowerCase()])
+);
+
+// Convert enum to hex
+export const turnEnumToHex = (color) => normalizedColorMapping[color] || null;
 
 // Convert hex to enum
 export const turnHexToEnum = (hex) => {
-  const entries = Object.entries(colorMapping);
-  const match = entries.find(([_, value]) => value === hex);
+  // Normalize the input hex to lowercase
+  const normalizedHex = hex.toLowerCase();
+  const entries = Object.entries(normalizedColorMapping);
+  const match = entries.find(([_, value]) => value === normalizedHex);
   return match ? match[0] : null;
 };
 

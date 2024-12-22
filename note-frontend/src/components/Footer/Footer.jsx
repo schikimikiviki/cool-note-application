@@ -19,8 +19,6 @@ const Footer = (props) => {
     navigate('/settings');
   };
 
-  console.log(props.userDetails);
-
   return (
     <div className='footer-main'>
       <button

@@ -3,7 +3,6 @@ import './ColorSort.css';
 import { turnEnumToHex } from '../features/helpers';
 
 const ColorSort = ({ onColorSort, fontSize, colors }) => {
-  console.log(colors);
   const [selectedColor, setSelectedColor] = useState(null);
   const [translatedColors, setTranslatedColors] = useState([]);
 
@@ -21,8 +20,9 @@ const ColorSort = ({ onColorSort, fontSize, colors }) => {
 
   const resetColor = () => {
     setSelectedColor(null);
-    onColorSort(null);
+    onColorSort(null); // This triggers reset in the parent component (Home)
   };
+
   return (
     <div>
       <div className='colorPicker-header'>
@@ -63,7 +63,7 @@ const ColorSort = ({ onColorSort, fontSize, colors }) => {
                 fontSize === 'var(--font-size-medium)' ? '17px' : fontSize,
               height: fontSize === 'var(--font-size-big)' ? '' : '20px',
             }}
-            onClick={() => resetColor()}
+            onClick={resetColor} // Reset filter button
           >
             Reset filter
           </div>

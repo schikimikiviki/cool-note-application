@@ -129,10 +129,10 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     localStorage.removeItem('userData');
     e.preventDefault();
-    console.log('Form submitted with:', { username, password });
+    //console.log('Form submitted with:', { username, password });
     setErrorMessage('');
 
-    console.log('Logging in user ... ');
+    // console.log('Logging in user ... ');
 
     try {
       const response = await axios.post(
@@ -163,10 +163,9 @@ const LoginPage = () => {
         console.log(userData);
         sendMailToUser(userData.email, generatedCode, userData.username);
       } else {
-        console.log('Appliying font size: ', userData.fontSize);
         navigate('/home', { state: { applicationState: userData } });
         writeDateTimeToDb(userData.id);
-        console.log('Passing the following data to /home: ', userData);
+        // console.log('Passing the following data to /home: ', userData);
       }
     } catch (error) {
       // Handle login error

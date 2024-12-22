@@ -94,8 +94,6 @@ const SettingsPage = () => {
       }
     });
 
-    console.log(userNotes);
-
     let userObj = {};
     userObj.colorPalette = { id: palette };
     userObj.notes = userNotes;
@@ -794,7 +792,7 @@ const SettingsPage = () => {
                       {firstHalf.length > 0 && (
                         <>
                           {firstHalf.map((txt) => (
-                            <li style={{ fontSize: fontSize }}>
+                            <li key={txt} style={{ fontSize: fontSize }}>
                               <p>{txt}</p>
                             </li>
                           ))}
@@ -807,7 +805,7 @@ const SettingsPage = () => {
                       {secondHalf.length > 0 && (
                         <>
                           {secondHalf.map((txt) => (
-                            <li style={{ fontSize: fontSize }}>
+                            <li key={txt} style={{ fontSize: fontSize }}>
                               <p>{txt}</p>
                             </li>
                           ))}{' '}
