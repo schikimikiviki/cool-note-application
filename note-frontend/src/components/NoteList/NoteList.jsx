@@ -4,7 +4,7 @@ import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
 import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
-const NoteList = ({ notes, onDelete, titles, onLoad, fontSize }) => {
+const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const [isDoneList, setIsDoneList] = useState(Array(notes.length).fill(false));
@@ -113,6 +113,7 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize }) => {
                 onSave={handleSave}
                 onCancel={handleCancelEdit}
                 fontSize={fontSize}
+                colors={colors}
               />
             ) : null}
             <div>

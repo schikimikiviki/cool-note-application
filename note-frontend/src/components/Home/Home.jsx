@@ -123,8 +123,43 @@ function Home() {
     openAboutPopup();
   };
 
-  const handleThemeChange = () => {
-    setIsDarkThemeSet(!isDarkThemeSet);
+  const handleThemeChange = async () => {
+    let newState = !isDarkThemeSet;
+    setIsDarkThemeSet(newState);
+
+    // also post this to db
+
+    let userObj = {};
+    userObj.theme = newState ? 'NIGHT' : 'DAY';
+
+    try {
+      console.log('patching user with data: ', userObj);
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        setUserData(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
   };
 
   const updateUserDataState = (stateToUpdate, newData) => {
@@ -232,6 +267,7 @@ function Home() {
         onClick={handleThemeChange}
         onType={handleSearch}
         fontSize={fontSize}
+        isDarkThemeSet={isDarkThemeSet}
       />
       {isPopupOpen && (
         <Popup
@@ -239,6 +275,7 @@ function Home() {
           onAdd={load}
           userId={userData.id}
           fontSize={fontSize}
+          colors={userColors}
         />
       )}
 
@@ -257,6 +294,7 @@ function Home() {
           titles={areTitlesVisible}
           onLoad={load}
           fontSize={fontSize}
+          colors={userColors}
         />
       ) : (
         <p>Loading notes...</p>

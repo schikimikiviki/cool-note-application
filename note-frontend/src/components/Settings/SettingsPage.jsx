@@ -422,9 +422,10 @@ const SettingsPage = () => {
   let secondHalf = [];
 
   if (userData.loginList?.length > 1) {
-    const midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
-    const firstHalf = userData.loginList.slice(0, midIndex);
-    const secondHalf = userData.loginList.slice(midIndex);
+    console.log('There is login data to display');
+    let midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
+    firstHalf = userData.loginList.slice(0, midIndex);
+    secondHalf = userData.loginList.slice(midIndex);
   }
 
   return (
@@ -543,8 +544,8 @@ const SettingsPage = () => {
                   value={theme}
                   onChange={handleThemeChange}
                 >
-                  <option value='day'>Day</option>
-                  <option value='night'>Night</option>
+                  <option value='DAY'>Day</option>
+                  <option value='NIGHT'>Night</option>
                 </select>
                 <br />
                 <br />
@@ -606,7 +607,7 @@ const SettingsPage = () => {
                               id={`palette-${palette.id}`}
                               name={`palette-${palette.id}`}
                               value={palette.id}
-                              checked={chosenPalette === palette.id}
+                              checked={colorPalette === palette.id}
                               onChange={() => handleSelectPalette(palette.id)}
                             />
                             <label htmlFor={`palette-${palette.id}`}>

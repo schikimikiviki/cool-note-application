@@ -27,7 +27,11 @@ const Header = (props) => {
 
       <div className='header-item'>
         <SearchBar onSearch={handleSearch} fontSize={props.fontSize} />
-        <ModeSwitcher onSwitch={handleSwitch} fontSize={props.fontSize} />
+        <ModeSwitcher
+          onSwitch={handleSwitch}
+          fontSize={props.fontSize}
+          isDarkThemeSet={props.isDarkThemeSet}
+        />
         <PlusButton onClick={handleData} fontSize={props.fontSize} />
         <LogoutButton fontSize={props.fontSize} />
       </div>

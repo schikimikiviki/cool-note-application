@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './Popup.css';
-import colors from '../../assets/imports.js';
+import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
-const Popup = ({ onClose, onAdd, userId, fontSize }) => {
+const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   const [noteData, setNoteData] = useState({
     name: '',
     content: '',
@@ -11,6 +11,14 @@ const Popup = ({ onClose, onAdd, userId, fontSize }) => {
   });
 
   const [selectedColor, setSelectedColor] = useState(null);
+  const [translatedColors, setTranslatedColors] = useState([]);
+
+  useEffect(() => {
+    if (colors) {
+      const hexColors = colors.map(turnEnumToHex);
+      setTranslatedColors(hexColors);
+    }
+  }, [colors]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,19 +40,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize }) => {
     }
 
     try {
-      let enumColor;
-      // we need enums for db
-      if (selectedColor === '#FF595E') {
-        enumColor = 'RED';
-      } else if (selectedColor === '#FFCA3A') {
-        enumColor = 'YELLOW';
-      } else if (selectedColor === '#8AC926') {
-        enumColor = 'GREEN';
-      } else if (selectedColor === '#1982C4') {
-        enumColor = 'BLUE';
-      } else if (selectedColor === '#6A4C93') {
-        enumColor = 'PURPLE';
-      }
+      let enumColor = turnHexToEnum(selectedColor);
 
       const dataToSubmit = {
         title: noteData.name,
@@ -114,7 +110,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize }) => {
                 alignItems: 'center',
               }}
             >
-              {colors.map((color, index) => (
+              {translatedColors.map((color, index) => (
                 <div
                   key={index}
                   onClick={() => handleColorClick(color)}

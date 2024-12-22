@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './EditPopup.css';
-import colors from '../../assets/imports.js';
+import { turnEnumToHex } from '../features/helpers';
 
-const EditPopup = ({ note, onSave, onCancel, fontSize }) => {
+const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
   const [editedContent, setEditedContent] = useState(note.content);
   const [selectedColor, setSelectedColor] = useState(note.color);
   const [editedName, setEditedName] = useState(note.title);
+  const [translatedColors, setTranslatedColors] = useState([]);
+
+  useEffect(() => {
+    if (colors) {
+      const hexColors = colors.map(turnEnumToHex);
+      setTranslatedColors(hexColors);
+    }
+  }, [colors]);
 
   const handleSave = () => {
     onSave(note.id, editedContent, selectedColor, editedName);
@@ -37,7 +45,7 @@ const EditPopup = ({ note, onSave, onCancel, fontSize }) => {
               alignItems: 'flex-start',
             }}
           >
-            {colors.map((color, index) => (
+            {translatedColors.map((color, index) => (
               <div
                 key={index}
                 onClick={() => handleColorClick(color)}
