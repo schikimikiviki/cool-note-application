@@ -5,6 +5,7 @@ import { fetchGetFromBackend } from '../features/helpers';
 import api from '../../api/axiosConfig';
 import { turnEnumToHex, getAllColorPalettes } from '../features/helpers';
 import { useNavigate } from 'react-router-dom';
+import ColorPicker from '../ColorPicker/ColorPicker';
 
 const SettingsPage = () => {
   const [username, setUsername] = useState('');
@@ -642,13 +643,14 @@ const SettingsPage = () => {
                 <p style={{ fontSize: fontSize }}>
                   You can give colors a custom meaning or even change your color
                   palette. Type in your own ideas for colors and filter your
-                  notes according to your own values in the notes page!
+                  notes according to your own values in the notes page! Choose
+                  short, meaningful names for this to work best.
                 </p>
 
                 <br />
                 <p>
-                  <u>Attention:</u> The color of your notes will change randomly
-                  to a new color if you choose a new palette!
+                  <u>Attention:</u> The color of your existent notes will change
+                  randomly to a new color if you choose a new palette!
                 </p>
                 <div className='color-div'>
                   <div
@@ -740,7 +742,7 @@ const SettingsPage = () => {
 
                       <button
                         className='exit'
-                        style={{ marginTop: '20px' }}
+                        style={{ marginTop: '20px', fontSize: fontSize }}
                         onClick={handleSaveCustomColors}
                         type='submit'
                       >
@@ -749,6 +751,11 @@ const SettingsPage = () => {
                     </div>
                   </div>
                 </div>
+
+                <br />
+                <br />
+
+                <ColorPicker fontSize={fontSize} />
               </div>
             </TabPanel>
             <TabPanel tabId='vertical-tab-three'>

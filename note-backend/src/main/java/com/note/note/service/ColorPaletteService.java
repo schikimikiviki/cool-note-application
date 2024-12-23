@@ -27,6 +27,12 @@ private final ColorPaletteRepository colorPaletteRepository;
     public List<ColorPalette> findAllPalettes(){
     	return colorPaletteRepository.findAll();
     }
+
+	public ColorPalette save(ColorPalette existingPalette) {
+		return colorPaletteRepository.save(existingPalette);
+	
+		
+	}
     
 	
 }

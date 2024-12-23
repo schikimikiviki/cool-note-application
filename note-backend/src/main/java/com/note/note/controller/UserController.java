@@ -218,7 +218,30 @@ public class UserController {
          if (user.getCustomNamesForColors() != null) {
         	 foundUser.setCustomNamesForColors(user.getCustomNamesForColors());
          }
-
+         
+         if (user.getOwnColorPalettes() != null) {
+             // Update ownColorPalettes
+             List<ColorPalette> updatedPalettes = user.getOwnColorPalettes();
+             
+             // For each palette in the incoming list, either update or create a new one
+             for (ColorPalette updatedPalette : updatedPalettes) {
+                 Optional<ColorPalette> existingPaletteOptional = colorPaletteService.findPalettesById(updatedPalette.getId());
+                 
+                 if (existingPaletteOptional.isPresent()) {
+                     ColorPalette existingPalette = existingPaletteOptional.get();
+                     // Update existing palette's name and userSetColors
+                     existingPalette.setName(updatedPalette.getName());
+                     existingPalette.setUserSetColors(updatedPalette.getUserSetColors());
+                     colorPaletteService.save(existingPalette); // Save the updated palette
+                 } else {
+                     // Create a new ColorPalette if it doesn't exist
+                     colorPaletteService.save(updatedPalette); // Save new palette
+                 }
+             }
+             
+             // Set the updated palettes to the user
+             foundUser.setOwnColorPalettes(updatedPalettes);
+         }
 
          UserDto userDto = new UserDto(
                  foundUser.getId(),
@@ -233,7 +256,8 @@ public class UserController {
                  foundUser.getTheme(), 
                  foundUser.getFontSize(), 
                  foundUser.getColorPalette(),
-                 foundUser.getCustomNamesForColors()
+                 foundUser.getCustomNamesForColors(),
+                 foundUser.getOwnColorPalettes()
              );
 
        

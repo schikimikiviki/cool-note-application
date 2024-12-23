@@ -1,5 +1,33 @@
 import axios from 'axios';
 
+export const patchUserWithNewData = async (userObj) => {
+  try {
+    console.log('patching user with data: ', userObj);
+    const response = await api.patch(`/users/${userData.id}`, userObj, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Now, get the updated user object and save it to the local storage
+    try {
+      const userResponse = await api.get(`/users/id/${userData.id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Got the following user data: ', userResponse.data);
+      localStorage.setItem('userData', JSON.stringify(userResponse.data));
+      setUserData(userResponse.data);
+    } catch (err) {
+      console.log('Failed to GET user data', err);
+    }
+  } catch (error) {
+    console.error('An error occurred during the patch request:', error.message);
+  }
+};
+
 export const getAllColorPalettes = async () => {
   // fetch available color palettes
 
@@ -115,4 +143,5 @@ export default {
   turnEnumToHex,
   turnHexToEnum,
   getAllColorPalettes,
+  patchUserWithNewData,
 };

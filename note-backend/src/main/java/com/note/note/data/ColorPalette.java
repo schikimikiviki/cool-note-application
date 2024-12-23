@@ -21,18 +21,31 @@ public class ColorPalette {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Color> colorList; 
+    
+    @ElementCollection
+    private List<String> userSetColors;
 
 
     public ColorPalette() {
 
     }
 
-    public ColorPalette(Long id, String name, List<Color> colorList) {
+    public ColorPalette(Long id, String name, List<Color> colorList, List<String> userSetColors) {
      super();
      this.id = id; 
      this.name = name;
      this.colorList = colorList; 
+     this.userSetColors = userSetColors;
     }
+    
+    public List<String> getUserSetColors() {
+        return userSetColors;
+    }
+
+    public void setUserSetColors(List<String> userSetColors) {
+        this.userSetColors = userSetColors;
+    }
+
     
     public void setId(Long id) {
     	this.id = id; 

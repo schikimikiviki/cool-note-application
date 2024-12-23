@@ -50,13 +50,16 @@ public class User {
  
  
  private Set<String> roles;
+ 
+ @OneToMany
+ private List<ColorPalette> ownColorPalettes; 
 
 
  public User() {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<ColorPalette> ownColorPalettes) {
   super();
   this.id = id; 
   this.username = username;
@@ -71,6 +74,15 @@ public class User {
   this.fontSize = fontSize;
   this.colorPalette = colorPalette; 
   this.customNamesForColors = customNamesForColors;
+  this.ownColorPalettes = ownColorPalettes; 
+ }
+ 
+ public void setOwnColorPalettes(List<ColorPalette> ownColorPalettes) {
+	 this.ownColorPalettes = ownColorPalettes; 
+ }
+ 
+ public List<ColorPalette> getOwnColorPalettes(){
+	 return ownColorPalettes; 
  }
  
  public EnumMap<Color, String> getCustomNamesForColors(){
