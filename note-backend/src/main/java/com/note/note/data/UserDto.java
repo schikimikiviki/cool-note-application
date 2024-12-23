@@ -1,5 +1,6 @@
 package com.note.note.data;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 
@@ -26,13 +27,15 @@ public class UserDto {
 	 
 	 @OneToOne
 	 private ColorPalette colorPalette;
+	 
+	 EnumMap<Color, String> customNamesForColors; 
 
 
 	public UserDto() {
 
 	}
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -46,7 +49,17 @@ public class UserDto {
 		this.theme = theme; 
 		this.fontSize = fontSize; 
 		this.colorPalette = colorPalette; 
+		this.customNamesForColors = customNamesForColors;
 	}
+	
+	 public EnumMap<Color, String> getCustomNamesForColors(){
+		 return customNamesForColors; 
+	 }
+	 
+	 public void setCustomNamesForColors(EnumMap<Color, String> customNamesForColors) {
+		 this.customNamesForColors = customNamesForColors;
+	 }
+	 
 	
 	 public void setColorPalette(ColorPalette colorPalette) {
 		 this.colorPalette = colorPalette; 

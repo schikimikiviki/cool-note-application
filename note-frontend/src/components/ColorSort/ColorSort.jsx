@@ -2,14 +2,26 @@ import { useState, useEffect } from 'react';
 import './ColorSort.css';
 import { turnEnumToHex } from '../features/helpers';
 
-const ColorSort = ({ onColorSort, fontSize, colors }) => {
+const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [translatedColors, setTranslatedColors] = useState([]);
+  const [translatedCustomMeanings, setTranslatedCustomMeanings] = useState({});
 
   useEffect(() => {
     if (colors) {
       const hexColors = colors.map(turnEnumToHex);
       setTranslatedColors(hexColors);
+
+      const updatedMeanings = {};
+
+      if (customMeanings) {
+        // we need to translate the enums to hex values in order to be able to display and match them later in the div
+        for (const [key, value] of Object.entries(customMeanings)) {
+          let newKey = turnEnumToHex(key);
+          updatedMeanings[newKey] = value;
+        }
+        setTranslatedCustomMeanings(updatedMeanings);
+      }
     }
   }, [colors]);
 
@@ -54,7 +66,9 @@ const ColorSort = ({ onColorSort, fontSize, colors }) => {
                 cursor: 'pointer',
                 border: selectedColor === color ? '2px solid #000' : 'none',
               }}
-            ></div>
+            >
+              {translatedCustomMeanings[color]}
+            </div>
           ))}
           <div
             className='before-after'

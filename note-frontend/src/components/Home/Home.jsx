@@ -26,6 +26,7 @@ function Home() {
   const { applicationState } = location.state || {};
   const [fontSize, setFontSize] = useState(); // put css prop in here
   const [userColors, setUserColors] = useState();
+  const [customMeanings, setCustomMeanings] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +50,10 @@ function Home() {
           } else {
             setFontSize('var(--font-size-medium)');
           }
+        }
+
+        if (userData.customMeanings != null) {
+          setCustomMeanings(userData.customMeanings);
         }
 
         if (userData.colorPalette != null) {
@@ -83,7 +88,7 @@ function Home() {
       console.log('loading user data from localstorage: ', storedUserDataItem);
 
       setUserData(storedUserDataItem);
-
+      setCustomMeanings(storedUserDataItem.customNamesForColors);
       setOriginalNotes(storedUserDataItem.notes);
       if (storedUserDataItem.fontSize) {
         if (storedUserDataItem.fontSize == 'SMALL') {
@@ -94,17 +99,14 @@ function Home() {
           setFontSize('var(--font-size-medium)');
         }
       }
-
-      console.log('loading original notes: ', originalNotes);
     } else if (applicationState) {
       console.log(
         'loading user data from applicationState: ',
         applicationState
       );
+      setCustomMeanings(applicationState.customNamesForColors);
       setUserData(applicationState); // Fall back to applicationState if no data in localStorage
       setOriginalNotes(applicationState.notes);
-
-      console.log('loading original notes: ', originalNotes);
     }
   }, [applicationState]);
 
@@ -302,6 +304,7 @@ function Home() {
         colors={userColors}
         onColorSort={handleColorSort}
         fontSize={fontSize}
+        customMeanings={customMeanings}
       />
       {userData ? (
         <NoteList

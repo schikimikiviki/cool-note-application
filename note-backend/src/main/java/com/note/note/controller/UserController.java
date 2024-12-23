@@ -214,6 +214,10 @@ public class UserController {
                  foundUser.setColorPalette(newPalette);
              }
          }
+         
+         if (user.getCustomNamesForColors() != null) {
+        	 foundUser.setCustomNamesForColors(user.getCustomNamesForColors());
+         }
 
 
          UserDto userDto = new UserDto(
@@ -228,7 +232,8 @@ public class UserController {
                  foundUser.getLoginList(), 
                  foundUser.getTheme(), 
                  foundUser.getFontSize(), 
-                 foundUser.getColorPalette()
+                 foundUser.getColorPalette(),
+                 foundUser.getCustomNamesForColors()
              );
 
        

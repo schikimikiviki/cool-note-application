@@ -1,5 +1,6 @@
 package com.note.note.data;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -37,9 +39,11 @@ public class User {
  @Enumerated(EnumType.STRING)
  private FontSize fontSize; 
  
- @OneToOne
+ @ManyToOne
  private ColorPalette colorPalette;
-
+ 
+ EnumMap<Color, String> customNamesForColors; 
+ 
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
  private List<Note> notes;
@@ -52,7 +56,7 @@ public class User {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors) {
   super();
   this.id = id; 
   this.username = username;
@@ -66,6 +70,15 @@ public class User {
   this.theme = theme; 
   this.fontSize = fontSize;
   this.colorPalette = colorPalette; 
+  this.customNamesForColors = customNamesForColors;
+ }
+ 
+ public EnumMap<Color, String> getCustomNamesForColors(){
+	 return customNamesForColors; 
+ }
+ 
+ public void setCustomNamesForColors(EnumMap<Color, String> customNamesForColors) {
+	 this.customNamesForColors = customNamesForColors;
  }
  
  public void setColorPalette(ColorPalette colorPalette) {

@@ -37,7 +37,9 @@ const SettingsPage = () => {
     return 'medium'; // Default to medium if no fontSize or userData
   });
   const [selectedColor, setSelectedColor] = useState(null);
-  const [colorMeanings, setColorMeanings] = useState({});
+  const [colorMeanings, setColorMeanings] = useState(
+    userData.customNamesForColors
+  );
   const [colorPalette, setColorPalette] = useState(); // saving id here
   const [paletteCollection, setPaletteCollection] = useState();
   const [chosenPalette, setChosenPalette] = useState();
@@ -60,6 +62,7 @@ const SettingsPage = () => {
         if (userData?.colorPalette) {
           // this is the case where the user already had a patch request for this
           setColorPalette(userData.colorPalette.id);
+          setChosenPalette(userData.colorPalette.id);
         } else {
           // look for default palette id
           let filteredPalette = palettes.find(
@@ -77,8 +80,11 @@ const SettingsPage = () => {
   }, [userData]);
 
   const handleSelectPalette = async (e) => {
+    // setColorMeanings({});
+
     let palette = e;
     setChosenPalette(palette);
+    setColorPalette(palette);
 
     let newPalette = paletteCollection.find((item) => item.id == palette);
 
@@ -100,7 +106,10 @@ const SettingsPage = () => {
 
     let userObj = {};
     userObj.colorPalette = { id: palette };
-    userObj.notes = userNotes;
+
+    if (userNotes.length > 0) {
+      userObj.notes = userNotes;
+    }
 
     try {
       console.log('patching user with data: ', userObj);
@@ -434,6 +443,44 @@ const SettingsPage = () => {
     setPassword(e.target.value);
   };
 
+  const handleSaveCustomColors = async () => {
+    // save customColorNames for user
+
+    //  {RED: 'red', YELLOW: 'eggshell', PURPLE: 'purple', GREEN: 'kale', BLUE: 'blueish'}
+
+    let userObj = {};
+    userObj.customNamesForColors = colorMeanings;
+
+    try {
+      console.log('patching user with data: ', userObj);
+      const response = await api.patch(`/users/${userData.id}`, userObj, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${userData.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        setUserData(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
+    } catch (error) {
+      console.error(
+        'An error occurred during the patch request:',
+        error.message
+      );
+    }
+  };
+
   let firstHalf = [];
   let secondHalf = [];
 
@@ -661,7 +708,8 @@ const SettingsPage = () => {
                                     display: 'inline-block',
                                   }}
                                 >
-                                  {colorMeanings[color] || ''}
+                                  {(colorMeanings && colorMeanings[color]) ||
+                                    ''}
                                 </div>
                               ))}
                             </div>
@@ -675,7 +723,9 @@ const SettingsPage = () => {
                                   placeholder='Enter a new name'
                                   value={
                                     selectedColor
-                                      ? colorMeanings[selectedColor] || ''
+                                      ? (colorMeanings &&
+                                          colorMeanings[selectedColor]) ||
+                                        ''
                                       : ''
                                   }
                                   onChange={handleColorCustomMeaning}
@@ -687,6 +737,15 @@ const SettingsPage = () => {
                             </div>
                           </div>
                         ))}
+
+                      <button
+                        className='exit'
+                        style={{ marginTop: '20px' }}
+                        onClick={handleSaveCustomColors}
+                        type='submit'
+                      >
+                        Save custom meanings for colors
+                      </button>
                     </div>
                   </div>
                 </div>
