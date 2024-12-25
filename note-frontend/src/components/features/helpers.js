@@ -1,9 +1,10 @@
 import axios from 'axios';
+import api from '../../api/axiosConfig';
 
-export const patchUserWithNewData = async (userObj) => {
+export const patchUserWithNewData = async (userObj, id) => {
   try {
     console.log('patching user with data: ', userObj);
-    const response = await api.patch(`/users/${userData.id}`, userObj, {
+    const response = await api.patch(`/users/${id}`, userObj, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -11,7 +12,7 @@ export const patchUserWithNewData = async (userObj) => {
 
     // Now, get the updated user object and save it to the local storage
     try {
-      const userResponse = await api.get(`/users/id/${userData.id}`, {
+      const userResponse = await api.get(`/users/id/${id}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -19,7 +20,8 @@ export const patchUserWithNewData = async (userObj) => {
 
       console.log('Got the following user data: ', userResponse.data);
       localStorage.setItem('userData', JSON.stringify(userResponse.data));
-      setUserData(userResponse.data);
+      // setUserData(userResponse.data); ----> do this in the component itself
+      return userResponse.data;
     } catch (err) {
       console.log('Failed to GET user data', err);
     }

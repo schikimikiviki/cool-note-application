@@ -1,23 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import { patchUserWithNewData } from '../features/helpers';
+import api from '../../api/axiosConfig';
 
-const ColorPicker = ({ fontSize }) => {
-  const [color1, setColor1] = useState();
-  const [color2, setColor2] = useState();
-  const [color3, setColor3] = useState();
-  const [color4, setColor4] = useState();
-  const [color5, setColor5] = useState();
+const ColorPicker = ({ fontSize, user }) => {
+  const [color1, setColor1] = useState('#000000');
+  const [color2, setColor2] = useState('#000000');
+  const [color3, setColor3] = useState('#000000');
+  const [color4, setColor4] = useState('#000000');
+  const [color5, setColor5] = useState('#000000');
   const [name, setName] = useState('');
 
-  const savePalette = () => {
-    let userObj = {};
+  const savePalette = async () => {
+    //first, a post request to colorpalettes has to be done, then you can patch the user with it
 
-    // TODO: first, a post request to colorpalettes has to be done, then you can patch the user with it
-    // "customColors": ["#123456", "#789abc"] // Custom colors
-    userObj.ownColorPalettes = {
-      // TODO: add data
+    let colorPaletteObj = {
+      name: name,
+      userSetColors: [color1, color2, color3, color4, color5],
     };
-    patchUserWithNewData(userObj);
+
+    try {
+      const request = await api.post(
+        `/api/colorpalettes/add`,
+        colorPaletteObj,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // now, use the same data and do a patch request
+
+      // save the palette id from the one we just created
+      const paletteId = request.data?.id;
+
+      if (paletteId) {
+        let userObj = {
+          ownColorPalettes: [
+            {
+              id: paletteId,
+              name: name,
+              colorList: [],
+              userSetColors: [color1, color2, color3, color4, color5],
+            },
+          ],
+        };
+
+        let userData = patchUserWithNewData(userObj, user.id);
+
+        // TODO: give this data to parent and handle correctly
+      }
+    } catch (err) {
+      console.log('Failed to POST data', err);
+    }
+  };
+
+  const handleEditPalette = () => {};
+
+  const handleDeletePalette = async (id) => {
+    console.log('trying to  delete palette with id: ', id);
+    try {
+      const request = await api.delete(`/api/colorpalettes/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // TODO: frontend refresh so that it vanishes
+    } catch (err) {
+      console.log('Failed to POST data', err);
+    }
   };
 
   return (
@@ -84,6 +136,54 @@ const ColorPicker = ({ fontSize }) => {
           Save new palette
         </button>
       </div>
+
+      <br />
+      <br />
+
+      <h2>
+        <u>Manage your palettes</u>
+      </h2>
+
+      {user.ownColorPalettes &&
+        user.ownColorPalettes.map((palette, paletteIndex) => (
+          <div
+            key={paletteIndex}
+            style={{
+              gap: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              paddingBottom: '10px',
+            }}
+          >
+            <p>{palette.name}</p>
+            <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
+              <span
+                style={{
+                  cursor: 'pointer',
+                  color: 'blue',
+                  fontSize: '20px',
+                }}
+                title='Edit Palette'
+                onClick={() => handleEditPalette(paletteIndex)}
+              >
+                ✏️
+              </span>
+
+              <span
+                style={{
+                  cursor: 'pointer',
+                  color: 'red',
+                  fontSize: '20px',
+                }}
+                title='Delete Palette'
+                onClick={() => handleDeletePalette(palette.id)}
+              >
+                🗑️
+              </span>
+            </div>
+          </div>
+        ))}
     </>
   );
 };

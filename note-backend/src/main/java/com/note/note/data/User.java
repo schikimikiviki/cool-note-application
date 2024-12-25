@@ -52,7 +52,8 @@ public class User {
  private Set<String> roles;
  
  @OneToMany
- private List<ColorPalette> ownColorPalettes; 
+ private List<ColorPalette> ownColorPalettes;
+ 
 
 
  public User() {

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import com.note.note.data.ColorPalette;
+import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
 import com.note.note.service.ColorPaletteService;
@@ -35,6 +36,28 @@ public class ColorPaletteController {
 		return colorPaletteService.findAllPalettes();
 	}
 
+    @PostMapping("/add")
+    public ColorPalette createColorPalette(@RequestBody ColorPalette colorPalette) {
+ 
+		
+    	ColorPalette palette = colorPaletteService.save(colorPalette);
+        return palette;
+
+    }
+    
+    @DeleteMapping("/{paletteId}")
+    public ResponseEntity<?> deletePalette(@PathVariable Long paletteId) {
+        try {
+            colorPaletteService.deletePaletteById(paletteId);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Palette deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Palette not found"));
+        }
+    }
+
+    
 	 
 
 }

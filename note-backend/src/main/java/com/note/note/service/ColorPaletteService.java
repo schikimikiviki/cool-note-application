@@ -6,16 +6,20 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.note.note.data.ColorPalette;
+import com.note.note.data.User;
 import com.note.note.repository.ColorPaletteRepository;
+import com.note.note.repository.UserRepository;
 
 
 @Service
 public class ColorPaletteService {
 
 private final ColorPaletteRepository colorPaletteRepository; 
+private final UserRepository userRepository; 
 
-    public ColorPaletteService(ColorPaletteRepository colorPaletteRepository) {
+    public ColorPaletteService(ColorPaletteRepository colorPaletteRepository, UserRepository userRepository) {
         this.colorPaletteRepository = colorPaletteRepository;
+        this.userRepository = userRepository; 
      
     }
 
@@ -30,9 +34,22 @@ private final ColorPaletteRepository colorPaletteRepository;
 
 	public ColorPalette save(ColorPalette existingPalette) {
 		return colorPaletteRepository.save(existingPalette);
-	
 		
 	}
+	
+	public void deletePaletteById(Long id) {
+		
+		 List<User> users = userRepository.findAll();
+		    for (User user : users) {
+		        user.getOwnColorPalettes().removeIf(palette -> palette.getId().equals(id));
+		        userRepository.save(user); 
+		    }
+
+		    colorPaletteRepository.deleteById(id);
+	 
+	}
+	
+
     
 	
 }
