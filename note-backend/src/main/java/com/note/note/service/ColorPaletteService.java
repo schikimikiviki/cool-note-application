@@ -37,17 +37,6 @@ private final UserRepository userRepository;
 		
 	}
 	
-	public void deletePaletteById(Long id) {
-		
-		 List<User> users = userRepository.findAll();
-		    for (User user : users) {
-		        user.getOwnColorPalettes().removeIf(palette -> palette.getId().equals(id));
-		        userRepository.save(user); 
-		    }
-
-		    colorPaletteRepository.deleteById(id);
-	 
-	}
 	
 
     

@@ -9,10 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import com.note.note.data.ColorPalette;
+import com.note.note.data.CustomColorPalette;
 import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
 import com.note.note.service.ColorPaletteService;
+import com.note.note.service.CustomColorPaletteService;
 
 import java.security.Principal;
 import java.util.List;
@@ -20,27 +22,22 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/colorpalettes")
-public class ColorPaletteController {
+@RequestMapping("/api/colorpalettes/custom")
+public class CustomColorPaletteController {
 
 	@Autowired
-	private ColorPaletteService colorPaletteService;
+	private CustomColorPaletteService customColorPaletteService;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
 
 	
 
-	@GetMapping("/")
-	public List<ColorPalette> getAllColorPalettes() {
-		return colorPaletteService.findAllPalettes();
-	}
-
     @PostMapping("/add")
-    public ColorPalette createColorPalette(@RequestBody ColorPalette colorPalette) {
+    public CustomColorPalette createCustomColorPalette(@RequestBody CustomColorPalette customColorPalette) {
  
 		
-    	ColorPalette palette = colorPaletteService.save(colorPalette);
+    	CustomColorPalette palette = customColorPaletteService.save(customColorPalette);
         return palette;
 
     }

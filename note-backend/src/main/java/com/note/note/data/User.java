@@ -14,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -50,17 +51,17 @@ public class User {
  
  
  private Set<String> roles;
+
  
- @OneToMany
- private List<ColorPalette> ownColorPalettes;
- 
+ @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+ private List<CustomColorPalette> customColorPaletteList;
 
 
  public User() {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<ColorPalette> ownColorPalettes) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<CustomColorPalette> customColorPaletteList) {
   super();
   this.id = id; 
   this.username = username;
@@ -75,15 +76,15 @@ public class User {
   this.fontSize = fontSize;
   this.colorPalette = colorPalette; 
   this.customNamesForColors = customNamesForColors;
-  this.ownColorPalettes = ownColorPalettes; 
+  this.customColorPaletteList = customColorPaletteList; 
  }
  
- public void setOwnColorPalettes(List<ColorPalette> ownColorPalettes) {
-	 this.ownColorPalettes = ownColorPalettes; 
+ public List<CustomColorPalette> getCustomColorPaletteList() {
+	 return customColorPaletteList; 
  }
  
- public List<ColorPalette> getOwnColorPalettes(){
-	 return ownColorPalettes; 
+ public void setCustomColorPaletteList (List<CustomColorPalette> customColorPaletteList) {
+	 this.customColorPaletteList = customColorPaletteList; 
  }
  
  public EnumMap<Color, String> getCustomNamesForColors(){

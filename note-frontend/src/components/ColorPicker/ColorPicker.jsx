@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { patchUserWithNewData } from '../features/helpers';
 import api from '../../api/axiosConfig';
 
-const ColorPicker = ({ fontSize, user }) => {
+const ColorPicker = ({ fontSize, user, onAddPalette }) => {
   const [color1, setColor1] = useState('#000000');
   const [color2, setColor2] = useState('#000000');
   const [color3, setColor3] = useState('#000000');
@@ -47,6 +47,7 @@ const ColorPicker = ({ fontSize, user }) => {
         };
 
         let userData = patchUserWithNewData(userObj, user.id);
+        onAddPalette(userData);
 
         // TODO: give this data to parent and handle correctly
       }

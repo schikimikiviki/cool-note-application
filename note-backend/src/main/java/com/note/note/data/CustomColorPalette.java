@@ -2,18 +2,20 @@ package com.note.note.data;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+
 @Entity
-public class ColorPalette {
+public class CustomColorPalette {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,28 +23,31 @@ public class ColorPalette {
     private String name;
     
     @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<Color> colorList; 
-    
-    @ElementCollection
     private List<String> userSetColors;
     
-   
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-
-    public ColorPalette() {
+    public CustomColorPalette() {
 
     }
 
-    public ColorPalette(Long id, String name, List<Color> colorList, List<String> userSetColors) {
+    public CustomColorPalette(Long id, String name, List<String> userSetColors, User user) {
      super();
      this.id = id; 
      this.name = name;
-     this.colorList = colorList; 
      this.userSetColors = userSetColors;
-    
+     this.user = user; 
     }
-   
+    
+    public User getUser() {
+    	return user; 
+    }
+    
+    public void setUser (User user) {
+    	this.user = user; 
+    }
     
     public List<String> getUserSetColors() {
         return userSetColors;
@@ -59,14 +64,6 @@ public class ColorPalette {
     
     public Long getId() {
     	return id; 
-    }
-    
-    public void setColorList(List<Color> colorList) {
-    	this.colorList = colorList; 
-    }
-    
-    public List<Color> getColorList(){
-    	return colorList; 
     }
     
     public String getName () {

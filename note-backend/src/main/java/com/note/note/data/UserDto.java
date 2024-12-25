@@ -30,14 +30,14 @@ public class UserDto {
 	 
 	 EnumMap<Color, String> customNamesForColors; 
 	 
-	 private List<ColorPalette> ownColorPalettes; 
+	 private List<CustomColorPalette> customColorPaletteList;
 
 
 	public UserDto() {
 
 	}
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<ColorPalette> ownColorPalettes) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<CustomColorPalette> customColorPaletteList) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -52,18 +52,17 @@ public class UserDto {
 		this.fontSize = fontSize; 
 		this.colorPalette = colorPalette; 
 		this.customNamesForColors = customNamesForColors;
-		this.ownColorPalettes = ownColorPalettes; 
+		this.customColorPaletteList = customColorPaletteList; 
 	}
 	
-	 public void setOwnColorPalettes(List<ColorPalette> ownColorPalettes) {
-		 this.ownColorPalettes = ownColorPalettes; 
+	 public List<CustomColorPalette> getCustomColorPaletteList() {
+		 return customColorPaletteList; 
 	 }
 	 
-	 public List<ColorPalette> getOwnColorPalettes(){
-		 return ownColorPalettes; 
+	 public void setCustomColorPaletteList (List<CustomColorPalette> customColorPaletteList) {
+		 this.customColorPaletteList = customColorPaletteList; 
 	 }
-	 
-	
+
 	 public EnumMap<Color, String> getCustomNamesForColors(){
 		 return customNamesForColors; 
 	 }

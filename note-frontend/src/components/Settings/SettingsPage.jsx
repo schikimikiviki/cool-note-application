@@ -482,6 +482,10 @@ const SettingsPage = () => {
     }
   };
 
+  const handleAddCustomPalette = (newUserData) => {
+    setUserData(newUserData);
+  };
+
   let firstHalf = [];
   let secondHalf = [];
 
@@ -849,7 +853,11 @@ const SettingsPage = () => {
                 <br />
                 <br />
 
-                <ColorPicker fontSize={fontSize} user={userData} />
+                <ColorPicker
+                  fontSize={fontSize}
+                  user={userData}
+                  onAddPalette={handleAddCustomPalette}
+                />
               </div>
             </TabPanel>
             <TabPanel tabId='vertical-tab-three'>

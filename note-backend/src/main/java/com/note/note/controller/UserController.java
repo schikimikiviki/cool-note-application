@@ -185,7 +185,7 @@ public class UserController {
         	            foundUser.getLoginList().remove(0); // Remove the first (oldest) entry
         	        }
         	    }
-        	}
+        	}         
          
          if (user.getTheme() != null) {
         	 foundUser.setTheme(user.getTheme());
@@ -219,28 +219,8 @@ public class UserController {
         	 foundUser.setCustomNamesForColors(user.getCustomNamesForColors());
          }
          
-         if (user.getOwnColorPalettes() != null) {
-             // Update ownColorPalettes
-             List<ColorPalette> updatedPalettes = user.getOwnColorPalettes();
-             
-             // For each palette in the incoming list, either update or create a new one
-             for (ColorPalette updatedPalette : updatedPalettes) {
-                 Optional<ColorPalette> existingPaletteOptional = colorPaletteService.findPalettesById(updatedPalette.getId());
-                 
-                 if (existingPaletteOptional.isPresent()) {
-                     ColorPalette existingPalette = existingPaletteOptional.get();
-                     // Update existing palette's name and userSetColors
-                     existingPalette.setName(updatedPalette.getName());
-                     existingPalette.setUserSetColors(updatedPalette.getUserSetColors());
-                     colorPaletteService.save(existingPalette); // Save the updated palette
-                 } else {
-                     // Create a new ColorPalette if it doesn't exist
-                     colorPaletteService.save(updatedPalette); // Save new palette
-                 }
-             }
-             
-             // Set the updated palettes to the user
-             foundUser.setOwnColorPalettes(updatedPalettes);
+         if (user.getCustomColorPaletteList() != null) {
+        	 foundUser.setCustomColorPaletteList(user.getCustomColorPaletteList());
          }
 
          UserDto userDto = new UserDto(
@@ -257,7 +237,7 @@ public class UserController {
                  foundUser.getFontSize(), 
                  foundUser.getColorPalette(),
                  foundUser.getCustomNamesForColors(),
-                 foundUser.getOwnColorPalettes()
+                 foundUser.getCustomColorPaletteList()
              );
 
        
