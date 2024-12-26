@@ -2,6 +2,10 @@ package com.note.note.data;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -27,8 +31,9 @@ public class ColorPalette {
     @Enumerated(EnumType.STRING)
     private List<Color> colorList; 
     
-
+    
     @OneToMany(mappedBy = "colorPalette", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> users; 
     
 

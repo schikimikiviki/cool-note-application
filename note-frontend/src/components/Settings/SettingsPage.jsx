@@ -1,7 +1,7 @@
 import './SettingsPage.css';
 import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
 import { useState, useEffect } from 'react';
-import { fetchGetFromBackend } from '../features/helpers';
+import { patchUserWithNewData } from '../features/helpers';
 import api from '../../api/axiosConfig';
 import { turnEnumToHex, getAllColorPalettes } from '../features/helpers';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ const SettingsPage = () => {
 
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorMeanings, setColorMeanings] = useState(
-    userData.customNamesForColors
+    userData?.customNamesForColors
   );
   const [colorPalette, setColorPalette] = useState(); // saving id here
   const [paletteCollection, setPaletteCollection] = useState();
@@ -81,68 +81,80 @@ const SettingsPage = () => {
   }, [userData]);
 
   const handleSelectPalette = async (e) => {
-    // setColorMeanings({});
+    let isCustomPalette = false;
+    let selectedPalette;
 
     let palette = e;
     setChosenPalette(palette);
     setColorPalette(palette);
 
-    let newPalette = paletteCollection.find((item) => item.id == palette);
+    // check wheather we chose a palette from default section or from custom
+    selectedPalette = paletteCollection.find((item) => item.id == palette);
 
-    // TODO: this wont find custom palettes
+    if (!selectedPalette) {
+      selectedPalette = userData.customColorPaletteList.find(
+        (item) => item.id === palette
+      );
+      isCustomPalette = true;
+    }
+    // TODO: Problem ist hier, dass man keinen Patch machen kann, weil ja zBso colorList nicht vorhanden ist
+    // man muss sich hier was überlegen
+    if (!selectedPalette) {
+      console.log('Palette not found!');
+      return;
+    }
+
+    console.log(
+      isCustomPalette ? 'Custom palette selected' : 'Default palette selected'
+    );
 
     // also, put this to the db :))))
     // translate the users notes to have a new color of the new palette!
 
     let userNotes = JSON.parse(localStorage.getItem('userData')).notes;
 
-    userNotes.forEach(function (note) {
-      if (!newPalette.colorList.includes(note.color)) {
-        // TODO: differenciate between "normal" colorPalettes and customColorPalettes
-        let newColor =
-          newPalette.colorList[
-            Math.floor(Math.random() * newPalette.colorList.length)
-          ];
+    if (isCustomPalette) {
+      if (userNotes) {
+        userNotes.forEach(function (note) {
+          if (!userData.customColorPaletteList.userSetColors(note.color)) {
+            let newColor =
+              userData.customColorPaletteList.userSetColors[
+                Math.floor(
+                  Math.random() *
+                    userData.customColorPaletteList.userSetColors.length
+                )
+              ];
 
-        note.color = newColor;
+            note.color = newColor;
+          }
+        });
       }
-    });
+    } else {
+      if (userNotes) {
+        userNotes.forEach(function (note) {
+          if (!selectedPalette.colorList.includes(note.color)) {
+            let newColor =
+              selectedPalette.colorList[
+                Math.floor(Math.random() * selectedPalette.colorList.length)
+              ];
+
+            note.color = newColor;
+          }
+        });
+      }
+    }
 
     let userObj = {};
     userObj.colorPalette = { id: palette };
 
-    if (userNotes.length > 0) {
+    if (userNotes?.length > 0) {
       userObj.notes = userNotes;
     }
 
-    try {
-      console.log('patching user with data: ', userObj);
-      const response = await api.patch(`/users/${userData.id}`, userObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    console.log(userData);
 
-      // Now, get the updated user object and save it to the local storage
-      try {
-        const userResponse = await api.get(`/users/id/${userData.id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Got the following user data: ', userResponse.data);
-        localStorage.setItem('userData', JSON.stringify(userResponse.data));
-        setUserData(userResponse.data);
-      } catch (err) {
-        console.log('Failed to GET user data', err);
-      }
-    } catch (error) {
-      console.error(
-        'An error occurred during the patch request:',
-        error.message
-      );
-    }
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
   };
 
   const handleColorCustomMeaning = (e) => {
@@ -276,13 +288,14 @@ const SettingsPage = () => {
   };
 
   const refreshStateFromDb = (response) => {
+    console.log(response);
     setUserData(response);
   };
 
   let firstHalf = [];
   let secondHalf = [];
 
-  if (userData.loginList?.length > 1) {
+  if (userData?.loginList?.length > 1) {
     let midIndex = Math.ceil(userData.loginList.length / 2); // Round up to handle odd lengths
     firstHalf = userData.loginList.slice(0, midIndex);
     secondHalf = userData.loginList.slice(midIndex);
@@ -477,8 +490,8 @@ const SettingsPage = () => {
 
                       {/* SECOND PALETTE COLLECTION MAPPING BELOW:  */}
 
-                      {userData.customColorPaletteList &&
-                        userData.customColorPaletteList.map(
+                      {userData?.customColorPaletteList &&
+                        userData?.customColorPaletteList.map(
                           (palette, paletteIndex) => (
                             <div
                               key={paletteIndex}
@@ -582,6 +595,7 @@ const SettingsPage = () => {
                   user={userData}
                   onAddPalette={handleAddCustomPalette}
                   onDelete={refreshStateFromDb}
+                  onChangePaletteName={refreshStateFromDb}
                 />
               </div>
             </TabPanel>

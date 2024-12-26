@@ -17,6 +17,7 @@ import com.note.note.service.ColorPaletteService;
 import com.note.note.service.CustomColorPaletteService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,6 +48,25 @@ public class CustomColorPaletteController {
     @DeleteMapping("/{id}")
     public void deleteCustomPaletteById(@PathVariable Long id) {
         customColorPaletteService.deleteById(id);
+    }
+    
+    @PatchMapping("/{id}")
+    public CustomColorPalette editCustomColorPalette(@PathVariable Long id, @RequestBody CustomColorPalette customColorPalette) {
+
+        Optional<CustomColorPalette> foundPaletteOptional = customColorPaletteService.findCustomPalettesById(id);
+        
+        if (foundPaletteOptional.isPresent()) {
+            CustomColorPalette foundPalette = foundPaletteOptional.get();
+
+          
+            if (customColorPalette.getName() != null) {
+            	foundPalette.setName(customColorPalette.getName());
+            }
+
+                return customColorPaletteService.save(foundPalette);
+        }
+
+        return null;
     }
 	 
 

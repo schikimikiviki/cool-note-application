@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { patchUserWithNewData } from '../features/helpers';
 import api from '../../api/axiosConfig';
 
-const ColorPicker = ({ fontSize, user, onAddPalette, onDelete }) => {
+const ColorPicker = ({
+  fontSize,
+  user,
+  onAddPalette,
+  onDelete,
+  onChangePaletteName,
+}) => {
   const [color1, setColor1] = useState('#000000');
   const [color2, setColor2] = useState('#000000');
   const [color3, setColor3] = useState('#000000');
   const [color4, setColor4] = useState('#000000');
   const [color5, setColor5] = useState('#000000');
   const [name, setName] = useState('');
+  const [edit, setEdit] = useState(null);
+  const [paletteNameInput, setPaletteNameInput] = useState('');
 
   const savePalette = async () => {
     try {
@@ -38,8 +46,9 @@ const ColorPicker = ({ fontSize, user, onAddPalette, onDelete }) => {
     }
   };
 
-  const handleEditPalette = () => {
-    // TODO: edit name
+  const handleEditPalette = (paletteIndex) => {
+    setEdit(paletteIndex);
+    setPaletteNameInput(user.customColorPaletteList[paletteIndex].name);
   };
 
   const handleDeletePalette = async (id) => {
@@ -52,6 +61,42 @@ const ColorPicker = ({ fontSize, user, onAddPalette, onDelete }) => {
       });
 
       onDelete();
+    } catch (err) {
+      console.log('Failed to POST data', err);
+    }
+  };
+
+  const handleSubmitName = async (id) => {
+    // patch request to palette
+
+    let paletteObj = {};
+    paletteObj.name = paletteNameInput;
+
+    try {
+      const request = await api.patch(
+        `/api/colorpalettes/custom/${id}`,
+        paletteObj,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // Now, get the updated user object and save it to the local storage
+      try {
+        const userResponse = await api.get(`/users/id/${user.id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Got the following user data: ', userResponse.data);
+        localStorage.setItem('userData', JSON.stringify(userResponse.data));
+        onChangePaletteName(userResponse.data);
+      } catch (err) {
+        console.log('Failed to GET user data', err);
+      }
     } catch (err) {
       console.log('Failed to POST data', err);
     }
@@ -131,6 +176,7 @@ const ColorPicker = ({ fontSize, user, onAddPalette, onDelete }) => {
       <h2>
         <u>Manage your palettes</u>
       </h2>
+      <br />
 
       {user.customColorPaletteList &&
         user.customColorPaletteList.map((palette, paletteIndex) => (
@@ -169,11 +215,33 @@ const ColorPicker = ({ fontSize, user, onAddPalette, onDelete }) => {
               >
                 🗑️
               </span>
+
+              {edit === paletteIndex && (
+                <>
+                  <input
+                    type='text'
+                    value={paletteNameInput}
+                    onChange={(e) => setPaletteNameInput(e.target.value)}
+                  />
+
+                  <button
+                    type='submit'
+                    onClick={() =>
+                      handleSubmitName(
+                        user.customColorPaletteList[paletteIndex].id
+                      )
+                    }
+                  >
+                    Submit
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))}
     </>
   );
+  1;
 };
 
 export default ColorPicker;
