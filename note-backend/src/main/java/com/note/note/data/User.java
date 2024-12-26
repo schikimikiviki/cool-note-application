@@ -4,7 +4,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -40,9 +43,12 @@ public class User {
  @Enumerated(EnumType.STRING)
  private FontSize fontSize; 
  
- @ManyToOne
- private ColorPalette colorPalette;
  
+ @ManyToOne
+ @JoinColumn(name = "color_palette_id") 
+ @JsonIgnore
+ private ColorPalette colorPalette;
+
  EnumMap<Color, String> customNamesForColors; 
  
  

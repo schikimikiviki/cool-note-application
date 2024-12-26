@@ -38,7 +38,17 @@ private final UserRepository userRepository;
 		return customColorPaletteRepository.save(existingPalette);
 		
 	}
+
+	public void deleteById(Long id) {
+		customColorPaletteRepository.deleteById(id);
+
+	}
 	
+    public List<CustomColorPalette> findAll(){
+    	return customColorPaletteRepository.findAll();
+    }
+
+
 	
 
     

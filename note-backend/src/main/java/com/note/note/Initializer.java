@@ -23,12 +23,12 @@ public class Initializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Define palettes
-        ColorPalette palette1 = new ColorPalette(null, "Default", Arrays.asList(Color.RED, Color.YELLOW, Color.PURPLE,  Color.GREEN, Color.BLUE), null);
-		ColorPalette palette2 = new ColorPalette(null, "Pastel", Arrays.asList(Color.COTTONCANDY,  Color.LAVENDER, Color.MAGNOLIA, Color.MEDIUMBLUE, Color.SKY), null); 
-		ColorPalette palette3 = new ColorPalette(null, "Autumn",Arrays.asList(Color.MOSS, Color.OGRE, Color.BEIGE, Color.CREME, Color.PUMPKIN), null );
-		ColorPalette palette4 = new ColorPalette(null, "Summer", Arrays.asList(Color.MARINE, Color.FUCHSIA, Color.EGG, Color.TURQUOISE, Color.WHITE ), null);
-		ColorPalette palette5 = new ColorPalette(null, "Vintage", Arrays.asList(Color.BROWN, Color.GREENISH, Color.OCRE, Color.BRIGHT, Color.COOL), null);
-		ColorPalette palette6 = new ColorPalette(null, "Neon", Arrays.asList(Color.NEON_GREEN, Color.NEON_ORANGE, Color.NEON_PINK, Color.NEON_PURPLE, Color.NEON_YELLOW), null);		
+        ColorPalette palette1 = new ColorPalette(null, "Default", Arrays.asList(Color.RED, Color.YELLOW, Color.PURPLE,  Color.GREEN, Color.BLUE), null );
+		ColorPalette palette2 = new ColorPalette(null, "Pastel", Arrays.asList(Color.COTTONCANDY,  Color.LAVENDER, Color.MAGNOLIA, Color.MEDIUMBLUE, Color.SKY), null ); 
+		ColorPalette palette3 = new ColorPalette(null, "Autumn",Arrays.asList(Color.MOSS, Color.OGRE, Color.BEIGE, Color.CREME, Color.PUMPKIN) , null );
+		ColorPalette palette4 = new ColorPalette(null, "Summer", Arrays.asList(Color.MARINE, Color.FUCHSIA, Color.EGG, Color.TURQUOISE, Color.WHITE ), null );
+		ColorPalette palette5 = new ColorPalette(null, "Vintage", Arrays.asList(Color.BROWN, Color.GREENISH, Color.OCRE, Color.BRIGHT, Color.COOL), null );
+		ColorPalette palette6 = new ColorPalette(null, "Neon", Arrays.asList(Color.NEON_GREEN, Color.NEON_ORANGE, Color.NEON_PINK, Color.NEON_PURPLE, Color.NEON_YELLOW), null );		
 				
         // Save palettes to the database
 		 saveIfNotExists(palette1);

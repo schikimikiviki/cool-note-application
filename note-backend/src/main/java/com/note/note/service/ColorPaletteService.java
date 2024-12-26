@@ -10,6 +10,8 @@ import com.note.note.data.User;
 import com.note.note.repository.ColorPaletteRepository;
 import com.note.note.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class ColorPaletteService {
@@ -37,6 +39,22 @@ private final UserRepository userRepository;
 		
 	}
 	
+	
+	  public void deleteById(Long id) {
+		  	  
+		  List<User> users = userRepository.findByColorPaletteId(id);
+		    for (User user : users) {
+		        user.setColorPalette(null);  // Remove the color palette reference
+		        userRepository.save(user);   // Save user to update the relationship
+		    }
+
+		    // Now, it's safe to delete the color palette
+		    colorPaletteRepository.deleteById(id);
+	  
+	  }
+	 
+
+
 	
 
     

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { patchUserWithNewData } from '../features/helpers';
 import api from '../../api/axiosConfig';
 
-const ColorPicker = ({ fontSize, user, onAddPalette }) => {
+const ColorPicker = ({ fontSize, user, onAddPalette, onDelete }) => {
   const [color1, setColor1] = useState('#000000');
   const [color2, setColor2] = useState('#000000');
   const [color3, setColor3] = useState('#000000');
@@ -11,63 +11,47 @@ const ColorPicker = ({ fontSize, user, onAddPalette }) => {
   const [name, setName] = useState('');
 
   const savePalette = async () => {
-    //first, a post request to colorpalettes has to be done, then you can patch the user with it
-
-    let colorPaletteObj = {
-      name: name,
-      userSetColors: [color1, color2, color3, color4, color5],
-    };
-
     try {
-      const request = await api.post(
-        `/api/colorpalettes/add`,
-        colorPaletteObj,
-        {
-          headers: {
-            'Content-Type': 'application/json',
+      let userObj = {
+        customColorPaletteList: [
+          {
+            name: name,
+            userSetColors: [color1, color2, color3, color4, color5],
           },
-        }
-      );
+        ],
+      };
 
-      // now, use the same data and do a patch request
+      console.log(user);
 
-      // save the palette id from the one we just created
-      const paletteId = request.data?.id;
+      let responseObj = await patchUserWithNewData(userObj, user.id);
+      onAddPalette(responseObj);
 
-      if (paletteId) {
-        let userObj = {
-          ownColorPalettes: [
-            {
-              id: paletteId,
-              name: name,
-              colorList: [],
-              userSetColors: [color1, color2, color3, color4, color5],
-            },
-          ],
-        };
-
-        let userData = patchUserWithNewData(userObj, user.id);
-        onAddPalette(userData);
-
-        // TODO: give this data to parent and handle correctly
-      }
+      // reset fields
+      setName('');
+      setColor1('#000000');
+      setColor2('#000000');
+      setColor3('#000000');
+      setColor4('#000000');
+      setColor5('#000000');
     } catch (err) {
       console.log('Failed to POST data', err);
     }
   };
 
-  const handleEditPalette = () => {};
+  const handleEditPalette = () => {
+    // TODO: edit name
+  };
 
   const handleDeletePalette = async (id) => {
     console.log('trying to  delete palette with id: ', id);
     try {
-      const request = await api.delete(`/api/colorpalettes/${id}`, {
+      const request = await api.delete(`/api/colorpalettes/custom/${id}`, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      // TODO: frontend refresh so that it vanishes
+      onDelete();
     } catch (err) {
       console.log('Failed to POST data', err);
     }
@@ -116,7 +100,10 @@ const ColorPicker = ({ fontSize, user, onAddPalette }) => {
         ></input>
       </div>
       <div style={{ marginTop: '20px' }}>
-        <label style={{ fontSize: fontSize, marginRight: '10px' }} for='text'>
+        <label
+          style={{ fontSize: fontSize, marginRight: '10px' }}
+          htmlFor='text'
+        >
           Select a name for the new palette:
         </label>
         <input
@@ -145,8 +132,8 @@ const ColorPicker = ({ fontSize, user, onAddPalette }) => {
         <u>Manage your palettes</u>
       </h2>
 
-      {user.ownColorPalettes &&
-        user.ownColorPalettes.map((palette, paletteIndex) => (
+      {user.customColorPaletteList &&
+        user.customColorPaletteList.map((palette, paletteIndex) => (
           <div
             key={paletteIndex}
             style={{

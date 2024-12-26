@@ -44,7 +44,15 @@ public class ColorPaletteController {
         return palette;
 
     }
+    
+    @DeleteMapping("/{id}")
+    public void deleteCustomPaletteById(@PathVariable Long id) {
+        colorPaletteService.deleteById(id);
+    }
+	 
 
+  
+	 
     
 	 
 

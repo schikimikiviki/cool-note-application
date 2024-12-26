@@ -31,18 +31,23 @@ public class CustomColorPaletteController {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	
+	@GetMapping("/")
+	public List<CustomColorPalette> getAllCustomColorPalettes() {
+		return customColorPaletteService.findAll();
+	}
 
     @PostMapping("/add")
     public CustomColorPalette createCustomColorPalette(@RequestBody CustomColorPalette customColorPalette) {
- 
 		
     	CustomColorPalette palette = customColorPaletteService.save(customColorPalette);
         return palette;
 
     }
 
-    
+    @DeleteMapping("/{id}")
+    public void deleteCustomPaletteById(@PathVariable Long id) {
+        customColorPaletteService.deleteById(id);
+    }
 	 
 
 }

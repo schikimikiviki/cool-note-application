@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.note.note.data.Color;
 import com.note.note.data.ColorPalette;
+import com.note.note.data.CustomColorPalette;
 import com.note.note.data.CustomUserDetailsService;
 import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
 import com.note.note.repository.ColorPaletteRepository;
 import com.note.note.service.ColorPaletteService;
+import com.note.note.service.CustomColorPaletteService;
 import com.note.note.service.UserService;
 
 import java.security.Principal;
@@ -41,13 +43,16 @@ public class UserController {
  
  private final ColorPaletteService colorPaletteService; 
  
+ private final CustomColorPaletteService customColorPaletteService; 
+ 
  private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 
- public UserController(UserService userService, PasswordEncoder passwordEncoder, ColorPaletteService colorPaletteService) {
+ public UserController(UserService userService, PasswordEncoder passwordEncoder, ColorPaletteService colorPaletteService, CustomColorPaletteService customColorPaletteService) {
   this.passwordEncoder = passwordEncoder;
   this.userService = userService;
   this.colorPaletteService = colorPaletteService; 
+  this.customColorPaletteService = customColorPaletteService;
  }
 
  @GetMapping("/home")
@@ -162,7 +167,7 @@ public class UserController {
         	        newNote.setUser(foundUser); // Establish the relationship
         	        foundUser.getNotes().add(newNote); // Add the note
         	    }
-        	}
+        }
 
          
          if (user.getEmail() != null) {
@@ -219,9 +224,34 @@ public class UserController {
         	 foundUser.setCustomNamesForColors(user.getCustomNamesForColors());
          }
          
-         if (user.getCustomColorPaletteList() != null) {
-        	 foundUser.setCustomColorPaletteList(user.getCustomColorPaletteList());
-         }
+         if (user.getCustomColorPaletteList() != null && !user.getCustomColorPaletteList().isEmpty()) {
+        	    if (foundUser.getCustomColorPaletteList() == null) {
+        	        foundUser.setCustomColorPaletteList(new ArrayList<>()); // Initialize if null
+        	    }
+
+        	    for (CustomColorPalette newPalette : user.getCustomColorPaletteList()) {
+        	        if (newPalette.getId() != null) {
+        	            // Check if the palette already exists
+        	            boolean exists = foundUser.getCustomColorPaletteList().stream()
+        	                .anyMatch(existingPalette -> existingPalette.getId().equals(newPalette.getId()));
+        	            if (!exists) {
+        	                Optional<CustomColorPalette> existingPalette = customColorPaletteService.findCustomPalettesById(newPalette.getId());
+        	                if (existingPalette.isPresent()) {
+        	                    foundUser.getCustomColorPaletteList().add(existingPalette.get());
+        	                } else {
+        	                    System.out.println("CustomColorPalette not found with ID: " + newPalette.getId());
+        	                }
+        	            }
+        	        } else {
+        	            // For new palettes without an ID, ensure the user is set and save
+        	            newPalette.setUser(foundUser); // Establish relationship
+        	            CustomColorPalette savedPalette = customColorPaletteService.save(newPalette);
+        	            foundUser.getCustomColorPaletteList().add(savedPalette);
+        	        }
+        	    }
+        	}
+
+         
 
          UserDto userDto = new UserDto(
                  foundUser.getId(),

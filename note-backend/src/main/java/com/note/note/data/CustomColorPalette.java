@@ -27,6 +27,7 @@ public class CustomColorPalette {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     public CustomColorPalette() {
