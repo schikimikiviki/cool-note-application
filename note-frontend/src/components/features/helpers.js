@@ -1,6 +1,40 @@
 import axios from 'axios';
 import api from '../../api/axiosConfig';
 
+export const checkIfHex = (colorArray) => {
+  // console.log('COLOR ARRAY: ', colorArray);
+  return colorArray.every((element) => element.startsWith('#'));
+};
+
+export const getCustomPaletteViaId = async (id) => {
+  // ganze farbpalette soll returned werden
+  try {
+    // http://localhost:8080/api/colorpalettes/custom/
+    const response = await api.get(`/api/colorpalettes/custom/`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = response.data;
+
+    const numericId = Number(id);
+
+    // Filter the palette with the matching id
+    const result = data.find((palette) => palette.id === numericId);
+
+    if (result) {
+      //console.log('Found this result: ', result);
+      return result;
+    } else {
+      console.log('No palette found with the given ID:', id);
+      return null; // Return null if no match is found
+    }
+  } catch (error) {
+    console.error('An error occurred during the  request:', error.message);
+  }
+};
+
 export const patchUserWithNewData = async (userObj, id) => {
   try {
     console.log('patching user with data: ', userObj);
@@ -146,4 +180,6 @@ export default {
   turnHexToEnum,
   getAllColorPalettes,
   patchUserWithNewData,
+  getCustomPaletteViaId,
+  checkIfHex,
 };

@@ -59,19 +59,24 @@ const SettingsPage = () => {
 
         setPaletteCollection(palettes);
 
-        if (userData?.colorPalette) {
-          // this is the case where the user already had a patch request for this
-          setColorPalette(userData.colorPalette.id);
-          setChosenPalette(userData.colorPalette.id);
-        } else {
-          // look for default palette id
+        let colorsToUse = JSON.parse(localStorage.getItem('colors')); //
 
-          let filteredPalette = palettes.find(
-            (palette) => palette.name == 'Default'
-          );
-          setChosenPalette(filteredPalette.id);
-          setColorPalette(filteredPalette.id);
+        // console.log('***', colorsToUse);
+
+        if (colorsToUse) {
+          setColorPalette(colorsToUse.id);
+          setChosenPalette(colorsToUse.id);
         }
+
+        // else {
+        //   // look for default palette id
+
+        //   let filteredPalette = palettes.find(
+        //     (palette) => palette.name == 'Default'
+        //   );
+        //   setChosenPalette(filteredPalette.id);
+        //   setColorPalette(filteredPalette.id);
+        // }
       } catch (error) {
         console.error('Error fetching palettes:', error);
       }
@@ -97,8 +102,7 @@ const SettingsPage = () => {
       );
       isCustomPalette = true;
     }
-    // TODO: Problem ist hier, dass man keinen Patch machen kann, weil ja zBso colorList nicht vorhanden ist
-    // man muss sich hier was überlegen
+
     if (!selectedPalette) {
       console.log('Palette not found!');
       return;

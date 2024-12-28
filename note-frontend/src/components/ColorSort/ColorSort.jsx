@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './ColorSort.css';
-import { turnEnumToHex } from '../features/helpers';
+import { turnEnumToHex, checkIfHex } from '../features/helpers';
 
 const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
   const [selectedColor, setSelectedColor] = useState(null);
@@ -8,22 +8,41 @@ const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
   const [translatedCustomMeanings, setTranslatedCustomMeanings] = useState({});
 
   useEffect(() => {
-    if (colors) {
-      const hexColors = colors.map(turnEnumToHex);
-      setTranslatedColors(hexColors);
+    const processColors = async () => {
+      try {
+        const resolvedColors = (await colors) || [];
 
-      const updatedMeanings = {};
+        if (checkIfHex(resolvedColors)) {
+          setTranslatedColors(resolvedColors);
 
-      if (customMeanings) {
-        // we need to translate the enums to hex values in order to be able to display and match them later in the div
-        for (const [key, value] of Object.entries(customMeanings)) {
-          let newKey = turnEnumToHex(key);
-          updatedMeanings[newKey] = value;
+          if (customMeanings) {
+            const updatedMeanings = {};
+            for (const [key, value] of Object.entries(customMeanings)) {
+              let newKey = turnEnumToHex(key);
+              updatedMeanings[newKey] = value;
+            }
+            setTranslatedCustomMeanings(updatedMeanings);
+          }
+        } else {
+          const hexColors = resolvedColors.map(turnEnumToHex);
+          setTranslatedColors(hexColors);
+
+          if (customMeanings) {
+            const updatedMeanings = {};
+            for (const [key, value] of Object.entries(customMeanings)) {
+              let newKey = turnEnumToHex(key);
+              updatedMeanings[newKey] = value;
+            }
+            setTranslatedCustomMeanings(updatedMeanings);
+          }
         }
-        setTranslatedCustomMeanings(updatedMeanings);
+      } catch (error) {
+        console.error('Error resolving colors:', error);
       }
-    }
-  }, [colors]);
+    };
+
+    processColors();
+  }, [colors, customMeanings]);
 
   const handleColorClick = (color) => {
     setSelectedColor(color);

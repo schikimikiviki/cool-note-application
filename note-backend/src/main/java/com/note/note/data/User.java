@@ -61,13 +61,14 @@ public class User {
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
  private List<CustomColorPalette> customColorPaletteList;
-
+ 
+ private String favoritePaletteReference;
 
  public User() {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<CustomColorPalette> customColorPaletteList) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference ) {
   super();
   this.id = id; 
   this.username = username;
@@ -83,6 +84,15 @@ public class User {
   this.colorPalette = colorPalette; 
   this.customNamesForColors = customNamesForColors;
   this.customColorPaletteList = customColorPaletteList; 
+  this.favoritePaletteReference = favoritePaletteReference; 
+ }
+ 
+ public void setFavoritePaletteReference (String favoritePaletteReference) {
+	 this.favoritePaletteReference = favoritePaletteReference; 
+ }
+ 
+ public String getFavoritePaletteReference () {
+	 return favoritePaletteReference; 
  }
  
  public List<CustomColorPalette> getCustomColorPaletteList() {

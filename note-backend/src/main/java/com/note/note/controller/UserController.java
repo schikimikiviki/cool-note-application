@@ -213,6 +213,7 @@ public class UserController {
                      foundUser.setColorPalette(paletteOptional.get());
                  } else {
                      System.out.println("ColorPalette not found with ID: " + newPalette.getId());
+                    
                  }
              } else {
                  // Validate or save new palettes, if necessary
@@ -250,6 +251,33 @@ public class UserController {
         	        }
         	    }
         	}
+         
+         if (user.getFavoritePaletteReference() != null) {
+        	    String[] parts = user.getFavoritePaletteReference().split(":");
+        	    if (parts.length == 2) {
+        	        String type = parts[0];
+        	        Long id = Long.valueOf(parts[1]);
+
+        	        if ("colorPalette".equals(type)) {
+        	            Optional<ColorPalette> paletteOptional = colorPaletteService.findPalettesById(id);
+        	            if (paletteOptional.isPresent()) {
+        	                foundUser.setFavoritePaletteReference(user.getFavoritePaletteReference());
+        	            } else {
+        	                System.out.println("ColorPalette not found with ID: " + id);
+        	            }
+        	        } else if ("customPalette".equals(type)) {
+        	            Optional<CustomColorPalette> customPaletteOptional = customColorPaletteService.findCustomPalettesById(id);
+        	            if (customPaletteOptional.isPresent()) {
+        	                foundUser.setFavoritePaletteReference(user.getFavoritePaletteReference());
+        	            } else {
+        	                System.out.println("CustomColorPalette not found with ID: " + id);
+        	            }
+        	        }
+        	    } else {
+        	        System.out.println("Invalid favoritePaletteReference format");
+        	    }
+        	}
+
 
          
 
@@ -267,7 +295,8 @@ public class UserController {
                  foundUser.getFontSize(), 
                  foundUser.getColorPalette(),
                  foundUser.getCustomNamesForColors(),
-                 foundUser.getCustomColorPaletteList()
+                 foundUser.getCustomColorPaletteList(),
+                 foundUser.getFavoritePaletteReference()
              );
 
        

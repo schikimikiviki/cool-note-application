@@ -108,9 +108,7 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
           <div
             className={`note-container ${isDoneList[index] ? 'overlay' : ''}`}
             style={{
-              backgroundColor: isDoneList[index]
-                ? 'grey'
-                : turnEnumToHex(note.color),
+              backgroundColor: isDoneList[index] ? 'grey' : note.colorString,
             }}
           >
             {editingNote === note.id ? (

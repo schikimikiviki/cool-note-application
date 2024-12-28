@@ -40,8 +40,7 @@ public class Note {
     @JsonIgnore
     private User user;
     
-    @Enumerated(EnumType.STRING)
-    private Color color;
+    private String colorString; 
 
     private Boolean isDone; 
 
@@ -51,14 +50,22 @@ public class Note {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Note(Long id, String title, String content, User user, Color color, Boolean isDone) {
+    public Note(Long id, String title, String content, User user, Boolean isDone, String colorString) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.id = id; 
         this.createdAt = LocalDateTime.now();
-        this.color = color; 
         this.isDone = isDone; 
+        this.colorString = colorString; 
+    }
+   
+    public void setColorString(String colorString) {
+    	this.colorString = colorString;
+    }
+    
+    public String getColorString () {
+    	return this.colorString;
     }
     
     public Boolean getIsDone() {
@@ -69,13 +76,6 @@ public class Note {
     	this.isDone = isDone; 
     }
     
-    public Color getColor() {
-    	return this.color; 
-    }
-    
-    public void setColor(Color color) {
-    	this.color = color; 
-    }
     
     public LocalDateTime getCreatedAt() {
     	return this.createdAt; 

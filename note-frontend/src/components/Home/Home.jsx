@@ -13,6 +13,7 @@ import {
   loadUserNotes,
   turnHexToEnum,
   getAllColorPalettes,
+  getCustomPaletteViaId,
 } from '../features/helpers.js';
 
 function Home() {
@@ -57,7 +58,33 @@ function Home() {
         }
 
         if (userData.colorPalette != null) {
-          setUserColors(userData.colorPalette.colorList);
+          // wenn hier ein Value gesetzt ist, müssen wir differenzieren, ob es sich um eine custom palette
+          // oder eine default palette handelt
+
+          //  console.log(userData.favoritePaletteReference);
+
+          let parts = userData.favoritePaletteReference.split(':');
+          let colorPaletteType = parts[0];
+          let colorPaletteID = parts[1];
+
+          if (colorPaletteType === 'colorPalette') {
+            // default
+            setUserColors(userData.colorPalette.colorList);
+          } else if (colorPaletteType === 'customPalette') {
+            // die custom Palette suchen
+
+            getCustomPaletteViaId(colorPaletteID).then((userSetColors) => {
+              if (userSetColors) {
+                // console.log('Palette colors:', userSetColors);
+                setUserColors(userSetColors.userSetColors);
+                localStorage.setItem('colors', JSON.stringify(userSetColors)); // speichern damit wir das in den Settings abrufen können
+              } else {
+                console.log('Palette not found.');
+              }
+            });
+          } else {
+            console.log('Cannot read favorite palette type');
+          }
         } else {
           // use default colors if none are set
           try {
@@ -68,6 +95,11 @@ function Home() {
 
             if (foundPalette) {
               setUserColors(foundPalette.colorList);
+
+              localStorage.setItem(
+                'colors',
+                JSON.stringify(foundPalette.colors)
+              );
             } else {
               console.warn('No "Default" palette found.');
             }

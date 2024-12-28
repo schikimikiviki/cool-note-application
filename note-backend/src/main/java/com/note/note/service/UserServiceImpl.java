@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User save(UserDto userDto) {
 
-		User user = new User(userDto.getId(), userDto.getUsername(), userDto.getPassword(), userDto.getFullname(), userDto.getNotes(), userDto.getRoles(), userDto.getEmail(), userDto.getIsAuthActive(), userDto.getLoginList(), userDto.getTheme(), userDto.getFontSize(), userDto.getColorPalette(), userDto.getCustomNamesForColors(), userDto.getCustomColorPaletteList());
+		User user = new User(userDto.getId(), userDto.getUsername(), userDto.getPassword(), userDto.getFullname(), userDto.getNotes(), userDto.getRoles(), userDto.getEmail(), userDto.getIsAuthActive(), userDto.getLoginList(), userDto.getTheme(), userDto.getFontSize(), userDto.getColorPalette(), userDto.getCustomNamesForColors(), userDto.getCustomColorPaletteList(), userDto.getFavoritePaletteReference());
 
 		return userRepository.save(user);
 	}
@@ -69,6 +69,8 @@ public class UserServiceImpl implements UserService {
         // Save the note and return it
         return noteRepository.save(note);
     }
+	
+	
 	
 	@Override
 	public void deleteUserById(Long id) {

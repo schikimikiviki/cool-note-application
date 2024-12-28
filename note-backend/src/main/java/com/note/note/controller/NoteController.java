@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.note.note.data.CustomUserDetailsService;
 import com.note.note.data.Note;
-import com.note.note.data.NoteDto;
 import com.note.note.service.NoteService;
 import com.note.note.service.UserService;
 
@@ -45,7 +44,7 @@ public class NoteController {
     @PostMapping("/{userId}")
     public Note createNote(@PathVariable Long userId, @RequestBody Note note) {
  
-		/* return noteService.saveNoteForUser(userId, note); */
+	
     	Note savedNote = userService.addNoteToUser(userId, note);
         return savedNote;
 
@@ -67,11 +66,13 @@ public class NoteController {
             if (note.getContent() != null) {
                 foundNote.setContent(note.getContent());
             }
-            if (note.getColor() != null) {
-                foundNote.setColor(note.getColor());
-            }
+          
             if (note.getIsDone() != null) {
                 foundNote.setIsDone(note.getIsDone());
+            }
+            
+            if (note.getColorString() != null) {
+            	foundNote.setColorString(note.getColorString());
             }
 
             // Save updated note

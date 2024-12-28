@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './Popup.css';
-import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
+import { turnEnumToHex, turnHexToEnum, checkIfHex } from '../features/helpers';
 
 const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   const [noteData, setNoteData] = useState({
@@ -14,10 +14,23 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   const [translatedColors, setTranslatedColors] = useState([]);
 
   useEffect(() => {
-    if (colors) {
-      const hexColors = colors.map(turnEnumToHex);
-      setTranslatedColors(hexColors);
-    }
+    const processColors = async () => {
+      try {
+        const resolvedColors = await colors; // Resolve the promise
+
+        if (checkIfHex(resolvedColors)) {
+          // no conversion
+          setTranslatedColors(resolvedColors);
+        } else {
+          const hexColors = colors.map(turnEnumToHex);
+          setTranslatedColors(hexColors);
+        }
+      } catch (error) {
+        console.error('Error resolving colors:', error);
+      }
+    };
+
+    processColors();
   }, [colors]);
 
   const handleInputChange = (e) => {
@@ -40,13 +53,11 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
     }
 
     try {
-      let enumColor = turnHexToEnum(selectedColor);
-
       const dataToSubmit = {
         title: noteData.name,
         content: noteData.content,
-        color: enumColor,
         done: false,
+        colorString: selectedColor,
       };
 
       const jsonString = JSON.stringify(dataToSubmit);
