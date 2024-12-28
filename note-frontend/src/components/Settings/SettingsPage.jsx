@@ -3,7 +3,12 @@ import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
 import { useState, useEffect } from 'react';
 import { patchUserWithNewData } from '../features/helpers';
 import api from '../../api/axiosConfig';
-import { turnEnumToHex, getAllColorPalettes } from '../features/helpers';
+import {
+  turnEnumToHex,
+  getAllColorPalettes,
+  getCustomPaletteViaId,
+  getPaletteViaID,
+} from '../features/helpers';
 import { useNavigate } from 'react-router-dom';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import AdvancedSettings from '../AdvancedSettings/AdvancedSettings';
@@ -61,22 +66,10 @@ const SettingsPage = () => {
 
         let colorsToUse = JSON.parse(localStorage.getItem('colors')); //
 
-        // console.log('***', colorsToUse);
-
         if (colorsToUse) {
           setColorPalette(colorsToUse.id);
           setChosenPalette(colorsToUse.id);
         }
-
-        // else {
-        //   // look for default palette id
-
-        //   let filteredPalette = palettes.find(
-        //     (palette) => palette.name == 'Default'
-        //   );
-        //   setChosenPalette(filteredPalette.id);
-        //   setColorPalette(filteredPalette.id);
-        // }
       } catch (error) {
         console.error('Error fetching palettes:', error);
       }
@@ -116,40 +109,55 @@ const SettingsPage = () => {
     // translate the users notes to have a new color of the new palette!
 
     let userNotes = JSON.parse(localStorage.getItem('userData')).notes;
+    let oldNotes = JSON.parse(JSON.stringify(userNotes)); // Deep clone to make sure that we dont display an old version of the object from localstorage
+    console.log('Old notes: ', oldNotes);
 
     if (isCustomPalette) {
       if (userNotes) {
-        userNotes.forEach(function (note) {
-          if (!userData.customColorPaletteList.userSetColors(note.color)) {
-            let newColor =
-              userData.customColorPaletteList.userSetColors[
-                Math.floor(
-                  Math.random() *
-                    userData.customColorPaletteList.userSetColors.length
-                )
-              ];
-
-            note.color = newColor;
+        // get colors to do a check
+        let colorsToCheck;
+        await getCustomPaletteViaId(palette).then((userSetColors) => {
+          if (userSetColors) {
+            colorsToCheck = userSetColors.userSetColors;
           }
         });
+
+        console.log(colorsToCheck);
+
+        userNotes.forEach(function (note) {
+          // check if the color is included already in the customColorPaletteList
+          if (!colorsToCheck.includes(note.colorString)) {
+            let newColor =
+              colorsToCheck[Math.floor(Math.random() * colorsToCheck.length)];
+
+            note.colorString = newColor;
+          }
+        });
+        console.log('new notes: ', userNotes);
       }
     } else {
       if (userNotes) {
         userNotes.forEach(function (note) {
-          if (!selectedPalette.colorList.includes(note.color)) {
-            let newColor =
+          if (!selectedPalette.colorList.includes(note.colorString)) {
+            let newColor = turnEnumToHex(
               selectedPalette.colorList[
                 Math.floor(Math.random() * selectedPalette.colorList.length)
-              ];
+              ]
+            );
 
-            note.color = newColor;
+            note.colorString = newColor;
           }
         });
+
+        console.log('new notes: ', userNotes);
       }
     }
 
     let userObj = {};
     userObj.colorPalette = { id: palette };
+    let type = isCustomPalette ? 'customPalette' : 'colorPalette';
+    let colorRef = `${type}:${palette}`;
+    userObj.favoritePaletteReference = colorRef;
 
     if (userNotes?.length > 0) {
       userObj.notes = userNotes;
@@ -159,6 +167,26 @@ const SettingsPage = () => {
 
     let responseObj = await patchUserWithNewData(userObj, userData.id);
     setUserData(responseObj);
+
+    // color im Localstorage überschreiben, weil sonst die neue Farbe nicht gerendert wird
+
+    console.log('wir speichern: ', palette);
+    if (isCustomPalette) {
+      console.log('getting custom pallete');
+      getCustomPaletteViaId(palette).then((userSetColors) => {
+        if (userSetColors) {
+          localStorage.setItem('colors', JSON.stringify(userSetColors)); // speichern damit wir das in den Settings abrufen können
+        }
+      });
+    } else {
+      console.log('getting default pallete');
+
+      getPaletteViaID(palette).then((userSetColors) => {
+        if (userSetColors) {
+          localStorage.setItem('colors', JSON.stringify(userSetColors)); // speichern damit wir das in den Settings abrufen können
+        }
+      });
+    }
   };
 
   const handleColorCustomMeaning = (e) => {
@@ -429,7 +457,7 @@ const SettingsPage = () => {
                               id={`palette-${palette.id}`}
                               name={`palette-${palette.id}`}
                               value={palette.id}
-                              checked={colorPalette === palette.id}
+                              checked={chosenPalette === palette.id}
                               onChange={() => handleSelectPalette(palette.id)}
                             />
                             <label htmlFor={`palette-${palette.id}`}>
@@ -512,7 +540,7 @@ const SettingsPage = () => {
                                 id={`palette-${palette.id}`}
                                 name={`palette-${palette.id}`}
                                 value={palette.id}
-                                checked={colorPalette === palette.id}
+                                checked={chosenPalette === palette.id}
                                 onChange={() => handleSelectPalette(palette.id)}
                               />
                               <label htmlFor={`palette-${palette.id}`}>
