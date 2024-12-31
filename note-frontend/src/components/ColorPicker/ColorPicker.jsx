@@ -19,6 +19,12 @@ const ColorPicker = ({
   const [paletteNameInput, setPaletteNameInput] = useState('');
 
   const savePalette = async () => {
+    if (!name.trim()) {
+      // Prevent saving if the name is empty
+      alert('Please provide a name for the palette.');
+      return;
+    }
+
     try {
       let userObj = {
         customColorPaletteList: [
@@ -60,7 +66,13 @@ const ColorPicker = ({
         },
       });
 
-      onDelete();
+      // If successful, call the refreshStateFromDb function to update the UI with the latest user data
+      const userResponse = await api.get(`/users/id/${user.id}`, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      console.log('Updated user data after delete:', userResponse.data);
+      onDelete(userResponse.data); // Call onDelete to update the state
     } catch (err) {
       console.log('Failed to POST data', err);
     }
@@ -159,7 +171,7 @@ const ColorPicker = ({
         ></input>
         <button
           className='delete'
-          type='submit'
+          type='button'
           onClick={() => savePalette()}
           style={{
             fontSize: fontSize === 'var(--font-size-big)' ? '17px' : '15px',

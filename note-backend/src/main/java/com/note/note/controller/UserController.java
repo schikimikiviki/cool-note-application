@@ -274,11 +274,15 @@ public class UserController {
         	        System.out.println("Invalid favoritePaletteReference format");
         	    }
         	}
+  
 
-         if (user.getCustomPairs() != null) {
-        	 foundUser.setCustomPairs(user.getCustomPairs());
-         }
-         
+         if (user.getCustomPairs() != null && !user.getCustomPairs().isEmpty()) {
+        	    System.out.println("Patch with custom pair");
+        	    foundUser.setCustomPairs(user.getCustomPairs());
+        	} else {
+        	    System.out.println("Patch WITH NO custom pair");
+        	}
+
 
          UserDto userDto = new UserDto(
                  foundUser.getId(),

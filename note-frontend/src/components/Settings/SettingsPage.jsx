@@ -215,34 +215,8 @@ const SettingsPage = () => {
     let userObj = {};
     userObj.fontSize = e.target.value.toUpperCase();
 
-    try {
-      console.log('patching user with data: ', userObj);
-      const response = await api.patch(`/users/${userData.id}`, userObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Now, get the updated user object and save it to the local storage
-      try {
-        const userResponse = await api.get(`/users/id/${userData.id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Got the following user data: ', userResponse.data);
-        localStorage.setItem('userData', JSON.stringify(userResponse.data));
-        setUserData(userResponse.data);
-      } catch (err) {
-        console.log('Failed to GET user data', err);
-      }
-    } catch (error) {
-      console.error(
-        'An error occurred during the patch request:',
-        error.message
-      );
-    }
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
   };
 
   const handleThemeChange = async (e) => {
@@ -253,72 +227,18 @@ const SettingsPage = () => {
     let userObj = {};
     userObj.theme = e.target.value.toUpperCase();
 
-    try {
-      console.log('patching user with data: ', userObj);
-      const response = await api.patch(`/users/${userData.id}`, userObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Now, get the updated user object and save it to the local storage
-      try {
-        const userResponse = await api.get(`/users/id/${userData.id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Got the following user data: ', userResponse.data);
-        localStorage.setItem('userData', JSON.stringify(userResponse.data));
-        setUserData(userResponse.data);
-      } catch (err) {
-        console.log('Failed to GET user data', err);
-      }
-    } catch (error) {
-      console.error(
-        'An error occurred during the patch request:',
-        error.message
-      );
-    }
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
   };
 
   const handleSaveCustomColors = async () => {
     // save customColorNames for user
 
-    //  {RED: 'red', YELLOW: 'eggshell', PURPLE: 'purple', GREEN: 'kale', BLUE: 'blueish'}
-
     let userObj = {};
     userObj.customPairs = colorMeanings;
 
-    try {
-      console.log('patching user with data: ', userObj);
-      const response = await api.patch(`/users/${userData.id}`, userObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Now, get the updated user object and save it to the local storage
-      try {
-        const userResponse = await api.get(`/users/id/${userData.id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Got the following user data: ', userResponse.data);
-        localStorage.setItem('userData', JSON.stringify(userResponse.data));
-        setUserData(userResponse.data);
-      } catch (err) {
-        console.log('Failed to GET user data', err);
-      }
-    } catch (error) {
-      console.error(
-        'An error occurred during the patch request:',
-        error.message
-      );
-    }
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
   };
 
   const handleAddCustomPalette = (newUserData) => {

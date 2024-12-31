@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import api from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import { loadUserNotes } from '../features/helpers';
+import { loadUserNotes, patchUserWithNewData } from '../features/helpers';
 import emailjs from '@emailjs/browser';
 
 const LoginPage = () => {
@@ -46,16 +46,7 @@ const LoginPage = () => {
     //     {
     //   "loginList": ["2024-06-17T13:55:00"]
     // }
-
-    try {
-      const response = await api.patch(`/users/${id}`, userObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (error) {
-      console.error('Request failed:', error.message || error);
-    }
+    await patchUserWithNewData(userObj, id);
   };
 
   const getDateTime = () => {

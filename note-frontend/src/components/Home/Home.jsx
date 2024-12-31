@@ -11,10 +11,10 @@ import About from '../About/About.jsx';
 import ColorSort from '../ColorSort/ColorSort.jsx';
 import {
   loadUserNotes,
-  turnHexToEnum,
   turnEnumToHex,
   getAllColorPalettes,
   getCustomPaletteViaId,
+  patchUserWithNewData,
 } from '../features/helpers.js';
 
 function Home() {
@@ -198,35 +198,8 @@ function Home() {
     let userObj = {};
     userObj.theme = newState ? 'NIGHT' : 'DAY';
 
-    try {
-      console.log('patching user with data: ', userObj);
-      const response = await api.patch(`/users/${userData.id}`, userObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Now, get the updated user object and save it to the local storage
-      try {
-        const userResponse = await api.get(`/users/id/${userData.id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Got the following user data: ', userResponse.data);
-
-        localStorage.setItem('userData', JSON.stringify(userResponse.data));
-        setUserData(userResponse.data);
-      } catch (err) {
-        console.log('Failed to GET user data', err);
-      }
-    } catch (error) {
-      console.error(
-        'An error occurred during the patch request:',
-        error.message
-      );
-    }
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
   };
 
   const updateUserDataState = (stateToUpdate, newData) => {
@@ -241,8 +214,12 @@ function Home() {
       console.log(`Executing load for user ${userData.username}...`);
       const newUserData = await loadUserNotes(userData.username);
       console.log('New user data: ', newUserData);
-      updateUserDataState('notes', newUserData.notes);
-      setOriginalNotes(newUserData.notes);
+
+      // Sort notes by 'id'
+      const sortedNotes = newUserData.notes.sort((a, b) => a.id - b.id);
+
+      updateUserDataState('notes', sortedNotes);
+      setOriginalNotes(sortedNotes);
     } catch (error) {
       console.error('Error loading notes:', error);
     }

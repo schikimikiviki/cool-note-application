@@ -41,7 +41,7 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
       let editedBody = {
         content: editedContent,
         title: editedName,
-        color: turnHexToEnum(selectedColor),
+        colorString: selectedColor,
       };
 
       console.log(editedBody);
