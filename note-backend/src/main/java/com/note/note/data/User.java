@@ -1,7 +1,9 @@
 package com.note.note.data;
 
-import java.util.EnumMap;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -10,6 +12,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,8 +24,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -48,8 +56,6 @@ public class User {
  @ManyToOne
  @JoinColumn(name = "color_palette_id") 
  private ColorPalette colorPalette;
-
- EnumMap<Color, String> customNamesForColors; 
  
  
  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -63,12 +69,19 @@ public class User {
  private List<CustomColorPalette> customColorPaletteList;
  
  private String favoritePaletteReference;
+ 
+ @ElementCollection
+ @CollectionTable(name = "user_custom_pairs", joinColumns = @JoinColumn(name = "user_id"))
+ @MapKeyColumn(name = "pair_key")
+ @Column(name = "pair_value")
+ private Map<String, String> customPairs = new HashMap<>();
+
 
  public User() {
 
  }
 
- public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference ) {
+ public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference, Map<String, String> customPairs ) {
   super();
   this.id = id; 
   this.username = username;
@@ -82,9 +95,17 @@ public class User {
   this.theme = theme; 
   this.fontSize = fontSize;
   this.colorPalette = colorPalette; 
-  this.customNamesForColors = customNamesForColors;
   this.customColorPaletteList = customColorPaletteList; 
   this.favoritePaletteReference = favoritePaletteReference; 
+  this.customPairs = customPairs; 
+ }
+ 
+ public Map<String, String> getCustomPairs (){
+	 return customPairs; 
+ }
+ 
+ public void setCustomPairs (Map<String, String> customPairs) {
+	 this.customPairs = customPairs; 
  }
  
  public void setFavoritePaletteReference (String favoritePaletteReference) {
@@ -101,14 +122,6 @@ public class User {
  
  public void setCustomColorPaletteList (List<CustomColorPalette> customColorPaletteList) {
 	 this.customColorPaletteList = customColorPaletteList; 
- }
- 
- public EnumMap<Color, String> getCustomNamesForColors(){
-	 return customNamesForColors; 
- }
- 
- public void setCustomNamesForColors(EnumMap<Color, String> customNamesForColors) {
-	 this.customNamesForColors = customNamesForColors;
  }
  
  public void setColorPalette(ColorPalette colorPalette) {

@@ -39,9 +39,7 @@ const SettingsPage = () => {
   });
 
   const [selectedColor, setSelectedColor] = useState(null);
-  const [colorMeanings, setColorMeanings] = useState(
-    userData?.customNamesForColors
-  );
+  const [colorMeanings, setColorMeanings] = useState(userData?.customPairs);
   const [colorPalette, setColorPalette] = useState(); // saving id here
   const [paletteCollection, setPaletteCollection] = useState();
   const [chosenPalette, setChosenPalette] = useState();
@@ -64,9 +62,17 @@ const SettingsPage = () => {
 
         setPaletteCollection(palettes);
 
-        let colorsToUse = JSON.parse(localStorage.getItem('colors')); //
+        // get item in localstorage because we need a saved color palette to use
+
+        let colorsToUse = localStorage.getItem('colors');
+
+        console.log('colorsToUse: ', colorsToUse);
+
+        // we should have saved the whole palette:
+        // colorsToUse:  {"id":57,"name":"Neon","colorList":["NEON_GREEN","NEON_ORANGE","NEON_PINK","NEON_PURPLE","NEON_YELLOW"]}
 
         if (colorsToUse) {
+          colorsToUse = JSON.parse(colorsToUse);
           setColorPalette(colorsToUse.id);
           setChosenPalette(colorsToUse.id);
         }
@@ -283,7 +289,7 @@ const SettingsPage = () => {
     //  {RED: 'red', YELLOW: 'eggshell', PURPLE: 'purple', GREEN: 'kale', BLUE: 'blueish'}
 
     let userObj = {};
-    userObj.customNamesForColors = colorMeanings;
+    userObj.customPairs = colorMeanings;
 
     try {
       console.log('patching user with data: ', userObj);

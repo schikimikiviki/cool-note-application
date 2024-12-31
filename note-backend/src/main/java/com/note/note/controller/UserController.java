@@ -221,9 +221,6 @@ public class UserController {
              }
          }
          
-         if (user.getCustomNamesForColors() != null) {
-        	 foundUser.setCustomNamesForColors(user.getCustomNamesForColors());
-         }
          
          if (user.getCustomColorPaletteList() != null && !user.getCustomColorPaletteList().isEmpty()) {
         	    if (foundUser.getCustomColorPaletteList() == null) {
@@ -278,7 +275,9 @@ public class UserController {
         	    }
         	}
 
-
+         if (user.getCustomPairs() != null) {
+        	 foundUser.setCustomPairs(user.getCustomPairs());
+         }
          
 
          UserDto userDto = new UserDto(
@@ -294,9 +293,9 @@ public class UserController {
                  foundUser.getTheme(), 
                  foundUser.getFontSize(), 
                  foundUser.getColorPalette(),
-                 foundUser.getCustomNamesForColors(),
                  foundUser.getCustomColorPaletteList(),
-                 foundUser.getFavoritePaletteReference()
+                 foundUser.getFavoritePaletteReference(),
+                 foundUser.getCustomPairs()
              );
 
        

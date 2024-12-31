@@ -1,7 +1,9 @@
 package com.note.note.data;
 
-import java.util.EnumMap;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jakarta.persistence.EnumType;
@@ -27,19 +29,19 @@ public class UserDto {
 	 private FontSize fontSize; 
 	 
 	 private ColorPalette colorPalette;
-	 
-	 EnumMap<Color, String> customNamesForColors; 
+	
 	 
 	 private List<CustomColorPalette> customColorPaletteList;
 	 
 	 private String favoritePaletteReference;
 
+	 private Map<String, String> customPairs = new HashMap<>();
 
 	 public UserDto() {
 
 	 }
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, EnumMap<Color, String> customNamesForColors, List<CustomColorPalette> customColorPaletteList,  String favoritePaletteReference) {
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList,  String favoritePaletteReference, Map<String, String> customPairs) {
 		super();
 		this.id = id; 
 		this.username = username;
@@ -53,10 +55,18 @@ public class UserDto {
 		this.theme = theme; 
 		this.fontSize = fontSize; 
 		this.colorPalette = colorPalette; 
-		this.customNamesForColors = customNamesForColors;
 		this.customColorPaletteList = customColorPaletteList; 
-		this.favoritePaletteReference = favoritePaletteReference; 
+		this.favoritePaletteReference = favoritePaletteReference;
+		this.customPairs = customPairs; 
 	}
+	
+	 public Map<String, String> getCustomPairs (){
+		 return customPairs; 
+	 }
+	 
+	 public void setCustomPairs (Map<String, String> customPairs) {
+		 this.customPairs = customPairs; 
+	 }
 	
 	 public void setFavoritePaletteReference (String favoritePaletteReference) {
 		 this.favoritePaletteReference = favoritePaletteReference; 
@@ -73,15 +83,6 @@ public class UserDto {
 	 public void setCustomColorPaletteList (List<CustomColorPalette> customColorPaletteList) {
 		 this.customColorPaletteList = customColorPaletteList; 
 	 }
-
-	 public EnumMap<Color, String> getCustomNamesForColors(){
-		 return customNamesForColors; 
-	 }
-	 
-	 public void setCustomNamesForColors(EnumMap<Color, String> customNamesForColors) {
-		 this.customNamesForColors = customNamesForColors;
-	 }
-	 
 	
 	 public void setColorPalette(ColorPalette colorPalette) {
 		 this.colorPalette = colorPalette; 

@@ -12,6 +12,7 @@ import ColorSort from '../ColorSort/ColorSort.jsx';
 import {
   loadUserNotes,
   turnHexToEnum,
+  turnEnumToHex,
   getAllColorPalettes,
   getCustomPaletteViaId,
 } from '../features/helpers.js';
@@ -57,7 +58,10 @@ function Home() {
           setCustomMeanings(userData.customMeanings);
         }
 
-        if (userData.colorPalette != null) {
+        if (
+          userData.colorPalette != null ||
+          userData.favoritePaletteReference != null
+        ) {
           // wenn hier ein Value gesetzt ist, müssen wir differenzieren, ob es sich um eine custom palette
           // oder eine default palette handelt
 
@@ -70,6 +74,11 @@ function Home() {
           if (colorPaletteType === 'colorPalette') {
             // default
             setUserColors(userData.colorPalette.colorList);
+            // set it to localstorage as well here
+            localStorage.setItem(
+              'colors',
+              JSON.stringify(userData.colorPalette)
+            );
           } else if (colorPaletteType === 'customPalette') {
             // die custom Palette suchen
 
@@ -86,6 +95,7 @@ function Home() {
             console.log('Cannot read favorite palette type');
           }
         } else {
+          console.log('user has no colorPalette and no fav palette ref');
           // use default colors if none are set
           try {
             const palettes = await getAllColorPalettes();
@@ -93,13 +103,26 @@ function Home() {
               (palette) => palette.name === 'Default'
             );
 
+            console.log('Found default palette: ', foundPalette);
+
             if (foundPalette) {
               setUserColors(foundPalette.colorList);
 
-              localStorage.setItem(
-                'colors',
-                JSON.stringify(foundPalette.colors)
+              // Create a copy of foundPalette
+              let newPalette = { ...foundPalette };
+
+              // Update the colorList with new keys (converted to hex)
+              const updatedColors = foundPalette.colorList.map((color) =>
+                turnEnumToHex(color)
               );
+
+              // Update newPalette with the updated color list
+              newPalette.colorList = updatedColors;
+
+              // Save updated palette to localStorage
+              localStorage.setItem('colors', JSON.stringify(newPalette));
+
+              console.log('Updated palette saved:', newPalette);
             } else {
               console.warn('No "Default" palette found.');
             }
@@ -120,7 +143,7 @@ function Home() {
       console.log('loading user data from localstorage: ', storedUserDataItem);
 
       setUserData(storedUserDataItem);
-      setCustomMeanings(storedUserDataItem.customNamesForColors);
+      setCustomMeanings(storedUserDataItem.customPairs);
       setOriginalNotes(storedUserDataItem.notes);
       if (storedUserDataItem.fontSize) {
         if (storedUserDataItem.fontSize == 'SMALL') {
@@ -136,7 +159,7 @@ function Home() {
         'loading user data from applicationState: ',
         applicationState
       );
-      setCustomMeanings(applicationState.customNamesForColors);
+      setCustomMeanings(applicationState.customPairs);
       setUserData(applicationState); // Fall back to applicationState if no data in localStorage
       setOriginalNotes(applicationState.notes);
     }
@@ -250,8 +273,6 @@ function Home() {
 
   const handleColorSort = async (color) => {
     try {
-      console.log(color);
-
       // Check if the color is null (reset filter case)
       if (color === null) {
         // Reset the notes to the original ones when filter is reset
@@ -259,18 +280,18 @@ function Home() {
         console.log('Resetting notes to original ones');
         return;
       }
-
-      // Proceed with color filtering if color is not null
-      color = turnHexToEnum(color);
       console.log(color);
+      // Proceed with color filtering if color is not null
 
       if (color) {
         // Always filter from originalNotes to prevent notes from being deleted
+
+        console.log(originalNotes);
         const filteredNotes = originalNotes.filter(
-          (note) => note.color === color
+          (note) => note.colorString === color
         );
         updateUserDataState('notes', filteredNotes);
-        console.log('Updating notes to filtered notes');
+        console.log('Updating notes to filtered notes', filteredNotes);
       }
     } catch (error) {
       console.error('Error while sorting notes by color:', error);
