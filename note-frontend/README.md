@@ -23,4 +23,4 @@ App to manage notes and users. Visit the live version at: https://blitznotiz.at/
 
 - Plan out the classes you want to use. An interface can be used in cases where classes are very equal (like ColorPalette and CustomColorPalette). Also, plan out the features you want to use to avoid re-writing entire classes.
 
--
+- Plan out the react router setup. You may not have to use localstorage all the time when navigating between pages.

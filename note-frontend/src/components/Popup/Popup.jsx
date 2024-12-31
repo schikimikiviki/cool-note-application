@@ -72,7 +72,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
 
       onAdd();
       onClose();
-      console.log(dataToSubmit, typeof dataToSubmit);
+      // console.log(dataToSubmit, typeof dataToSubmit);
     } catch (error) {
       console.error('Error while posting note:', error);
     }

@@ -19,6 +19,7 @@ import {
 
 function Home() {
   const [originalNotes, setOriginalNotes] = useState([]);
+  const [filteredNotes, setFilteredNotes] = useState([]);
   const [userData, setUserData] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isAboutPopupOpen, setIsAboutPopupOpen] = useState(false);
@@ -142,9 +143,11 @@ function Home() {
       let storedUserDataItem = JSON.parse(storedUserData);
       console.log('loading user data from localstorage: ', storedUserDataItem);
 
+      setFilteredNotes(storedUserDataItem.notes);
       setUserData(storedUserDataItem);
       setCustomMeanings(storedUserDataItem.customPairs);
       setOriginalNotes(storedUserDataItem.notes);
+
       if (storedUserDataItem.fontSize) {
         if (storedUserDataItem.fontSize == 'SMALL') {
           setFontSize('var(--font-size-small)');
@@ -162,6 +165,7 @@ function Home() {
       setCustomMeanings(applicationState.customPairs);
       setUserData(applicationState); // Fall back to applicationState if no data in localStorage
       setOriginalNotes(applicationState.notes);
+      setFilteredNotes(applicationState.notes);
     }
   }, [applicationState]);
 
@@ -202,23 +206,18 @@ function Home() {
     setUserData(responseObj);
   };
 
-  const updateUserDataState = (stateToUpdate, newData) => {
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      [stateToUpdate]: newData,
-    }));
-  };
-
   const load = async () => {
     try {
       console.log(`Executing load for user ${userData.username}...`);
       const newUserData = await loadUserNotes(userData.username);
       console.log('New user data: ', newUserData);
 
+      localStorage.setItem('userData', JSON.stringify(newUserData));
+
       // Sort notes by 'id'
       const sortedNotes = newUserData.notes.sort((a, b) => a.id - b.id);
 
-      updateUserDataState('notes', sortedNotes);
+      setFilteredNotes(sortedNotes);
       setOriginalNotes(sortedNotes);
     } catch (error) {
       console.error('Error loading notes:', error);
@@ -230,7 +229,7 @@ function Home() {
     console.log('NOTES STATE', userData.notes);
     console.log('ORIGINALNOTES', originalNotes);
     if (searchTerm === '') {
-      updateUserDataState('notes', originalNotes);
+      setFilteredNotes(originalNotes);
     } else {
       const filteredNotes = userData.notes.filter(
         (note) =>
@@ -239,7 +238,7 @@ function Home() {
       );
       console.log(filteredNotes);
 
-      updateUserDataState('notes', filteredNotes);
+      setFilteredNotes(filteredNotes);
     }
   };
 
@@ -253,7 +252,8 @@ function Home() {
       // Check if the color is null (reset filter case)
       if (color === null) {
         // Reset the notes to the original ones when filter is reset
-        updateUserDataState('notes', originalNotes);
+
+        setFilteredNotes(originalNotes);
         console.log('Resetting notes to original ones');
         return;
       }
@@ -267,7 +267,9 @@ function Home() {
         const filteredNotes = originalNotes.filter(
           (note) => note.colorString === color
         );
-        updateUserDataState('notes', filteredNotes);
+
+        setFilteredNotes(filteredNotes);
+
         console.log('Updating notes to filtered notes', filteredNotes);
       }
     } catch (error) {
@@ -338,7 +340,8 @@ function Home() {
       />
       {userData ? (
         <NoteList
-          notes={userData.notes}
+          // notes={userData.notes}
+          notes={filteredNotes}
           onDelete={load}
           titles={areTitlesVisible}
           onLoad={load}
