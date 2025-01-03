@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 				userDto.getNotes(), userDto.getRoles(), userDto.getEmail(), userDto.getIsAuthActive(),
 				userDto.getLoginList(), userDto.getTheme(), userDto.getFontSize(), userDto.getColorPalette(),
 				userDto.getCustomColorPaletteList(), userDto.getFavoritePaletteReference(), userDto.getCustomPairs(),
-				userDto.getDeleteDoneNotes(), userDto.getShowNoteTitles());
+				userDto.getHideDoneNotes(), userDto.getShowNoteTitles(), userDto.getDeleteAllDone());
 
 		return userRepository.save(user);
 	}

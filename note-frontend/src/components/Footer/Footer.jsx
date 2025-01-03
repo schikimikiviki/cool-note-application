@@ -9,8 +9,6 @@ const Footer = (props) => {
   );
   const navigate = useNavigate();
 
-  console.log(props.titles);
-
   useEffect(() => {
     setAreDoneNotesDeleted(props.deleteDone);
     setAreTitlesDisplayed(props.titles);

@@ -141,10 +141,11 @@ export const fetchGetFromBackend = async (path, errorType) => {
   }
 };
 
-export const loadUserNotes = async (userName) => {
+export const loadUserObject = async (userName) => {
   try {
     const response = await axios.get(`http://localhost:8080/users/${userName}`);
     console.log('fetching url: ', `http://localhost:8080/users/${userName}`);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching user notes:', error);
@@ -203,7 +204,7 @@ export const turnHexToEnum = (hex) => {
 };
 
 export default {
-  loadUserNotes,
+  loadUserObject,
   fetchGetFromBackend,
   turnEnumToHex,
   turnHexToEnum,

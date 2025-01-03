@@ -287,16 +287,20 @@ public class UserController {
 				foundUser.setShowNoteTitles(user.getShowNoteTitles());
 			}
 
-			if (user.getDeleteDoneNotes() != null) {
-				foundUser.setDeleteDoneNotes(user.getDeleteDoneNotes());
+			if (user.getHideDoneNotes() != null) {
+				foundUser.setHideDoneNotes(user.getHideDoneNotes());
+			}
+
+			if (user.getDeleteAllDone() != null) {
+				foundUser.setDeleteAllDone(user.getDeleteAllDone());
 			}
 
 			UserDto userDto = new UserDto(foundUser.getId(), foundUser.getUsername(), foundUser.getPassword(),
 					foundUser.getFullname(), foundUser.getNotes(), foundUser.getRoles(), foundUser.getEmail(),
 					foundUser.getIsAuthActive(), foundUser.getLoginList(), foundUser.getTheme(),
 					foundUser.getFontSize(), foundUser.getColorPalette(), foundUser.getCustomColorPaletteList(),
-					foundUser.getFavoritePaletteReference(), foundUser.getCustomPairs(), foundUser.getDeleteDoneNotes(),
-					foundUser.getShowNoteTitles());
+					foundUser.getFavoritePaletteReference(), foundUser.getCustomPairs(), foundUser.getHideDoneNotes(),
+					foundUser.getShowNoteTitles(), foundUser.getDeleteAllDone());
 
 			return userService.save(userDto);
 		}

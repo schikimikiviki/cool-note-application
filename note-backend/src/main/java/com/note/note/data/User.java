@@ -62,9 +62,11 @@ public class User {
 	@Column(name = "pair_value")
 	private Map<String, String> customPairs = new HashMap<>();
 
-	private Boolean deleteDoneNotes;
+	private Boolean hideDoneNotes; // this state is for hiding done notes
 
 	private Boolean showNoteTitles;
+
+	private Boolean deleteAllDone; // this state is for auto-deleting a note if its done
 
 	public User() {
 
@@ -73,7 +75,7 @@ public class User {
 	public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles,
 			String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize,
 			ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference,
-			Map<String, String> customPairs, Boolean deleteDoneNotes, Boolean showNoteTitles) {
+			Map<String, String> customPairs, Boolean hideDoneNotes, Boolean showNoteTitles, Boolean deleteAllDone) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -90,8 +92,17 @@ public class User {
 		this.customColorPaletteList = customColorPaletteList;
 		this.favoritePaletteReference = favoritePaletteReference;
 		this.customPairs = customPairs;
-		this.deleteDoneNotes = deleteDoneNotes;
+		this.hideDoneNotes = hideDoneNotes;
 		this.showNoteTitles = showNoteTitles;
+		this.deleteAllDone = deleteAllDone;
+	}
+
+	public void setDeleteAllDone(Boolean deleteAllDone) {
+		this.deleteAllDone = deleteAllDone;
+	}
+
+	public Boolean getDeleteAllDone() {
+		return deleteAllDone;
 	}
 
 	public void setShowNoteTitles(Boolean showNoteTitles) {
@@ -102,12 +113,12 @@ public class User {
 		return showNoteTitles;
 	}
 
-	public void setDeleteDoneNotes(Boolean deleteDoneNotes) {
-		this.deleteDoneNotes = deleteDoneNotes;
+	public void setHideDoneNotes(Boolean hideDoneNotes) {
+		this.hideDoneNotes = hideDoneNotes;
 	}
 
-	public Boolean getDeleteDoneNotes() {
-		return deleteDoneNotes;
+	public Boolean getHideDoneNotes() {
+		return hideDoneNotes;
 	}
 
 	public Map<String, String> getCustomPairs() {

@@ -9,7 +9,7 @@ import Popup from '../Popup/Popup.jsx';
 import Footer from '../Footer/Footer.jsx';
 import ColorSort from '../ColorSort/ColorSort.jsx';
 import {
-  loadUserNotes,
+  loadUserObject,
   turnEnumToHex,
   getAllColorPalettes,
   getCustomPaletteViaId,
@@ -29,11 +29,20 @@ function Home() {
   const [userColors, setUserColors] = useState();
   const [customMeanings, setCustomMeanings] = useState({});
   const [hideDoneNotes, setHideDoneNotes] = useState(false);
+  const [deleteAllDone, setDeleteAllDone] = useState(false);
+
+  const initializeUserData = (data) => ({
+    ...data,
+    deleteAllDone: data.deleteAllDone ?? false, // Default to false if null or undefined
+    hideDoneNotes: data.hideDoneNotes ?? false,
+    showNoteTitles: data.showNoteTitles ?? true,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       if (userData) {
-        localStorage.setItem('userData', JSON.stringify(userData)); // Persist userData
+        const normalizedData = initializeUserData(userData);
+        localStorage.setItem('userData', JSON.stringify(normalizedData));
 
         // Ensure originalNotes is set from userData.notes once
         if (userData.notes && originalNotes.length === 0) {
@@ -45,10 +54,10 @@ function Home() {
         }
 
         if (
-          userData.deleteDoneNotes !== null &&
-          userData.deleteDoneNotes !== undefined
+          userData.hideDoneNotes !== null &&
+          userData.hideDoneNotes !== undefined
         ) {
-          setHideDoneNotes(userData.deleteDoneNotes);
+          setHideDoneNotes(userData.hideDoneNotes);
         } else {
           setHideDoneNotes(false);
         }
@@ -60,6 +69,15 @@ function Home() {
           setHideTitles(userData.showNoteTitles);
         } else {
           setHideTitles(true);
+        }
+
+        if (
+          userData.deleteAllDone !== null &&
+          userData.deleteAllDone !== undefined
+        ) {
+          setDeleteAllDone(userData.deleteAllDone);
+        } else {
+          setDeleteAllDone(false);
         }
 
         if (userData.fontSize) {
@@ -157,36 +175,31 @@ function Home() {
   useEffect(() => {
     const storedUserData = localStorage.getItem('userData');
     if (storedUserData) {
-      let storedUserDataItem = JSON.parse(storedUserData);
-      console.log('loading user data from localstorage: ', storedUserDataItem);
-
-      setFilteredNotes(storedUserDataItem.notes);
-      setUserData(storedUserDataItem);
-      setCustomMeanings(storedUserDataItem.customPairs);
-      setOriginalNotes(storedUserDataItem.notes);
-      setHideDoneNotes(storedUserDataItem.deleteDoneNotes);
-      setHideTitles(storedUserData.showNoteTitles);
-
-      if (storedUserDataItem.fontSize) {
-        if (storedUserDataItem.fontSize == 'SMALL') {
-          setFontSize('var(--font-size-small)');
-        } else if (storedUserDataItem.fontSize == 'BIG') {
-          setFontSize('var(--font-size-big)');
-        } else {
-          setFontSize('var(--font-size-medium)');
-        }
-      }
-    } else if (applicationState) {
-      console.log(
-        'loading user data from applicationState: ',
-        applicationState
+      const parsedData = JSON.parse(storedUserData);
+      const normalizedData = initializeUserData(parsedData);
+      setUserData(normalizedData);
+      setFilteredNotes(normalizedData.notes);
+      setOriginalNotes(normalizedData.notes);
+      setCustomMeanings(normalizedData.customPairs);
+      setHideDoneNotes(normalizedData.hideDoneNotes);
+      setHideTitles(normalizedData.showNoteTitles);
+      setDeleteAllDone(normalizedData.deleteAllDone);
+      setFontSize(
+        normalizedData.fontSize === 'SMALL'
+          ? 'var(--font-size-small)'
+          : normalizedData.fontSize === 'BIG'
+          ? 'var(--font-size-big)'
+          : 'var(--font-size-medium)'
       );
-      setCustomMeanings(applicationState.customPairs);
-      setUserData(applicationState); // Fall back to applicationState if no data in localStorage
-      setOriginalNotes(applicationState.notes);
-      setFilteredNotes(applicationState.notes);
-      setHideDoneNotes(applicationState.deleteDoneNotes);
-      setHideTitles(applicationState.showNoteTitles);
+    } else if (applicationState) {
+      const normalizedState = initializeUserData(applicationState);
+      setUserData(normalizedState);
+      setOriginalNotes(normalizedState.notes);
+      setFilteredNotes(normalizedState.notes);
+      setCustomMeanings(normalizedState.customPairs);
+      setHideDoneNotes(normalizedState.hideDoneNotes);
+      setHideTitles(normalizedState.showNoteTitles);
+      setDeleteAllDone(normalizedState.deleteAllDone);
     }
   }, [applicationState]);
 
@@ -218,7 +231,7 @@ function Home() {
   const load = async () => {
     try {
       console.log(`Executing load for user ${userData.username}...`);
-      const newUserData = await loadUserNotes(userData.username);
+      const newUserData = await loadUserObject(userData.username);
       console.log('New user data: ', newUserData);
 
       localStorage.setItem('userData', JSON.stringify(newUserData));
@@ -298,7 +311,7 @@ function Home() {
     setHideDoneNotes(data);
 
     let userObj = {};
-    userObj.deleteDoneNotes = data;
+    userObj.hideDoneNotes = data;
 
     let responseObj = await patchUserWithNewData(userObj, userData.id);
     setUserData(responseObj);
@@ -364,6 +377,7 @@ function Home() {
       />
       {userData ? (
         <NoteList
+          userData={userData}
           notes={filteredNotes}
           onDelete={load}
           titles={hideTitles}

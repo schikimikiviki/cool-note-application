@@ -1,7 +1,7 @@
 import './SettingsPage.css';
 import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
 import { useState, useEffect } from 'react';
-import { patchUserWithNewData } from '../features/helpers';
+import { patchUserWithNewData, loadUserObject } from '../features/helpers';
 import {
   turnEnumToHex,
   getAllColorPalettes,
@@ -13,6 +13,7 @@ import ColorPicker from '../ColorPicker/ColorPicker';
 import AdvancedSettings from '../AdvancedSettings/AdvancedSettings';
 import EditUserData from '../EditUserData/EditUserData';
 import About from '../About/About';
+import api from '../../api/axiosConfig';
 
 const SettingsPage = () => {
   const [userData, setUserData] = useState(() => {
@@ -43,9 +44,12 @@ const SettingsPage = () => {
   const [colorPalette, setColorPalette] = useState(); // saving id here
   const [paletteCollection, setPaletteCollection] = useState();
   const [chosenPalette, setChosenPalette] = useState();
-  const [showDoneInput, setShowDoneInput] = useState(userData?.deleteDoneNotes);
+  const [showDoneInput, setShowDoneInput] = useState(userData?.hideDoneNotes);
   const [hideTitleInput, setHideTitleInput] = useState(
     userData?.showNoteTitles
+  );
+  const [deleteAllDoneInput, setDeleteAllDoneInput] = useState(
+    userData?.deleteAllDone
   );
   const navigate = useNavigate();
 
@@ -70,7 +74,7 @@ const SettingsPage = () => {
 
         let colorsToUse = localStorage.getItem('colors');
 
-        console.log('colorsToUse: ', colorsToUse);
+        // console.log('colorsToUse: ', colorsToUse);
 
         // we should have saved the whole palette:
         // colorsToUse:  {"id":57,"name":"Neon","colorList":["NEON_GREEN","NEON_ORANGE","NEON_PINK","NEON_PURPLE","NEON_YELLOW"]}
@@ -94,7 +98,7 @@ const SettingsPage = () => {
     // also, patch to the db
 
     let userObj = {};
-    userObj.deleteDoneNotes = e.target.value;
+    userObj.hideDoneNotes = e.target.value;
 
     let responseObj = await patchUserWithNewData(userObj, userData.id);
     setUserData(responseObj);
@@ -273,6 +277,60 @@ const SettingsPage = () => {
     setUserData(newUserData);
   };
 
+  const handleDeleteAllDone = async (e) => {
+    let newState = e.target.value === 'true';
+    setDeleteAllDoneInput(newState);
+
+    // Patch the user data in the database
+    const userObj = { deleteAllDone: newState };
+    let responseObj;
+
+    try {
+      responseObj = await patchUserWithNewData(userObj, userData.id);
+      setUserData(responseObj);
+    } catch (err) {
+      console.error('Error updating user data:', err);
+      return; // Exit early if patching fails
+    }
+
+    // Delete all done notes if the new state is true
+    if (newState === true && responseObj) {
+      const notesToDelete = responseObj.notes.filter(
+        (note) => note.isDone === true
+      );
+      console.log('Notes to delete:', notesToDelete);
+
+      if (notesToDelete.length > 0) {
+        try {
+          const deletionPromises = notesToDelete.map((note) =>
+            api.delete(`/api/notes/${note.id}`, {
+              headers: { 'Content-Type': 'application/json' },
+            })
+          );
+
+          await Promise.all(deletionPromises); // Wait for all deletions to complete
+          console.log('All notes deleted');
+        } catch (err) {
+          console.error('Error deleting notes:', err);
+          return; // Exit early if deletion fails
+        }
+      }
+    }
+
+    // Refetch the updated user object and save it to local storage
+    try {
+      const updatedUser = await api.get(`/users/id/${userData.id}`, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      console.log('Got the updated user data:', updatedUser.data);
+      localStorage.setItem('userData', JSON.stringify(updatedUser.data));
+      setUserData(updatedUser.data); // Update the state with the latest data
+    } catch (err) {
+      console.error('Failed to fetch updated user data:', err);
+    }
+  };
+
   const refreshStateFromDb = (response) => {
     console.log(response);
     setUserData(response);
@@ -402,6 +460,22 @@ const SettingsPage = () => {
                   style={{ fontSize: fontSize }}
                   value={hideTitleInput ?? 'true'}
                   onChange={handleHideTitle}
+                >
+                  <option value='true'>yes</option>
+                  <option value='false'>no</option>
+                </select>
+                <br />
+                <br />
+                <h2>
+                  <u>Permanently delete notes marked as "done? </u>
+                </h2>
+
+                <br />
+
+                <select
+                  style={{ fontSize: fontSize }}
+                  value={deleteAllDoneInput ?? 'false'}
+                  onChange={handleDeleteAllDone}
                 >
                   <option value='true'>yes</option>
                   <option value='false'>no</option>

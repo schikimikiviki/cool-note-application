@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import api from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import { loadUserNotes, patchUserWithNewData } from '../features/helpers';
+import { loadUserObject, patchUserWithNewData } from '../features/helpers';
 import emailjs from '@emailjs/browser';
 
 const LoginPage = () => {
@@ -141,7 +141,7 @@ const LoginPage = () => {
       // UserDaten fetchen und in den State speichern, zB. für Settings
       // und user-definierte Daten und Notes
 
-      const userData = await loadUserNotes(username);
+      const userData = await loadUserObject(username);
       setUserData(userData);
       setIsLoginCorrect(true);
 

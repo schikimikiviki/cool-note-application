@@ -12,6 +12,7 @@ const NoteList = ({
   fontSize,
   colors,
   isDoneDelete,
+  userData,
 }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState();
@@ -103,6 +104,21 @@ const NoteList = ({
         const updatedIsDoneList = [...isDoneList];
         updatedIsDoneList[index] = newDoneState;
         setIsDoneList(updatedIsDoneList);
+      }
+
+      if (userData.deleteAllDone) {
+        console.log('user has set done notes to be deleted!');
+
+        try {
+          api.delete(`/api/notes/${noteId}`, {
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          console.log('All notes deleted');
+        } catch (err) {
+          console.error('Error deleting notes:', err);
+          return; // Exit early if deletion fails
+        }
       }
 
       onLoad(); // Reload to reflect changes from DB
