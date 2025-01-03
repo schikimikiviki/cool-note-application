@@ -64,6 +64,8 @@ public class User {
 
 	private Boolean deleteDoneNotes;
 
+	private Boolean showNoteTitles;
+
 	public User() {
 
 	}
@@ -71,7 +73,7 @@ public class User {
 	public User(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles,
 			String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize,
 			ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference,
-			Map<String, String> customPairs, Boolean deleteDoneNotes) {
+			Map<String, String> customPairs, Boolean deleteDoneNotes, Boolean showNoteTitles) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -89,6 +91,15 @@ public class User {
 		this.favoritePaletteReference = favoritePaletteReference;
 		this.customPairs = customPairs;
 		this.deleteDoneNotes = deleteDoneNotes;
+		this.showNoteTitles = showNoteTitles;
+	}
+
+	public void setShowNoteTitles(Boolean showNoteTitles) {
+		this.showNoteTitles = showNoteTitles;
+	}
+
+	public Boolean getShowNoteTitles() {
+		return showNoteTitles;
 	}
 
 	public void setDeleteDoneNotes(Boolean deleteDoneNotes) {

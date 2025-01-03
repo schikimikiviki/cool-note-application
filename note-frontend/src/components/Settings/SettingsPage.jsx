@@ -44,6 +44,9 @@ const SettingsPage = () => {
   const [paletteCollection, setPaletteCollection] = useState();
   const [chosenPalette, setChosenPalette] = useState();
   const [showDoneInput, setShowDoneInput] = useState(userData?.deleteDoneNotes);
+  const [hideTitleInput, setHideTitleInput] = useState(
+    userData?.showNoteTitles
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -92,6 +95,18 @@ const SettingsPage = () => {
 
     let userObj = {};
     userObj.deleteDoneNotes = e.target.value;
+
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
+  };
+
+  const handleHideTitle = async (e) => {
+    setHideTitleInput(e.target.value);
+
+    // also, patch to the db
+
+    let userObj = {};
+    userObj.showNoteTitles = e.target.value;
 
     let responseObj = await patchUserWithNewData(userObj, userData.id);
     setUserData(responseObj);
@@ -365,11 +380,28 @@ const SettingsPage = () => {
                 <h2>
                   <u>Show notes that are done ? </u>
                 </h2>
+                <br />
 
                 <select
                   style={{ fontSize: fontSize }}
-                  value={showDoneInput}
+                  value={showDoneInput ?? 'true'}
                   onChange={handleShowDone}
+                >
+                  <option value='true'>yes</option>
+                  <option value='false'>no</option>
+                </select>
+                <br />
+                <br />
+                <h2>
+                  <u>Show note titles ? </u>
+                </h2>
+
+                <br />
+
+                <select
+                  style={{ fontSize: fontSize }}
+                  value={hideTitleInput ?? 'true'}
+                  onChange={handleHideTitle}
                 >
                   <option value='true'>yes</option>
                   <option value='false'>no</option>

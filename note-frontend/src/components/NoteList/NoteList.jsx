@@ -14,7 +14,7 @@ const NoteList = ({
   isDoneDelete,
 }) => {
   const [editingNote, setEditingNote] = useState(null);
-  const [areTitlesVisible, setAreTitlesVisible] = useState(true);
+  const [areTitlesVisible, setAreTitlesVisible] = useState();
   const [isDoneList, setIsDoneList] = useState([]);
   const [areDoneDeleted, setAreDoneDeleted] = useState();
 

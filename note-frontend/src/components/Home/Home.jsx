@@ -22,7 +22,7 @@ function Home() {
   const [userData, setUserData] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
-  const [areTitlesVisible, setAreTitlesVisible] = useState(true);
+  const [hideTitles, setHideTitles] = useState(false);
   const location = useLocation();
   const { applicationState } = location.state || {};
   const [fontSize, setFontSize] = useState(); // put css prop in here
@@ -51,6 +51,15 @@ function Home() {
           setHideDoneNotes(userData.deleteDoneNotes);
         } else {
           setHideDoneNotes(false);
+        }
+
+        if (
+          userData.showNoteTitles !== null &&
+          userData.showNoteTitles !== undefined
+        ) {
+          setHideTitles(userData.showNoteTitles);
+        } else {
+          setHideTitles(true);
         }
 
         if (userData.fontSize) {
@@ -156,6 +165,7 @@ function Home() {
       setCustomMeanings(storedUserDataItem.customPairs);
       setOriginalNotes(storedUserDataItem.notes);
       setHideDoneNotes(storedUserDataItem.deleteDoneNotes);
+      setHideTitles(storedUserData.showNoteTitles);
 
       if (storedUserDataItem.fontSize) {
         if (storedUserDataItem.fontSize == 'SMALL') {
@@ -176,6 +186,7 @@ function Home() {
       setOriginalNotes(applicationState.notes);
       setFilteredNotes(applicationState.notes);
       setHideDoneNotes(applicationState.deleteDoneNotes);
+      setHideTitles(applicationState.showNoteTitles);
     }
   }, [applicationState]);
 
@@ -240,9 +251,15 @@ function Home() {
     }
   };
 
-  const changeTitles = (data) => {
+  const changeTitles = async (data) => {
     console.log(data);
-    setAreTitlesVisible(data);
+    setHideTitles(data);
+
+    let userObj = {};
+    userObj.showNoteTitles = data;
+
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
   };
 
   const handleColorSort = async (color) => {
@@ -349,7 +366,7 @@ function Home() {
         <NoteList
           notes={filteredNotes}
           onDelete={load}
-          titles={areTitlesVisible}
+          titles={hideTitles}
           isDoneDelete={hideDoneNotes}
           onLoad={load}
           fontSize={fontSize}
@@ -359,6 +376,7 @@ function Home() {
         <p>Loading notes...</p>
       )}
       <Footer
+        titles={hideTitles}
         onTitleChange={changeTitles}
         userDetails={userData}
         fontSize={fontSize}

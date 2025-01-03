@@ -3,15 +3,18 @@ import './Footer.css';
 import { useNavigate } from 'react-router-dom';
 
 const Footer = (props) => {
-  const [areTitlesDisplayed, setAreTitlesDisplayed] = useState(true);
+  const [areTitlesDisplayed, setAreTitlesDisplayed] = useState(props.titles);
   const [areDoneNotesDeleted, setAreDoneNotesDeleted] = useState(
     props.deleteDone
   );
   const navigate = useNavigate();
 
+  console.log(props.titles);
+
   useEffect(() => {
     setAreDoneNotesDeleted(props.deleteDone);
-  }, [props.deleteDone]);
+    setAreTitlesDisplayed(props.titles);
+  }, [props.deleteDone, props.titles]);
 
   const manageTitles = () => {
     setAreTitlesDisplayed((prevAreTitlesDisplayed) => !prevAreTitlesDisplayed);
