@@ -16,12 +16,8 @@ const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
           setTranslatedColors(resolvedColors);
 
           if (customMeanings) {
-            const updatedMeanings = {};
-            for (const [key, value] of Object.entries(customMeanings)) {
-              let newKey = turnEnumToHex(key);
-              updatedMeanings[newKey] = value;
-            }
-            setTranslatedCustomMeanings(updatedMeanings);
+            // no need to translate to hex
+            setTranslatedCustomMeanings(customMeanings);
           }
         } else {
           const hexColors = resolvedColors.map(turnEnumToHex);

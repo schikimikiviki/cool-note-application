@@ -277,13 +277,14 @@ public class UserController {
   
 
          if (user.getCustomPairs() != null && !user.getCustomPairs().isEmpty()) {
-        	    System.out.println("Patch with custom pair");
+        	  //  System.out.println("Patch with custom pair");
         	    foundUser.setCustomPairs(user.getCustomPairs());
-        	} else {
-        	    System.out.println("Patch WITH NO custom pair");
-        	}
+        	} 
 
-
+         if (user.getDeleteDoneNotes() != null ) {
+       	    foundUser.setDeleteDoneNotes(user.getDeleteDoneNotes());
+       	} 
+         
          UserDto userDto = new UserDto(
                  foundUser.getId(),
                  foundUser.getUsername(),
@@ -299,7 +300,8 @@ public class UserController {
                  foundUser.getColorPalette(),
                  foundUser.getCustomColorPaletteList(),
                  foundUser.getFavoritePaletteReference(),
-                 foundUser.getCustomPairs()
+                 foundUser.getCustomPairs(),
+                 foundUser.getDeleteDoneNotes()
              );
 
        

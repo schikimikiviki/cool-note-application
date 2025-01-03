@@ -1,18 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Footer.css';
 import { useNavigate } from 'react-router-dom';
 
 const Footer = (props) => {
   const [areTitlesDisplayed, setAreTitlesDisplayed] = useState(true);
+  const [areDoneNotesDeleted, setAreDoneNotesDeleted] = useState(
+    props.deleteDone
+  );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setAreDoneNotesDeleted(props.deleteDone);
+  }, [props.deleteDone]);
 
   const manageTitles = () => {
     setAreTitlesDisplayed((prevAreTitlesDisplayed) => !prevAreTitlesDisplayed);
     props.onTitleChange(!areTitlesDisplayed);
   };
 
-  const handleAbout = () => {
-    props.onAbout();
+  const handleHideDone = () => {
+    setAreDoneNotesDeleted((prevStateNotesDeleted) => {
+      const newState = !prevStateNotesDeleted;
+      props.onHide(newState);
+      return newState;
+    });
   };
 
   const handleSettings = () => {
@@ -24,9 +35,9 @@ const Footer = (props) => {
       <button
         className='footer-button'
         style={{ fontSize: props.fontSize }}
-        onClick={handleAbout}
+        onClick={handleHideDone}
       >
-        About
+        {props.deleteDone ? 'Show done notes' : 'Hide done notes'}
       </button>
       <button
         className='footer-button'

@@ -4,10 +4,19 @@ import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
 import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
-const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
+const NoteList = ({
+  notes,
+  onDelete,
+  titles,
+  onLoad,
+  fontSize,
+  colors,
+  isDoneDelete,
+}) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const [isDoneList, setIsDoneList] = useState([]);
+  const [areDoneDeleted, setAreDoneDeleted] = useState();
 
   // Sync the `isDoneList` whenever `notes` change
   useEffect(() => {
@@ -16,7 +25,8 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
     // Initialize `isDoneList` based on the `notes` prop
     const initialIsDoneList = notes.map((note) => note.isDone); // Make sure `isDone` is the correct property
     setIsDoneList(initialIsDoneList);
-  }, [notes, titles]); // Re-run when notes or titles change
+    setAreDoneDeleted(isDoneDelete);
+  }, [notes, titles, isDoneDelete]);
 
   const handleEdit = (noteId) => {
     setEditingNote(noteId);
@@ -109,6 +119,7 @@ const NoteList = ({ notes, onDelete, titles, onLoad, fontSize, colors }) => {
             className={`note-container ${isDoneList[index] ? 'overlay' : ''}`}
             style={{
               backgroundColor: isDoneList[index] ? 'grey' : note.colorString,
+              visibility: isDoneList[index] && areDoneDeleted ? 'hidden' : '',
             }}
           >
             {editingNote === note.id ? (

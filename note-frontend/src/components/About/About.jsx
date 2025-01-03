@@ -1,26 +1,18 @@
 import './About.css';
 import picture from '../../assets/about.jpg';
 
-const About = (props) => {
-  const onClose = () => {
-    props.onClose();
-  };
-
+const About = ({ fontSize }) => {
   return (
-    <div className='popup-overlay'>
-      <div className='popup'>
-        <button className='close-button' onClick={onClose}>
-          X
-        </button>
-
-        <h2 className='popup-title' style={{ fontSize: props.fontSize }}>
+    <div>
+      <div>
+        <h2 className='popup-title' style={{ fontSize: fontSize }}>
           About
         </h2>
         <div className='about-container'>
           <div>
             <img src={picture} width='220' height='280' />
           </div>
-          <div className='container-text' style={{ fontSize: props.fontSize }}>
+          <div className='container-text' style={{ fontSize: fontSize }}>
             Hi! My name is Viktoria and this is my Notes Application, where
             simplicity meets productivity. Organize your thoughts effortlessly
             with my user-friendly interface. Customize your notes with different

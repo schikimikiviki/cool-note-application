@@ -7,7 +7,6 @@ import NoteList from '../NoteList/NoteList.jsx';
 import Header from '../Header/Header.jsx';
 import Popup from '../Popup/Popup.jsx';
 import Footer from '../Footer/Footer.jsx';
-import About from '../About/About.jsx';
 import ColorSort from '../ColorSort/ColorSort.jsx';
 import {
   loadUserNotes,
@@ -22,7 +21,6 @@ function Home() {
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [userData, setUserData] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isAboutPopupOpen, setIsAboutPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
   const [areTitlesVisible, setAreTitlesVisible] = useState(true);
   const location = useLocation();
@@ -30,6 +28,7 @@ function Home() {
   const [fontSize, setFontSize] = useState(); // put css prop in here
   const [userColors, setUserColors] = useState();
   const [customMeanings, setCustomMeanings] = useState({});
+  const [hideDoneNotes, setHideDoneNotes] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +42,15 @@ function Home() {
 
         if (userData.theme === 'NIGHT') {
           setIsDarkThemeSet(true);
+        }
+
+        if (
+          userData.deleteDoneNotes !== null &&
+          userData.deleteDoneNotes !== undefined
+        ) {
+          setHideDoneNotes(userData.deleteDoneNotes);
+        } else {
+          setHideDoneNotes(false);
         }
 
         if (userData.fontSize) {
@@ -147,6 +155,7 @@ function Home() {
       setUserData(storedUserDataItem);
       setCustomMeanings(storedUserDataItem.customPairs);
       setOriginalNotes(storedUserDataItem.notes);
+      setHideDoneNotes(storedUserDataItem.deleteDoneNotes);
 
       if (storedUserDataItem.fontSize) {
         if (storedUserDataItem.fontSize == 'SMALL') {
@@ -166,6 +175,7 @@ function Home() {
       setUserData(applicationState); // Fall back to applicationState if no data in localStorage
       setOriginalNotes(applicationState.notes);
       setFilteredNotes(applicationState.notes);
+      setHideDoneNotes(applicationState.deleteDoneNotes);
     }
   }, [applicationState]);
 
@@ -177,20 +187,8 @@ function Home() {
     setIsPopupOpen(false);
   };
 
-  const openAboutPopup = () => {
-    setIsAboutPopupOpen(true);
-  };
-
-  const closeAboutPopup = () => {
-    setIsAboutPopupOpen(false);
-  };
-
   const handleRequest = () => {
     openPopup();
-  };
-
-  const handleAboutPopup = () => {
-    openAboutPopup();
   };
 
   const handleThemeChange = async () => {
@@ -277,6 +275,18 @@ function Home() {
     }
   };
 
+  const handleHideNotes = async (data) => {
+    // patch the user and update the state
+    console.log(data);
+    setHideDoneNotes(data);
+
+    let userObj = {};
+    userObj.deleteDoneNotes = data;
+
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
+  };
+
   return (
     <div
       className={`main-page ${isDarkThemeSet ? 'dark-theme' : 'light-theme'}`}
@@ -329,9 +339,6 @@ function Home() {
         />
       )}
 
-      {isAboutPopupOpen && (
-        <About onClose={closeAboutPopup} fontSize={fontSize} />
-      )}
       <ColorSort
         colors={userColors}
         onColorSort={handleColorSort}
@@ -340,10 +347,10 @@ function Home() {
       />
       {userData ? (
         <NoteList
-          // notes={userData.notes}
           notes={filteredNotes}
           onDelete={load}
           titles={areTitlesVisible}
+          isDoneDelete={hideDoneNotes}
           onLoad={load}
           fontSize={fontSize}
           colors={userColors}
@@ -353,9 +360,10 @@ function Home() {
       )}
       <Footer
         onTitleChange={changeTitles}
-        onAbout={handleAboutPopup}
         userDetails={userData}
         fontSize={fontSize}
+        onHide={handleHideNotes}
+        deleteDone={hideDoneNotes}
       />
     </div>
   );

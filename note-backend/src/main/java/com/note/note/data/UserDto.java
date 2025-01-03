@@ -1,6 +1,5 @@
 package com.note.note.data;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +7,6 @@ import java.util.Set;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 public class UserDto {
 
@@ -19,123 +16,136 @@ public class UserDto {
 	private List<Note> notes;
 	private Set<String> roles;
 	private Long id;
-	private String email; 
+	private String email;
 	private Boolean isAuthActive;
-	private List<String> loginList; 
-	 @Enumerated(EnumType.STRING)
-	 private Theme theme;
-	 
-	 @Enumerated(EnumType.STRING)
-	 private FontSize fontSize; 
-	 
-	 private ColorPalette colorPalette;
-	
-	 
-	 private List<CustomColorPalette> customColorPaletteList;
-	 
-	 private String favoritePaletteReference;
+	private List<String> loginList;
+	@Enumerated(EnumType.STRING)
+	private Theme theme;
 
-	 private Map<String, String> customPairs = new HashMap<>();
+	@Enumerated(EnumType.STRING)
+	private FontSize fontSize;
 
-	 public UserDto() {
+	private ColorPalette colorPalette;
 
-	 }
+	private List<CustomColorPalette> customColorPaletteList;
 
-	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles, String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize, ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList,  String favoritePaletteReference, Map<String, String> customPairs) {
+	private String favoritePaletteReference;
+
+	private Map<String, String> customPairs = new HashMap<>();
+
+	private Boolean deleteDoneNotes;
+
+	public UserDto() {
+
+	}
+
+	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles,
+			String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize,
+			ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference,
+			Map<String, String> customPairs, Boolean deleteDoneNotes) {
 		super();
-		this.id = id; 
+		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.notes = notes;
 		this.roles = roles;
-		this.email = email; 
-		this.isAuthActive = isAuthActive; 
-		this.loginList = loginList; 
-		this.theme = theme; 
-		this.fontSize = fontSize; 
-		this.colorPalette = colorPalette; 
-		this.customColorPaletteList = customColorPaletteList; 
+		this.email = email;
+		this.isAuthActive = isAuthActive;
+		this.loginList = loginList;
+		this.theme = theme;
+		this.fontSize = fontSize;
+		this.colorPalette = colorPalette;
+		this.customColorPaletteList = customColorPaletteList;
 		this.favoritePaletteReference = favoritePaletteReference;
-		this.customPairs = customPairs; 
+		this.customPairs = customPairs;
+		this.deleteDoneNotes = deleteDoneNotes;
 	}
-	
-	 public Map<String, String> getCustomPairs (){
-		 return customPairs; 
-	 }
-	 
-	 public void setCustomPairs (Map<String, String> customPairs) {
-		 this.customPairs = customPairs; 
-	 }
-	
-	 public void setFavoritePaletteReference (String favoritePaletteReference) {
-		 this.favoritePaletteReference = favoritePaletteReference; 
-	 }
-	 
-	 public String getFavoritePaletteReference () {
-		 return favoritePaletteReference; 
-	 }
-	
-	 public List<CustomColorPalette> getCustomColorPaletteList() {
-		 return customColorPaletteList; 
-	 }
-	 
-	 public void setCustomColorPaletteList (List<CustomColorPalette> customColorPaletteList) {
-		 this.customColorPaletteList = customColorPaletteList; 
-	 }
-	
-	 public void setColorPalette(ColorPalette colorPalette) {
-		 this.colorPalette = colorPalette; 
-	 }
-	 
-	 public ColorPalette getColorPalette() {
-		 return colorPalette;
-	 }
-	
+
+	public void setDeleteDoneNotes(Boolean deleteDoneNotes) {
+		this.deleteDoneNotes = deleteDoneNotes;
+	}
+
+	public Boolean getDeleteDoneNotes() {
+		return deleteDoneNotes;
+	}
+
+	public Map<String, String> getCustomPairs() {
+		return customPairs;
+	}
+
+	public void setCustomPairs(Map<String, String> customPairs) {
+		this.customPairs = customPairs;
+	}
+
+	public void setFavoritePaletteReference(String favoritePaletteReference) {
+		this.favoritePaletteReference = favoritePaletteReference;
+	}
+
+	public String getFavoritePaletteReference() {
+		return favoritePaletteReference;
+	}
+
+	public List<CustomColorPalette> getCustomColorPaletteList() {
+		return customColorPaletteList;
+	}
+
+	public void setCustomColorPaletteList(List<CustomColorPalette> customColorPaletteList) {
+		this.customColorPaletteList = customColorPaletteList;
+	}
+
+	public void setColorPalette(ColorPalette colorPalette) {
+		this.colorPalette = colorPalette;
+	}
+
+	public ColorPalette getColorPalette() {
+		return colorPalette;
+	}
+
 	public void setFontSize(FontSize fontSize) {
-		 this.fontSize = fontSize; 
-	 }
-	 
-	 public FontSize getFontSize() {
-		 return fontSize; 
-	 }
-	 
-	 public void setTheme (Theme theme) {
-		 this.theme = theme; 
-	 }
-	 
-	 public Theme getTheme() {
-		 return theme; 
-	 }
-	
+		this.fontSize = fontSize;
+	}
+
+	public FontSize getFontSize() {
+		return fontSize;
+	}
+
+	public void setTheme(Theme theme) {
+		this.theme = theme;
+	}
+
+	public Theme getTheme() {
+		return theme;
+	}
+
 	public List<String> getLoginList() {
 		return loginList;
 	}
-	
+
 	public void setLoginList(List<String> loginList) {
-		this.loginList = loginList; 
+		this.loginList = loginList;
 	}
-	
+
 	public Boolean getIsAuthActive() {
-		return isAuthActive; 
+		return isAuthActive;
 	}
-	
+
 	public void setIsAuthActive(Boolean isAuthActive) {
-		this.isAuthActive = isAuthActive; 
+		this.isAuthActive = isAuthActive;
 	}
-	
+
 	public String getEmail() {
-		return email; 
+		return email;
 	}
-	
+
 	public void setEmail(String email) {
-		this.email = email; 
+		this.email = email;
 	}
-	
+
 	public Long getId() {
-		return id; 
+		return id;
 	}
-	
+
 	public void setIdLong(Long id) {
 		this.id = id;
 	}
@@ -182,6 +192,7 @@ public class UserDto {
 
 	@Override
 	public String toString() {
-		return "UserDto [username=" + username + ", password=" + password + ", fullname=" + fullname + ", email=" + email + "]";
+		return "UserDto [username=" + username + ", password=" + password + ", fullname=" + fullname + ", email="
+				+ email + "]";
 	}
 }

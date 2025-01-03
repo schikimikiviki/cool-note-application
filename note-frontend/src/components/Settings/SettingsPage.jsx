@@ -2,7 +2,6 @@ import './SettingsPage.css';
 import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
 import { useState, useEffect } from 'react';
 import { patchUserWithNewData } from '../features/helpers';
-import api from '../../api/axiosConfig';
 import {
   turnEnumToHex,
   getAllColorPalettes,
@@ -13,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import AdvancedSettings from '../AdvancedSettings/AdvancedSettings';
 import EditUserData from '../EditUserData/EditUserData';
+import About from '../About/About';
 
 const SettingsPage = () => {
   const [userData, setUserData] = useState(() => {
@@ -43,6 +43,7 @@ const SettingsPage = () => {
   const [colorPalette, setColorPalette] = useState(); // saving id here
   const [paletteCollection, setPaletteCollection] = useState();
   const [chosenPalette, setChosenPalette] = useState();
+  const [showDoneInput, setShowDoneInput] = useState(userData?.deleteDoneNotes);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,6 +84,18 @@ const SettingsPage = () => {
 
     fetchData();
   }, [userData]);
+
+  const handleShowDone = async (e) => {
+    setShowDoneInput(e.target.value);
+
+    // also, patch to the db
+
+    let userObj = {};
+    userObj.deleteDoneNotes = e.target.value;
+
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
+  };
 
   const handleSelectPalette = async (e) => {
     let isCustomPalette = false;
@@ -287,11 +300,18 @@ const SettingsPage = () => {
               <Tab tabFor='vertical-tab-one' style={{ fontSize: fontSize }}>
                 User profile
               </Tab>
+              <Tab tabFor='extra' style={{ fontSize: fontSize }}>
+                Color palettes
+              </Tab>
               <Tab tabFor='vertical-tab-two' style={{ fontSize: fontSize }}>
                 Notes
               </Tab>
+
               <Tab tabFor='vertical-tab-three' style={{ fontSize: fontSize }}>
                 Advanced settings
+              </Tab>
+              <Tab tabFor='vertical-tab-four' style={{ fontSize: fontSize }}>
+                About
               </Tab>
             </TabList>
             <TabPanel tabId='vertical-tab-one'>
@@ -343,31 +363,128 @@ const SettingsPage = () => {
                 <br />
 
                 <h2>
-                  <u>Custom color palettes and custom values for colors</u>
+                  <u>Show notes that are done ? </u>
                 </h2>
 
-                <p style={{ fontSize: fontSize }}>
-                  You can give colors a custom meaning or even change your color
-                  palette. Type in your own ideas for colors and filter your
-                  notes according to your own values in the notes page! Choose
-                  short, meaningful names for this to work best.
-                </p>
+                <select
+                  style={{ fontSize: fontSize }}
+                  value={showDoneInput}
+                  onChange={handleShowDone}
+                >
+                  <option value='true'>yes</option>
+                  <option value='false'>no</option>
+                </select>
+              </div>
+            </TabPanel>
+            <TabPanel tabId='extra'>
+              <h2>
+                <u>Custom color palettes and custom values for colors</u>
+              </h2>
 
-                <br />
-                <p>
-                  <u>Attention:</u> The color of your existent notes will change
-                  randomly to a new color if you choose a new palette!
-                </p>
-                <div className='color-div'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <div>
-                      {paletteCollection &&
-                        paletteCollection.map((palette, paletteIndex) => (
+              <p style={{ fontSize: fontSize }}>
+                You can give colors a custom meaning or even change your color
+                palette. Type in your own ideas for colors and filter your notes
+                according to your own values in the notes page! Choose short,
+                meaningful names for this to work best.
+              </p>
+
+              <br />
+              <p>
+                <u>Attention:</u> The color of your existent notes will change
+                randomly to a new color if you choose a new palette!
+              </p>
+              <div className='color-div'>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <div>
+                    {paletteCollection &&
+                      paletteCollection.map((palette, paletteIndex) => (
+                        <div
+                          key={paletteIndex}
+                          style={{
+                            gap: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                            paddingBottom: '10px',
+                          }}
+                        >
+                          <input
+                            type='checkbox'
+                            id={`palette-${palette.id}`}
+                            name={`palette-${palette.id}`}
+                            value={palette.id}
+                            checked={chosenPalette === palette.id}
+                            onChange={() => handleSelectPalette(palette.id)}
+                          />
+                          <label htmlFor={`palette-${palette.id}`}>
+                            {palette.name || `Palette ${paletteIndex + 1}`}
+                          </label>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              marginTop: '10px',
+                            }}
+                          >
+                            {palette.colorList.map((color, colorIndex) => (
+                              <div
+                                key={colorIndex}
+                                onClick={
+                                  chosenPalette === palette.id
+                                    ? () => handleColorClick(color)
+                                    : null
+                                }
+                                style={{
+                                  width: '70px',
+                                  height: '30px',
+                                  backgroundColor: turnEnumToHex(color),
+                                  cursor: 'pointer',
+                                  border:
+                                    selectedColor === color
+                                      ? '2px solid #000'
+                                      : 'none',
+                                  display: 'inline-block',
+                                }}
+                              >
+                                {(colorMeanings && colorMeanings[color]) || ''}
+                              </div>
+                            ))}
+                          </div>
+
+                          <div>
+                            {chosenPalette === palette.id && ( // Input field only for the chosen palette
+                              <input
+                                type='text'
+                                id={`customMeaning-${palette.id}`}
+                                name={`customMeaning-${palette.id}`}
+                                placeholder='Enter a new name'
+                                value={
+                                  selectedColor
+                                    ? (colorMeanings &&
+                                        colorMeanings[selectedColor]) ||
+                                      ''
+                                    : ''
+                                }
+                                onChange={handleColorCustomMeaning}
+                                style={{
+                                  marginTop: '20px',
+                                }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      ))}
+
+                    {/* SECOND PALETTE COLLECTION MAPPING BELOW:  */}
+
+                    {userData?.customColorPaletteList &&
+                      userData?.customColorPaletteList.map(
+                        (palette, paletteIndex) => (
                           <div
                             key={paletteIndex}
                             style={{
@@ -396,30 +513,32 @@ const SettingsPage = () => {
                                 marginTop: '10px',
                               }}
                             >
-                              {palette.colorList.map((color, colorIndex) => (
-                                <div
-                                  key={colorIndex}
-                                  onClick={
-                                    chosenPalette === palette.id
-                                      ? () => handleColorClick(color)
-                                      : null
-                                  }
-                                  style={{
-                                    width: '70px',
-                                    height: '30px',
-                                    backgroundColor: turnEnumToHex(color),
-                                    cursor: 'pointer',
-                                    border:
-                                      selectedColor === color
-                                        ? '2px solid #000'
-                                        : 'none',
-                                    display: 'inline-block',
-                                  }}
-                                >
-                                  {(colorMeanings && colorMeanings[color]) ||
-                                    ''}
-                                </div>
-                              ))}
+                              {palette.userSetColors.map(
+                                (color, colorIndex) => (
+                                  <div
+                                    key={colorIndex}
+                                    onClick={
+                                      chosenPalette === palette.id
+                                        ? () => handleColorClick(color)
+                                        : null
+                                    }
+                                    style={{
+                                      width: '70px',
+                                      height: '30px',
+                                      backgroundColor: color,
+                                      cursor: 'pointer',
+                                      border:
+                                        selectedColor === color
+                                          ? '2px solid #000'
+                                          : 'none',
+                                      display: 'inline-block',
+                                    }}
+                                  >
+                                    {(colorMeanings && colorMeanings[color]) ||
+                                      ''}
+                                  </div>
+                                )
+                              )}
                             </div>
 
                             <div>
@@ -444,119 +563,33 @@ const SettingsPage = () => {
                               )}
                             </div>
                           </div>
-                        ))}
+                        )
+                      )}
 
-                      {/* SECOND PALETTE COLLECTION MAPPING BELOW:  */}
-
-                      {userData?.customColorPaletteList &&
-                        userData?.customColorPaletteList.map(
-                          (palette, paletteIndex) => (
-                            <div
-                              key={paletteIndex}
-                              style={{
-                                gap: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'flex-start',
-                                paddingBottom: '10px',
-                              }}
-                            >
-                              <input
-                                type='checkbox'
-                                id={`palette-${palette.id}`}
-                                name={`palette-${palette.id}`}
-                                value={palette.id}
-                                checked={chosenPalette === palette.id}
-                                onChange={() => handleSelectPalette(palette.id)}
-                              />
-                              <label htmlFor={`palette-${palette.id}`}>
-                                {palette.name || `Palette ${paletteIndex + 1}`}
-                              </label>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexWrap: 'wrap',
-                                  marginTop: '10px',
-                                }}
-                              >
-                                {palette.userSetColors.map(
-                                  (color, colorIndex) => (
-                                    <div
-                                      key={colorIndex}
-                                      onClick={
-                                        chosenPalette === palette.id
-                                          ? () => handleColorClick(color)
-                                          : null
-                                      }
-                                      style={{
-                                        width: '70px',
-                                        height: '30px',
-                                        backgroundColor: color,
-                                        cursor: 'pointer',
-                                        border:
-                                          selectedColor === color
-                                            ? '2px solid #000'
-                                            : 'none',
-                                        display: 'inline-block',
-                                      }}
-                                    >
-                                      {(colorMeanings &&
-                                        colorMeanings[color]) ||
-                                        ''}
-                                    </div>
-                                  )
-                                )}
-                              </div>
-
-                              <div>
-                                {chosenPalette === palette.id && ( // Input field only for the chosen palette
-                                  <input
-                                    type='text'
-                                    id={`customMeaning-${palette.id}`}
-                                    name={`customMeaning-${palette.id}`}
-                                    placeholder='Enter a new name'
-                                    value={
-                                      selectedColor
-                                        ? (colorMeanings &&
-                                            colorMeanings[selectedColor]) ||
-                                          ''
-                                        : ''
-                                    }
-                                    onChange={handleColorCustomMeaning}
-                                    style={{
-                                      marginTop: '20px',
-                                    }}
-                                  />
-                                )}
-                              </div>
-                            </div>
-                          )
-                        )}
-
-                      <button
-                        className='exit'
-                        style={{ marginTop: '20px', fontSize: fontSize }}
-                        onClick={handleSaveCustomColors}
-                        type='submit'
-                      >
-                        Save custom meanings for colors
-                      </button>
-                    </div>
+                    <button
+                      className='exit'
+                      style={{ marginTop: '20px', fontSize: fontSize }}
+                      onClick={handleSaveCustomColors}
+                      type='submit'
+                    >
+                      Save custom meanings for colors
+                    </button>
                   </div>
                 </div>
-
-                <br />
-                <br />
-
-                <ColorPicker
-                  fontSize={fontSize}
-                  user={userData}
-                  onAddPalette={handleAddCustomPalette}
-                  onDelete={refreshStateFromDb}
-                  onChangePaletteName={refreshStateFromDb}
-                />
               </div>
+
+              <br />
+              <br />
+
+              <ColorPicker
+                fontSize={fontSize}
+                user={userData}
+                onAddPalette={handleAddCustomPalette}
+                onDelete={refreshStateFromDb}
+                onChangePaletteName={refreshStateFromDb}
+              />
             </TabPanel>
+
             <TabPanel tabId='vertical-tab-three'>
               <AdvancedSettings
                 userData={userData}
@@ -566,6 +599,9 @@ const SettingsPage = () => {
                 onChangeAuth={refreshStateFromDb}
                 onAuthSubmit={refreshStateFromDb}
               />
+            </TabPanel>
+            <TabPanel tabId='vertical-tab-four'>
+              <About style={{ fontSize: fontSize }} />
             </TabPanel>
           </Tabs>
         </div>
