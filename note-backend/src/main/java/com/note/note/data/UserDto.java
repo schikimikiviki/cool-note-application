@@ -39,6 +39,8 @@ public class UserDto {
 
 	private Boolean deleteAllDone;
 
+	private String fontStyle;
+
 	public UserDto() {
 
 	}
@@ -46,7 +48,8 @@ public class UserDto {
 	public UserDto(Long id, String username, String password, String fullname, List<Note> notes, Set<String> roles,
 			String email, Boolean isAuthActive, List<String> loginList, Theme theme, FontSize fontSize,
 			ColorPalette colorPalette, List<CustomColorPalette> customColorPaletteList, String favoritePaletteReference,
-			Map<String, String> customPairs, Boolean hideDoneNotes, Boolean showNoteTitles, Boolean deleteAllDone) {
+			Map<String, String> customPairs, Boolean hideDoneNotes, Boolean showNoteTitles, Boolean deleteAllDone,
+			String fontStyle) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -66,6 +69,15 @@ public class UserDto {
 		this.hideDoneNotes = hideDoneNotes;
 		this.showNoteTitles = showNoteTitles;
 		this.deleteAllDone = deleteAllDone;
+		this.fontStyle = fontStyle;
+	}
+
+	public String getFontStyle() {
+		return fontStyle;
+	}
+
+	public void setFontStyle(String fontStyle) {
+		this.fontStyle = fontStyle;
 	}
 
 	public void setDeleteAllDone(Boolean deleteAllDone) {

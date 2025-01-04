@@ -37,27 +37,11 @@ const NoteList = ({
     setEditingNote(null);
   };
 
-  const handleSave = async (
-    noteId,
-    editedContent,
-    selectedColor,
-    editedName
-  ) => {
+  const handleSave = async (noteId, noteObj) => {
     try {
-      const editedNote = notes.find((note) => note.id === noteId);
-      editedNote.content = editedContent;
-      editedNote.color = selectedColor;
-      editedNote.title = editedName;
+      console.log('Edited Body:', noteObj);
 
-      let editedBody = {
-        content: editedContent,
-        title: editedName,
-        colorString: selectedColor,
-      };
-
-      console.log(editedBody);
-
-      await api.patch(`/api/notes/${noteId}`, editedBody, {
+      await api.patch(`/api/notes/${noteId}`, noteObj, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -156,14 +140,28 @@ const NoteList = ({
               </span>
 
               {areTitlesVisible ? (
-                <h2 className='handwriting' style={{ fontSize: fontSize }}>
+                <h2
+                  className='handwriting'
+                  style={{
+                    fontSize: fontSize,
+                    color: note.fontColor || '#000000',
+                    fontFamily: userData.fontStyle || 'Montserrat',
+                  }}
+                >
                   {note.title}
                 </h2>
               ) : (
                 <h2></h2>
               )}
 
-              <div className='handwriting' style={{ fontSize: fontSize }}>
+              <div
+                className='handwriting'
+                style={{
+                  fontSize: fontSize,
+                  color: note.fontColor || '#000000',
+                  fontFamily: userData.fontStyle || 'Montserrat',
+                }}
+              >
                 {note.content}
               </div>
               <hr className='line'></hr>
@@ -172,6 +170,7 @@ const NoteList = ({
                 style={{
                   fontSize:
                     fontSize === 'var(--font-size-big)' ? '20px' : '15px',
+                  fontFamily: userData.fontStyle || 'Montserrat',
                 }}
               >
                 Note-id: {note.id}
@@ -181,7 +180,10 @@ const NoteList = ({
               <div className='note-footer'>
                 <span
                   className={isDoneList[index] ? 'invisible' : 'link-default'}
-                  style={{ fontSize: fontSize }}
+                  style={{
+                    fontSize: fontSize,
+                    fontFamily: userData.fontStyle || 'Montserrat',
+                  }}
                   disabled={isDoneList[index]}
                   onClick={() => handleEdit(note.id)}
                 >
@@ -190,6 +192,7 @@ const NoteList = ({
                 <button
                   onClick={() => handleDone(note.id, index)}
                   className={`done-button`}
+                  style={{ fontFamily: userData.fontStyle || 'Montserrat' }}
                 >
                   {isDoneList[index] ? '✔️ ' : 'Done ✔️'}{' '}
                 </button>

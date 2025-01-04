@@ -295,12 +295,16 @@ public class UserController {
 				foundUser.setDeleteAllDone(user.getDeleteAllDone());
 			}
 
+			if (user.getFontStyle() != null) {
+				foundUser.setFontStyle(user.getFontStyle());
+			}
+
 			UserDto userDto = new UserDto(foundUser.getId(), foundUser.getUsername(), foundUser.getPassword(),
 					foundUser.getFullname(), foundUser.getNotes(), foundUser.getRoles(), foundUser.getEmail(),
 					foundUser.getIsAuthActive(), foundUser.getLoginList(), foundUser.getTheme(),
 					foundUser.getFontSize(), foundUser.getColorPalette(), foundUser.getCustomColorPaletteList(),
 					foundUser.getFavoritePaletteReference(), foundUser.getCustomPairs(), foundUser.getHideDoneNotes(),
-					foundUser.getShowNoteTitles(), foundUser.getDeleteAllDone());
+					foundUser.getShowNoteTitles(), foundUser.getDeleteAllDone(), foundUser.getFontStyle());
 
 			return userService.save(userDto);
 		}

@@ -1,92 +1,91 @@
 package com.note.note.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Optional;
 
-import com.note.note.data.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.note.note.data.Note;
 import com.note.note.service.NoteService;
 import com.note.note.service.UserService;
-
-import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {
 
-    @Autowired
-    private NoteService noteService;
+	@Autowired
+	private NoteService noteService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-    
-    private final UserService userService;
-   
+	@Autowired
+	private UserDetailsService userDetailsService;
 
-    public NoteController(UserService userService) {
-     this.userService = userService;
-    }
+	private final UserService userService;
 
-    
-    @GetMapping("/user/{userId}")
-    public List<Note> getNotesForUser(@PathVariable Long userId) {
-        return noteService.getNotesByUserId(userId);
-    }
-    
-    
+	public NoteController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @PostMapping("/{userId}")
-    public Note createNote(@PathVariable Long userId, @RequestBody Note note) {
- 
-	
-    	Note savedNote = userService.addNoteToUser(userId, note);
-        return savedNote;
+	@GetMapping("/user/{userId}")
+	public List<Note> getNotesForUser(@PathVariable Long userId) {
+		return noteService.getNotesByUserId(userId);
+	}
 
-    }
-    
-    @PatchMapping("/{noteId}")
-    public Note editNote(@PathVariable Long noteId, @RequestBody Note note) {
+	@PostMapping("/{userId}")
+	public Note createNote(@PathVariable Long userId, @RequestBody Note note) {
 
-        // Find the note to edit
-        Optional<Note> foundNoteOptional = noteService.findNoteById(noteId);
-        
-        if (foundNoteOptional.isPresent()) {
-            Note foundNote = foundNoteOptional.get();
+		Note savedNote = userService.addNoteToUser(userId, note);
+		return savedNote;
 
-            // Only update fields that are not null
-            if (note.getTitle() != null) {
-                foundNote.setTitle(note.getTitle());
-            }
-            if (note.getContent() != null) {
-                foundNote.setContent(note.getContent());
-            }
-          
-            if (note.getIsDone() != null) {
-                foundNote.setIsDone(note.getIsDone());
-            }
-            
-            if (note.getColorString() != null) {
-            	foundNote.setColorString(note.getColorString());
-            }
+	}
 
-            // Save updated note
-            return noteService.save(foundNote);
-        }
+	@PatchMapping("/{noteId}")
+	public Note editNote(@PathVariable Long noteId, @RequestBody Note note) {
 
-        // If the note isn't found, return null or throw an exception
-        return null;
-    }
+		// Find the note to edit
+		Optional<Note> foundNoteOptional = noteService.findNoteById(noteId);
 
-    
+		if (foundNoteOptional.isPresent()) {
+			Note foundNote = foundNoteOptional.get();
 
-    @DeleteMapping("/{id}")
-    public void deleteNoteById(@PathVariable Long id) {
-        noteService.deleteNoteById(id);
-    }
+			// Only update fields that are not null
+			if (note.getTitle() != null) {
+				foundNote.setTitle(note.getTitle());
+			}
+			if (note.getContent() != null) {
+				foundNote.setContent(note.getContent());
+			}
+
+			if (note.getIsDone() != null) {
+				foundNote.setIsDone(note.getIsDone());
+			}
+
+			if (note.getColorString() != null) {
+				foundNote.setColorString(note.getColorString());
+			}
+
+			if (note.getFontColor() != null) {
+				foundNote.setFontColor(note.getFontColor());
+			}
+
+			// Save updated note
+			return noteService.save(foundNote);
+		}
+
+		// If the note isn't found, return null or throw an exception
+		return null;
+	}
+
+	@DeleteMapping("/{id}")
+	public void deleteNoteById(@PathVariable Long id) {
+		noteService.deleteNoteById(id);
+	}
 }

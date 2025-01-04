@@ -236,9 +236,10 @@ function Home() {
 
       localStorage.setItem('userData', JSON.stringify(newUserData));
 
-      // Sort notes by 'id'
-      const sortedNotes = newUserData.notes.sort((a, b) => a.id - b.id);
+      // Sort notes by 'id' consistently
+      const sortedNotes = newUserData.notes.slice().sort((a, b) => a.id - b.id); // Use slice() to ensure immutability
 
+      // Update the state with the sorted notes
       setFilteredNotes(sortedNotes);
       setOriginalNotes(sortedNotes);
     } catch (error) {

@@ -1,22 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import './EditPopup.css';
-import { turnEnumToHex } from '../features/helpers';
+import { turnEnumToHex, checkIfHex } from '../features/helpers';
 
 const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
   const [editedContent, setEditedContent] = useState(note.content);
   const [selectedColor, setSelectedColor] = useState(note.color);
   const [editedName, setEditedName] = useState(note.title);
   const [translatedColors, setTranslatedColors] = useState([]);
+  const [fontColor, setFontColor] = useState(note.fontColor || '#000000');
 
   useEffect(() => {
     if (colors) {
-      const hexColors = colors.map(turnEnumToHex);
-      setTranslatedColors(hexColors);
+      if (checkIfHex(colors)) {
+        setTranslatedColors(colors);
+      } else {
+        const hexColors = colors.map(turnEnumToHex);
+        setTranslatedColors(hexColors);
+      }
     }
   }, [colors]);
 
   const handleSave = () => {
-    onSave(note.id, editedContent, selectedColor, editedName);
+    // Initialize an object to hold only modified values
+    const modifiedFields = {};
+
+    // Compare each field and add it to modifiedFields if changed
+    if (editedContent !== note.content) {
+      modifiedFields.content = editedContent;
+    }
+    if (selectedColor !== note.color) {
+      modifiedFields.colorString = selectedColor;
+    }
+    if (editedName !== note.title) {
+      modifiedFields.title = editedName;
+    }
+    if (fontColor !== note.fontColor) {
+      modifiedFields.fontColor = fontColor;
+    }
+
+    // Pass the note ID and the modified fields to onSave
+    onSave(note.id, modifiedFields);
   };
 
   const handleColorClick = (color) => {
@@ -80,7 +103,23 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
           style={{ fontSize: fontSize }}
           onChange={(e) => setEditedContent(e.target.value)}
         ></textarea>
+        <h1
+          className='heading-edit'
+          style={{ fontSize: fontSize, marginBottom: '5px' }}
+        >
+          Edit font color:
+        </h1>
 
+        <input
+          onChange={(e) => setFontColor(e.target.value)}
+          type='color'
+          id='fontColor'
+          value={fontColor}
+          style={{ marginLeft: '10px' }}
+        ></input>
+
+        <br />
+        <br />
         <button
           className='submit-button'
           style={{ fontSize: fontSize }}

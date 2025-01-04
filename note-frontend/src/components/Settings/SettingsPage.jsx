@@ -51,6 +51,9 @@ const SettingsPage = () => {
   const [deleteAllDoneInput, setDeleteAllDoneInput] = useState(
     userData?.deleteAllDone
   );
+  const [fontStyle, setFontStyle] = useState(
+    userData?.fontStyle || 'Montserrat'
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -336,6 +339,18 @@ const SettingsPage = () => {
     setUserData(response);
   };
 
+  const handleFontStyleChange = async (e) => {
+    setFontStyle(e.target.value);
+
+    // also, patch to the db
+
+    let userObj = {};
+    userObj.fontStyle = e.target.value;
+
+    let responseObj = await patchUserWithNewData(userObj, userData.id);
+    setUserData(responseObj);
+  };
+
   let firstHalf = [];
   let secondHalf = [];
 
@@ -430,6 +445,34 @@ const SettingsPage = () => {
                   <p style={{ fontSize: fontSize }}>
                     The preferred font size will be applied to the notes page
                     and the settings page
+                  </p>
+                </div>
+                <br />
+                <br />
+
+                <h2>
+                  <u>Preferred font</u>
+                </h2>
+                <br />
+                <div style={{ display: 'flex', gap: '20px' }}>
+                  <select
+                    style={{ fontSize: fontSize }}
+                    value={fontStyle ?? 'Montserrat'}
+                    onChange={handleFontStyleChange}
+                  >
+                    <option value='Montserrat'>Montserrat</option>
+                    <option value='Arial'>Arial</option>
+                    <option value='Helvetica'>Helvetica</option>
+                    <option value='Georgia'>Georgia</option>
+                    <option value='Courier'>Courier</option>
+                    <option value='Times'>Times</option>
+                    <option value='Tahoma'>Tahoma</option>
+                    <option value='Palatino'>Palatino</option>
+                    <option value='Optima'>Optima</option>
+                  </select>
+
+                  <p style={{ fontSize: fontSize }}>
+                    The preferred font will be applied only to the notes.
                   </p>
                 </div>
                 <br />
