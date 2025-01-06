@@ -318,6 +318,36 @@ function Home() {
     setUserData(responseObj);
   };
 
+  const filterDueDate = (filterState) => {
+    console.log(filterState);
+
+    if (filterState) {
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date().toISOString().slice(0, 10);
+
+      console.log('Today is: ', today);
+      console.log(originalNotes);
+
+      // Filter notes where the dueDate starts with today's date
+      const filteredNotes = originalNotes.filter((note) => {
+        if (note.dueDate) {
+          // Compare only the date part (YYYY-MM-DD)
+          const noteDate = note.dueDate.split('T')[0]; // Extract YYYY-MM-DD part
+          return noteDate === today;
+        }
+        return false;
+      });
+
+      setFilteredNotes(filteredNotes);
+
+      console.log('Updating notes to filtered notes', filteredNotes);
+    } else {
+      // reset filter to OG state
+      setFilteredNotes(originalNotes);
+      console.log('Resetting notes to original ones');
+    }
+  };
+
   return (
     <div
       className={`main-page ${isDarkThemeSet ? 'dark-theme' : 'light-theme'}`}
@@ -375,6 +405,7 @@ function Home() {
         onColorSort={handleColorSort}
         fontSize={fontSize}
         customMeanings={customMeanings}
+        onFilterDue={filterDueDate}
       />
       {userData ? (
         <NoteList

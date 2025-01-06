@@ -2,10 +2,17 @@ import { useState, useEffect } from 'react';
 import './ColorSort.css';
 import { turnEnumToHex, checkIfHex } from '../features/helpers';
 
-const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
+const ColorSort = ({
+  onColorSort,
+  fontSize,
+  colors,
+  customMeanings,
+  onFilterDue,
+}) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [translatedColors, setTranslatedColors] = useState([]);
   const [translatedCustomMeanings, setTranslatedCustomMeanings] = useState({});
+  const [filterByDueDate, setFilterByDueDate] = useState(false);
 
   useEffect(() => {
     const processColors = async () => {
@@ -48,6 +55,13 @@ const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
   const resetColor = () => {
     setSelectedColor(null);
     onColorSort(null); // This triggers reset in the parent component (Home)
+  };
+
+  const filterByDate = () => {
+    let newState = !filterByDueDate;
+
+    setFilterByDueDate(newState);
+    onFilterDue(newState);
   };
 
   return (
@@ -97,6 +111,18 @@ const ColorSort = ({ onColorSort, fontSize, colors, customMeanings }) => {
             Reset filter
           </div>
         </div>
+
+        <button
+          onClick={filterByDate}
+          style={{
+            marginLeft: '50px',
+            fontSize:
+              fontSize === 'var(--font-size-medium)' ? '17px' : fontSize,
+            height: fontSize === 'var(--font-size-big)' ? '' : '20px',
+          }}
+        >
+          {filterByDueDate ? 'Show all notes' : '  Show due notes'}
+        </button>
       </div>
     </div>
   );
