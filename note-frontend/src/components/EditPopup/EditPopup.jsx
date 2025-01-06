@@ -8,6 +8,9 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
   const [editedName, setEditedName] = useState(note.title);
   const [translatedColors, setTranslatedColors] = useState([]);
   const [fontColor, setFontColor] = useState(note.fontColor || '#000000');
+  const [dueDate, setDueDate] = useState(
+    note.dueDate ? new Date(note.dueDate).toISOString().slice(0, 16) : ''
+  );
 
   useEffect(() => {
     if (colors) {
@@ -37,9 +40,16 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
     if (fontColor !== note.fontColor) {
       modifiedFields.fontColor = fontColor;
     }
+    if (dueDate !== note.dueDate) {
+      modifiedFields.dueDate = dueDate;
+    }
 
     // Pass the note ID and the modified fields to onSave
     onSave(note.id, modifiedFields);
+  };
+
+  const handleDateChange = (event) => {
+    setDueDate(event.target.value);
   };
 
   const handleColorClick = (color) => {
@@ -117,6 +127,20 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
           value={fontColor}
           style={{ marginLeft: '10px' }}
         ></input>
+
+        <br />
+        <br />
+
+        <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+          Edit due date:
+        </h1>
+
+        <input
+          type='datetime-local'
+          value={dueDate}
+          style={{ marginLeft: '5px' }}
+          onChange={handleDateChange}
+        />
 
         <br />
         <br />

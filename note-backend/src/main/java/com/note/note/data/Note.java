@@ -41,6 +41,9 @@ public class Note {
 	private Boolean isDone;
 
 	private String fontColor;
+	
+	private String dueDate;  // ISO 8601 formatted due date
+	
 
 	// Constructors, getters and setters
 
@@ -49,7 +52,7 @@ public class Note {
 	}
 
 	public Note(Long id, String title, String content, User user, Boolean isDone, String colorString,
-			String fontColor) {
+			String fontColor, String dueDate) {
 		this.title = title;
 		this.content = content;
 		this.user = user;
@@ -58,7 +61,16 @@ public class Note {
 		this.isDone = isDone;
 		this.colorString = colorString;
 		this.fontColor = fontColor;
+		this.dueDate = dueDate; 
 	}
+	
+	  public String getDueDate() {
+	        return dueDate;
+	    }
+
+	    public void setDueDate(String dueDate) {
+	        this.dueDate = dueDate;
+	    }
 
 	public void setFontColor(String fontColor) {
 		this.fontColor = fontColor;

@@ -8,10 +8,14 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
     name: '',
     content: '',
     color: '',
+    fontColor: '',
+    dueDate: '',
   });
 
   const [selectedColor, setSelectedColor] = useState(null);
   const [translatedColors, setTranslatedColors] = useState([]);
+  const [fontColor, setFontColor] = useState('#000000');
+  const [dueDate, setDueDate] = useState('');
 
   useEffect(() => {
     const processColors = async () => {
@@ -58,6 +62,8 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
         content: noteData.content,
         done: false,
         colorString: selectedColor,
+        fontColor: fontColor,
+        dueDate: dueDate,
       };
 
       const jsonString = JSON.stringify(dataToSubmit);
@@ -76,6 +82,10 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
     } catch (error) {
       console.error('Error while posting note:', error);
     }
+  };
+
+  const handleDateChange = (event) => {
+    setDueDate(event.target.value);
   };
 
   return (
@@ -138,6 +148,35 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
             </div>
           </div>
 
+          <div style={{ display: 'flex' }}>
+            <h1
+              className='heading-edit'
+              style={{ fontSize: fontSize, marginBottom: '5px' }}
+            >
+              Edit font color:
+            </h1>
+            <input
+              onChange={(e) => setFontColor(e.target.value)}
+              type='color'
+              id='fontColor'
+              value={fontColor}
+              style={{
+                marginLeft: '10px',
+                width: '100px',
+                marginTop: '10px',
+              }}
+            ></input>
+
+            <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+              Edit due date:
+            </h1>
+            <input
+              type='datetime-local'
+              value={dueDate}
+              style={{ marginLeft: '5px', width: '200px', marginTop: '10px' }}
+              onChange={handleDateChange}
+            />
+          </div>
           <button
             type='submit'
             className='submit-button'

@@ -10,6 +10,7 @@ App to manage notes and users. Visit the live version at: https://blitznotiz.at/
 - 2 Factor Authentication for each user can be enabled in the settings page.
 - Frontend can be adapted to a users needs: Fontsize, Font family, theme, color palette and custom meanings for notes can be chosen.
 - The users login data can be edited in settings.
+- Notes can have a due date. Users can filter for those dates to see what notes are urgent, and also export them to google calender.
 
 ## USED TECHNOLOGIES
 

@@ -111,6 +111,14 @@ const NoteList = ({
     }
   };
 
+  const changeISOString = (isostring) => {
+    // format so this looks better
+    if (!isostring) return '';
+    const parts = isostring.split('T');
+    const result = parts[0] + ' @' + parts[1];
+    return result;
+  };
+
   return (
     <div className='main-container'>
       {notes.map((note, index) => (
@@ -132,6 +140,18 @@ const NoteList = ({
               />
             ) : null}
             <div>
+              <p
+                style={{
+                  fontStyle: userData.fontStyle,
+                  fontSize: fontSize,
+                  color: note.fontColor,
+                  marginTop: '-20px',
+                  marginLeft: '-20px',
+                  marginBottom: '10px',
+                }}
+              >
+                {changeISOString(note.dueDate) || ''}
+              </p>
               <span
                 className='close-button'
                 onClick={() => handleDelete(note.id)}

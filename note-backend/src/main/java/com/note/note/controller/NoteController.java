@@ -75,6 +75,10 @@ public class NoteController {
 			if (note.getFontColor() != null) {
 				foundNote.setFontColor(note.getFontColor());
 			}
+			
+			if (note.getDueDate() != null) {
+				foundNote.setDueDate(note.getDueDate());
+			}
 
 			// Save updated note
 			return noteService.save(foundNote);
