@@ -115,7 +115,7 @@ const NoteList = ({
     // format so this looks better
     if (!isostring) return '';
     const parts = isostring.split('T');
-    const result = parts[0] + ' @' + parts[1];
+    const result = parts[0] + ' @' + parts[1].substring(0, 5);
     return result;
   };
 

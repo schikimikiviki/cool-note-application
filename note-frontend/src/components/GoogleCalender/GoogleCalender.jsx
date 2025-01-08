@@ -7,6 +7,9 @@ const GoogleCalender = ({ notes }) => {
   }, []);
 
   const addEventToCalendar = (note) => {
+    const startDateTime = new Date(note.dueDate);
+    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
+
     const event = {
       summary: note.title,
       description: note.content,
@@ -15,7 +18,7 @@ const GoogleCalender = ({ notes }) => {
         timeZone: 'Europe/Vienna',
       },
       end: {
-        dateTime: note.dueDate,
+        dateTime: endDateTime.toISOString(),
         timeZone: 'Europe/Vienna',
       },
     };
