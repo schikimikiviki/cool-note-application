@@ -63,7 +63,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
         done: false,
         colorString: selectedColor,
         fontColor: fontColor,
-        dueDate: dueDate,
+        dueDate: convertToISOWithTimezone(dueDate),
       };
 
       const jsonString = JSON.stringify(dataToSubmit);
@@ -82,6 +82,12 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
     } catch (error) {
       console.error('Error while posting note:', error);
     }
+  };
+
+  const convertToISOWithTimezone = (dateString) => {
+    // Convert the stored value to ISO format with seconds and timezone (Z)
+    const date = new Date(dateString); // Convert to Date object
+    return date.toISOString(); // This gives the full ISO string with 'Z' (UTC)
   };
 
   const handleDateChange = (event) => {

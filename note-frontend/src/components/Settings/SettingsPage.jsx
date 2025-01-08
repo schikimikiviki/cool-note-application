@@ -14,6 +14,7 @@ import AdvancedSettings from '../AdvancedSettings/AdvancedSettings';
 import EditUserData from '../EditUserData/EditUserData';
 import About from '../About/About';
 import api from '../../api/axiosConfig';
+import GoogleCalender from '../GoogleCalender/GoogleCalender';
 
 const SettingsPage = () => {
   const [userData, setUserData] = useState(() => {
@@ -523,6 +524,19 @@ const SettingsPage = () => {
                   <option value='true'>yes</option>
                   <option value='false'>no</option>
                 </select>
+
+                <br />
+                <br />
+                <h2>
+                  <u>Export your notes</u>
+                </h2>
+                <p style={{ fontSize: fontSize }}>
+                  Please note that only notes having a date can be exported
+                </p>
+                <br />
+
+                <GoogleCalender notes={userData.notes} />
+                <br />
               </div>
             </TabPanel>
             <TabPanel tabId='extra'>

@@ -41,7 +41,7 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
       modifiedFields.fontColor = fontColor;
     }
     if (dueDate !== note.dueDate) {
-      modifiedFields.dueDate = dueDate;
+      modifiedFields.dueDate = convertToISOWithTimezone(dueDate);
     }
 
     // Pass the note ID and the modified fields to onSave
@@ -49,7 +49,14 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
   };
 
   const handleDateChange = (event) => {
-    setDueDate(event.target.value);
+    const value = event.target.value; // 'YYYY-MM-DDTHH:mm'
+    setDueDate(value); // Store the 'YYYY-MM-DDTHH:mm' value
+  };
+
+  const convertToISOWithTimezone = (dateString) => {
+    // Convert the stored value to ISO format with seconds and timezone (Z)
+    const date = new Date(dateString); // Convert to Date object
+    return date.toISOString(); // This gives the full ISO string with 'Z' (UTC)
   };
 
   const handleColorClick = (color) => {
