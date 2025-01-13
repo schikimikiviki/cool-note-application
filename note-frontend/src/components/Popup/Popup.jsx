@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './Popup.css';
 import { turnEnumToHex, turnHexToEnum, checkIfHex } from '../features/helpers';
+import RichTextEditor from '../RichTextEditor/RichTextEditor';
 
 const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   const [noteData, setNoteData] = useState({
@@ -38,9 +39,10 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   }, [colors]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNoteData({ ...noteData, [name]: value });
-    console.log(noteData);
+    console.log(e);
+    // const { name, value } = e.target;
+    // setNoteData({ ...noteData, [name]: value });
+    // console.log(noteData);
   };
 
   const handleColorClick = (color) => {
@@ -48,40 +50,37 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   };
 
   const submitForm = async (e) => {
-    e.preventDefault();
-
-    // Check if a color is selected
-    if (!selectedColor) {
-      alert('Please select a color before submitting.');
-      return;
-    }
-
-    try {
-      const dataToSubmit = {
-        title: noteData.name,
-        content: noteData.content,
-        done: false,
-        colorString: selectedColor,
-        fontColor: fontColor,
-        dueDate: convertToISOWithTimezone(dueDate),
-      };
-
-      const jsonString = JSON.stringify(dataToSubmit);
-
-      console.log('Data to submit: ', dataToSubmit);
-
-      await api.post(`/api/notes/${userId}`, jsonString, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      onAdd();
-      onClose();
-      // console.log(dataToSubmit, typeof dataToSubmit);
-    } catch (error) {
-      console.error('Error while posting note:', error);
-    }
+    // e.preventDefault();
+    // // Check if a color is selected
+    // if (!selectedColor) {
+    //   alert('Please select a color before submitting.');
+    //   return;
+    // }
+    // try {
+    //   const dataToSubmit = {
+    //     title: noteData.name,
+    //     content: noteData.content,
+    //     done: false,
+    //     colorString: selectedColor,
+    //     fontColor: fontColor,
+    //   };
+    //   // das datum ist keine pflichtangabe
+    //   if (dueDate) {
+    //     dataToSubmit.dueDate = convertToISOWithTimezone(dueDate);
+    //   }
+    //   const jsonString = JSON.stringify(dataToSubmit);
+    //   console.log('Data to submit: ', dataToSubmit);
+    //   await api.post(`/api/notes/${userId}`, jsonString, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
+    //   onAdd();
+    //   onClose();
+    //   // console.log(dataToSubmit, typeof dataToSubmit);
+    // } catch (error) {
+    //   console.error('Error while posting note:', error);
+    // }
   };
 
   const convertToISOWithTimezone = (dateString) => {
@@ -114,14 +113,20 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
             onChange={handleInputChange}
           />
 
-          <input
+          <RichTextEditor
+            noteContent={noteData.content}
+            onChangeContent={handleInputChange}
+            style={{ fontSize: fontSize }}
+          />
+
+          {/* <input
             type='text'
             name='content'
             style={{ fontSize: fontSize }}
             placeholder='Please type note contents'
             value={noteData.content}
             onChange={handleInputChange}
-          />
+          /> */}
 
           <div className='colorPicker'>
             <p
@@ -183,6 +188,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
               onChange={handleDateChange}
             />
           </div>
+
           <button
             type='submit'
             className='submit-button'
