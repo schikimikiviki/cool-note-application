@@ -6,6 +6,45 @@
   background-color: white;
 }
 
+/* those are for numbered lists*/
+.editor ol {
+  padding-left: 20px;
+}
+
+/* those are for bulletpoints and checkpoints */
+.editor ul {
+  padding-left: 20px;
+}
+
+.editor ul[data-type='taskList'] {
+  list-style-type: none; /* Remove bullet points */
+}
+
+.editor li[data-type='taskItem'] {
+  list-style-type: none; /* Remove bullet points for task items */
+}
+
+.editor ul[data-type='taskList'] li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.editor ul[data-type='taskList'] li label input[type='checkbox'] {
+  /* filter: invert(100%) hue-rotate(18deg) brightness(1.7); */
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.editor ul[data-type='taskList'] li div {
+  margin-bottom: 10px;
+}
+
+.editor ul[data-type='taskList'] li .text {
+  display: inline;
+  margin: 0;
+}
+
 .menu {
   position: absolute;
   top: 2px;
@@ -24,7 +63,7 @@
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   border-bottom: 1px solid var(--color-gray-5);
-  background-color: var(--color-white);
+  background-color: whitesmoke;
   color: var(--color-gray-2);
 }
 
@@ -126,7 +165,7 @@
 .ProseMirror {
   margin-top: 4px;
   padding: 48px 8px 8px;
-
+  height: 150px;
   border: 2px solid var(--color-gray-4);
   border-radius: 4px;
 }

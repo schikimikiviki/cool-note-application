@@ -5,18 +5,12 @@ import { turnEnumToHex, turnHexToEnum, checkIfHex } from '../features/helpers';
 import RichTextEditor from '../RichTextEditor/RichTextEditor';
 
 const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
-  const [noteData, setNoteData] = useState({
-    name: '',
-    content: '',
-    color: '',
-    fontColor: '',
-    dueDate: '',
-  });
-
   const [selectedColor, setSelectedColor] = useState(null);
   const [translatedColors, setTranslatedColors] = useState([]);
   const [fontColor, setFontColor] = useState('#000000');
   const [dueDate, setDueDate] = useState('');
+  const [noteContent, setNoteContent] = useState('');
+  const [noteName, setNoteName] = useState('');
 
   useEffect(() => {
     const processColors = async () => {
@@ -38,11 +32,11 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
     processColors();
   }, [colors]);
 
-  const handleInputChange = (e) => {
-    console.log(e);
-    // const { name, value } = e.target;
-    // setNoteData({ ...noteData, [name]: value });
-    // console.log(noteData);
+  const handleTitleChange = (e) => {
+    setNoteName(e.target.value);
+  };
+  const handleInputChange = (content) => {
+    setNoteContent(content);
   };
 
   const handleColorClick = (color) => {
@@ -50,37 +44,37 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
   };
 
   const submitForm = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     // // Check if a color is selected
-    // if (!selectedColor) {
-    //   alert('Please select a color before submitting.');
-    //   return;
-    // }
-    // try {
-    //   const dataToSubmit = {
-    //     title: noteData.name,
-    //     content: noteData.content,
-    //     done: false,
-    //     colorString: selectedColor,
-    //     fontColor: fontColor,
-    //   };
-    //   // das datum ist keine pflichtangabe
-    //   if (dueDate) {
-    //     dataToSubmit.dueDate = convertToISOWithTimezone(dueDate);
-    //   }
-    //   const jsonString = JSON.stringify(dataToSubmit);
-    //   console.log('Data to submit: ', dataToSubmit);
-    //   await api.post(`/api/notes/${userId}`, jsonString, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-    //   onAdd();
-    //   onClose();
-    //   // console.log(dataToSubmit, typeof dataToSubmit);
-    // } catch (error) {
-    //   console.error('Error while posting note:', error);
-    // }
+    if (!selectedColor) {
+      alert('Please select a color before submitting.');
+      return;
+    }
+    try {
+      const dataToSubmit = {
+        title: noteName,
+        content: noteContent,
+        done: false,
+        colorString: selectedColor,
+        fontColor: fontColor,
+      };
+      // das datum ist keine pflichtangabe
+      if (dueDate) {
+        dataToSubmit.dueDate = convertToISOWithTimezone(dueDate);
+      }
+      const jsonString = JSON.stringify(dataToSubmit);
+      console.log('Data to submit: ', dataToSubmit);
+      await api.post(`/api/notes/${userId}`, jsonString, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      onAdd();
+      onClose();
+      console.log(dataToSubmit, typeof dataToSubmit);
+    } catch (error) {
+      console.error('Error while posting note:', error);
+    }
   };
 
   const convertToISOWithTimezone = (dateString) => {
@@ -101,40 +95,48 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
         </button>
 
         <form className='popup-form' onSubmit={submitForm}>
-          <h2 className='popup-title' style={{ fontSize: fontSize }}>
-            New Note
-          </h2>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <h2 className='popup-title' style={{ fontSize: fontSize }}>
+              New Note
+            </h2>
+          </div>
+
           <input
             type='text'
             name='name'
-            style={{ fontSize: fontSize }}
+            style={{ fontSize: fontSize, width: '100%' }}
             placeholder='Please type in a note heading'
-            value={noteData.name}
-            onChange={handleInputChange}
+            value={noteName}
+            onChange={handleTitleChange}
           />
 
           <RichTextEditor
-            noteContent={noteData.content}
+            noteContent={noteName}
             onChangeContent={handleInputChange}
             style={{ fontSize: fontSize }}
           />
 
-          {/* <input
-            type='text'
-            name='content'
-            style={{ fontSize: fontSize }}
-            placeholder='Please type note contents'
-            value={noteData.content}
-            onChange={handleInputChange}
-          /> */}
-
           <div className='colorPicker'>
-            <p
-              className='heading-medium'
-              style={{ paddingTop: '1%', fontSize: fontSize }}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
             >
-              Select a color:
-            </p>
+              <p
+                className='heading-medium'
+                style={{ paddingTop: '1%', fontSize: fontSize }}
+              >
+                Select a color:
+              </p>
+            </div>
             <div
               style={{
                 display: 'flex',
@@ -159,43 +161,60 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
             </div>
           </div>
 
-          <div style={{ display: 'flex' }}>
-            <h1
-              className='heading-edit'
-              style={{ fontSize: fontSize, marginBottom: '5px' }}
-            >
-              Edit font color:
-            </h1>
-            <input
-              onChange={(e) => setFontColor(e.target.value)}
-              type='color'
-              id='fontColor'
-              value={fontColor}
-              style={{
-                marginLeft: '10px',
-                width: '100px',
-                marginTop: '10px',
-              }}
-            ></input>
-
-            <h1 className='heading-edit' style={{ fontSize: fontSize }}>
-              Edit due date:
-            </h1>
-            <input
-              type='datetime-local'
-              value={dueDate}
-              style={{ marginLeft: '5px', width: '200px', marginTop: '10px' }}
-              onChange={handleDateChange}
-            />
-          </div>
-
-          <button
-            type='submit'
-            className='submit-button'
-            style={{ fontSize: fontSize }}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}
           >
-            Submit
-          </button>
+            <div style={{ width: '30%' }}>
+              <h1
+                className='heading-edit'
+                style={{ fontSize: fontSize, marginBottom: '5px' }}
+              >
+                Edit font color:
+              </h1>
+              <input
+                onChange={(e) => setFontColor(e.target.value)}
+                type='color'
+                id='fontColor'
+                value={fontColor}
+                style={{
+                  marginLeft: '10px',
+                  width: '100px',
+                  marginTop: '10px',
+                }}
+              ></input>
+            </div>
+            <div>
+              <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+                Edit due date:
+              </h1>
+              <input
+                type='datetime-local'
+                value={dueDate}
+                style={{ marginLeft: '5px', width: '200px', marginTop: '10px' }}
+                onChange={handleDateChange}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '20px',
+            }}
+          >
+            <button
+              type='submit'
+              className='submit-button'
+              style={{ fontSize: fontSize }}
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -11,13 +11,18 @@ import Italic from '@tiptap/extension-italic';
 import Strike from '@tiptap/extension-strike';
 import Code from '@tiptap/extension-code';
 import History from '@tiptap/extension-history';
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import ListItem from '@tiptap/extension-list-item';
+import TaskList from '@tiptap/extension-task-list';
+import TaskItem from '@tiptap/extension-task-item';
 // Custom
 
 import * as Icons from './Icons';
 import { LinkModal } from './LinkModal';
 import './RichTextEditor.css';
 
-const RichTextEditor = () => {
+const RichTextEditor = ({ noteContent, onChangeContent }) => {
   const content = `<p>Start typing ... </p>`;
 
   const editor = useEditor({
@@ -34,8 +39,20 @@ const RichTextEditor = () => {
       Italic,
       Strike,
       Code,
+      BulletList,
+      OrderedList,
+      ListItem,
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
     ],
-    content,
+    content: noteContent, // Use the noteContent prop as initial content
+    onUpdate: ({ editor }) => {
+      if (onChangeContent) {
+        onChangeContent(editor.getHTML());
+      }
+    },
   });
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -86,10 +103,6 @@ const RichTextEditor = () => {
     editor.chain().focus().toggleStrike().run();
   }, [editor]);
 
-  const toggleCode = useCallback(() => {
-    editor.chain().focus().toggleCode().run();
-  }, [editor]);
-
   if (!editor) {
     return null;
   }
@@ -98,54 +111,67 @@ const RichTextEditor = () => {
     <div className='editor'>
       <div className='menu'>
         <button
-          className='menu-button'
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-        >
-          <Icons.RotateLeft />
-        </button>
-        <button
-          className='menu-button'
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().redo()}
-        >
-          <Icons.RotateRight />
-        </button>
-        <button
+          type='button'
           className={`menu-button is-active ${editor.isActive('link')}`}
           onClick={openModal}
         >
           <Icons.Link />
         </button>
         <button
+          type='button'
           className={`menu-button is-active ${editor.isActive('bold')}`}
           onClick={toggleBold}
         >
           <Icons.Bold />
         </button>
         <button
+          type='button'
           className={`menu-button is-active ${editor.isActive('underline')}`}
           onClick={toggleUnderline}
         >
           <Icons.Underline />
         </button>
         <button
+          type='button'
           className={`menu-button is-active ${editor.isActive('italic')}`}
           onClick={toggleItalic}
         >
           <Icons.Italic />
         </button>
         <button
+          type='button'
           className={`menu-button is-active ${editor.isActive('strike')}`}
           onClick={toggleStrike}
         >
           <Icons.Strikethrough />
         </button>
+
         <button
-          className={`menu-button is-active ${editor.isActive('code')}`}
-          onClick={toggleCode}
+          type='button'
+          className={`menu-button ${
+            editor.isActive('bulletList') ? 'is-active' : ''
+          }`}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
-          <Icons.Code />
+          <Icons.BulletList />
+        </button>
+        <button
+          type='button'
+          className={`menu-button ${
+            editor.isActive('orderedList') ? 'is-active' : ''
+          }`}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        >
+          <Icons.OrderedList />
+        </button>
+        <button
+          type='button'
+          className={`menu-button ${
+            editor.isActive('taskList') ? 'is-active' : ''
+          }`}
+          onClick={() => editor.chain().focus().toggleTaskList().run()}
+        >
+          <Icons.Checkbox />
         </button>
       </div>
 

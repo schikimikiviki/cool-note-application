@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig';
 import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
+import parse from 'html-react-parser';
 import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
 const NoteList = ({
@@ -163,7 +164,8 @@ const NoteList = ({
                 <h2
                   className='handwriting'
                   style={{
-                    fontSize: fontSize,
+                    fontSize:
+                      fontSize === 'var(--font-size-big)' ? '35px' : '18px',
                     color: note.fontColor || '#000000',
                     fontFamily: userData.fontStyle || 'Montserrat',
                   }}
@@ -182,7 +184,7 @@ const NoteList = ({
                   fontFamily: userData.fontStyle || 'Montserrat',
                 }}
               >
-                {note.content}
+                {parse(note.content)}
               </div>
               <hr className='line'></hr>
               <div

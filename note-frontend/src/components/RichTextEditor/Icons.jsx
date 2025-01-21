@@ -67,23 +67,6 @@ export const Link = ({ size = 16, color = 'currentColor' }) => (
   </svg>
 );
 
-export const Code = ({ size = 16, color = 'currentColor' }) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    width={size}
-    height={size}
-    viewBox='0 0 24 24'
-    fill='none'
-    stroke={color}
-    strokeWidth='2'
-    strokeLinecap='round'
-    strokeLinejoin='round'
-  >
-    <polyline points='16 18 22 12 16 6'></polyline>
-    <polyline points='8 6 2 12 8 18'></polyline>
-  </svg>
-);
-
 export const Strikethrough = ({ size = 16, color = 'currentColor' }) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -97,38 +80,6 @@ export const Strikethrough = ({ size = 16, color = 'currentColor' }) => (
     strokeLinejoin='round'
   >
     <path d='M17.3 4.9c-2.3-.6-4.4-1-6.2-.9-2.7 0-5.3.7-5.3 3.6 0 1.5 1.8 3.3 3.6 3.9h.2m8.2 3.7c.3.4.4.8.4 1.3 0 2.9-2.7 3.6-6.2 3.6-2.3 0-4.4-.3-6.2-.9M4 11.5h16' />
-  </svg>
-);
-
-export const RotateLeft = ({ size = 16, color = 'currentColor' }) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    width={size}
-    height={size}
-    viewBox='0 0 24 24'
-    fill='none'
-    stroke={color}
-    strokeWidth='2'
-    strokeLinecap='round'
-    strokeLinejoin='round'
-  >
-    <path d='M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .57-8.38' />
-  </svg>
-);
-
-export const RotateRight = ({ size = 16, color = 'currentColor' }) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    width={size}
-    height={size}
-    viewBox='0 0 24 24'
-    fill='none'
-    stroke={color}
-    strokeWidth='2'
-    strokeLinecap='round'
-    strokeLinejoin='round'
-  >
-    <path d='M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38' />
   </svg>
 );
 
@@ -146,5 +97,38 @@ export const X = ({ size = 16, color = 'currentColor' }) => (
   >
     <line x1='18' y1='6' x2='6' y2='18'></line>
     <line x1='6' y1='6' x2='18' y2='18'></line>
+  </svg>
+);
+
+export const BulletList = () => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 24 24'
+    width='20'
+    height='20'
+  >
+    <path d='M7 5h14v2H7ZM3 5h2v2H3ZM7 11h14v2H7Zm-4 0h2v2H3Zm4 6h14v2H7ZM3 17h2v2H3Z' />
+  </svg>
+);
+
+export const OrderedList = () => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 24 24'
+    width='20'
+    height='20'
+  >
+    <path d='M7 5h14v2H7ZM3 4h2v4H3Zm4 6h14v2H7Zm-4 2h1v1H3v1h1v1H3v1h2v-4Zm4 6h14v2H7Zm-4 2h2v-2H4v-1h1v-1H3v2h1Z' />
+  </svg>
+);
+
+export const Checkbox = () => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 24 24'
+    width='20'
+    height='20'
+  >
+    <path d='M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm-8 14L6 12l1.4-1.4 3.6 3.58 7.6-7.58L20 8Z' />
   </svg>
 );
