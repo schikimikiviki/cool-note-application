@@ -15,7 +15,7 @@ const modalStyles = {
     marginRight: '-50%',
     padding: 24,
     transform: 'translate(-50%, -50%)',
-    border: '2px solid var(--color-gray-4)',
+    border: '2px solid black',
     borderRadius: '4px',
   },
 };

@@ -184,7 +184,7 @@ const RichTextEditor = ({ noteContent, onChangeContent }) => {
           return from === to && editor.isActive('link');
         }}
       >
-        <button className='button' onClick={openModal}>
+        <button className='button button-edit' onClick={openModal}>
           Edit
         </button>
         <button className='button-remove' onClick={removeLink}>

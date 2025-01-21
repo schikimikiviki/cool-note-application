@@ -168,6 +168,7 @@ const NoteList = ({
                       fontSize === 'var(--font-size-big)' ? '35px' : '18px',
                     color: note.fontColor || '#000000',
                     fontFamily: userData.fontStyle || 'Montserrat',
+                    marginBottom: '10px',
                   }}
                 >
                   {note.title}

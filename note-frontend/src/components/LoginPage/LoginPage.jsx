@@ -128,7 +128,7 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         'http://localhost:8080/login',
-        `username=${username}&password=${password}`,
+        { username, password },
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
