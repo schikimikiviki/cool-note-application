@@ -44,6 +44,7 @@ public class SecurityConfig {
             	.requestMatchers("/verify").anonymous()
             	.requestMatchers("/test").anonymous()
             	.requestMatchers("/home").anonymous()
+            	.requestMatchers("/admin").anonymous()
 				.requestMatchers("/login/**").anonymous() 
 				.requestMatchers("/api/colorpalettes/**").anonymous() 
                 

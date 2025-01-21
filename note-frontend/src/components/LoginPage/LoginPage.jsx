@@ -29,7 +29,13 @@ const LoginPage = () => {
     // check if code is valid
     if (code === generatedAuthCode) {
       console.log('Appliying font size: ', userData.fontSize);
-      navigate('/home', { state: { applicationState: userData } });
+
+      if (userData.roles.includes('ADMIN')) {
+        navigate('/admin', { state: { applicationState: userData } });
+      } else {
+        navigate('/home', { state: { applicationState: userData } });
+      }
+
       writeDateTimeToDb(userData.id);
     } else {
       setSecondErrorMessage('AuthCode is not correct, please re-check!');
@@ -154,7 +160,12 @@ const LoginPage = () => {
         console.log(userData);
         sendMailToUser(userData.email, generatedCode, userData.username);
       } else {
-        navigate('/home', { state: { applicationState: userData } });
+        if (userData.roles.includes('ADMIN')) {
+          navigate('/admin', { state: { applicationState: userData } });
+        } else {
+          navigate('/home', { state: { applicationState: userData } });
+        }
+
         writeDateTimeToDb(userData.id);
         // console.log('Passing the following data to /home: ', userData);
       }
