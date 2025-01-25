@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './AddUserForm.css';
 
-const AddUserForm = () => {
+const AddUserForm = ({ onAdd }) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
@@ -73,6 +73,7 @@ const AddUserForm = () => {
       if (registerData.success) {
         setRegistrationMessage('Registration successful!');
         setErrorMessage('');
+        onAdd();
       } else {
         setErrorMessage('Registration failed!');
       }

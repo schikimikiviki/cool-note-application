@@ -3,13 +3,31 @@ import './AdminPage.css';
 import { useNavigate } from 'react-router-dom';
 import AddUserForm from '../AddUserForm/AddUserForm';
 import api from '../../api/axiosConfig';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const AdminPage = () => {
   const navigate = useNavigate();
   const [userID, setUserID] = useState('');
+  const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [registrationMessage, setRegistrationMessage] = useState('');
+
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get(`/users`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setUsers(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const deleteUser = async (id) => {
     try {
@@ -28,6 +46,7 @@ const AdminPage = () => {
         setRegistrationMessage('Deletion successful!');
         setErrorMessage('');
         setUserID('');
+        fetchUsers();
       } else {
         setErrorMessage('Deletion failed!');
       }
@@ -55,10 +74,10 @@ const AdminPage = () => {
       </div>
       <div className='admin-page'>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <UsersList />
+          <UsersList users={users} />
           <br />
 
-          <AddUserForm />
+          <AddUserForm onAdd={fetchUsers} />
           <br />
           <div>
             <h2>

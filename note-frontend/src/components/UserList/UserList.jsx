@@ -2,27 +2,10 @@ import { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig.js';
 import './UserList.css';
 
-const UsersList = () => {
-  const [users, setUsers] = useState([]);
+const UsersList = ({ users }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
   const [showUser, setShowUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.get(`/users`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        setUsers(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchUsers();
-  }, []);
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
