@@ -1,3 +1,8 @@
 .admin-page {
-  padding: 2%;
+  padding: 5%;
+}
+
+.admin-header {
+  background-color: antiquewhite;
+  padding: 40px;
 }

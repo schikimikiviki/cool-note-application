@@ -1,0 +1,28 @@
+.button-details {
+  padding: 2%;
+  margin-left: 10px;
+  margin-top: 10px;
+  background-color: antiquewhite;
+  border: none;
+}
+
+.pagination-button {
+  padding: 5%;
+  background-color: #2d8ec3;
+  color: white;
+  border: none;
+}
+
+.userlist-item {
+  margin-top: 10px;
+}
+
+.item-heading {
+  background-color: rgb(232, 232, 232);
+  margin-right: 5px;
+}
+
+.list-par {
+  margin-left: 50px;
+  list-style: none;
+}

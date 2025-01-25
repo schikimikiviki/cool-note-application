@@ -367,7 +367,7 @@ const SettingsPage = () => {
         <div className='settings-box'>
           <br />
           <br />
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <button
               className='exit'
               type='submit'
@@ -377,6 +377,22 @@ const SettingsPage = () => {
               }}
             >
               ⬅️ Back to home page
+            </button>
+
+            <button
+              className='exit'
+              type='submit'
+              style={{
+                fontSize: fontSize,
+                visibility: userData.roles.includes('ADMIN')
+                  ? 'visible'
+                  : 'hidden',
+              }}
+              onClick={() => {
+                navigate('/admin');
+              }}
+            >
+              ⬅️ Go to admin settings
             </button>
           </div>
           <br />

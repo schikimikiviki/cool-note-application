@@ -1,0 +1,8 @@
+.add-user {
+  display: flex;
+  gap: 10px;
+}
+
+.form-item {
+  width: 200px;
+}
