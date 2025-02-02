@@ -60,7 +60,7 @@ const RegisterPage = () => {
 
     try {
       // Verify captcha
-      const res = await fetch('http://localhost:8080/verify', {
+      const res = await fetch('http://localhost:8088/verify', {
         method: 'POST',
         body: JSON.stringify({ captchaValue }),
         headers: {
@@ -82,7 +82,7 @@ const RegisterPage = () => {
         roles: ['USER'], // admin users cannot be registered via frontend
       };
       console.log('POSTING the following user to the db: ', userObj);
-      const registerRes = await fetch('http://localhost:8080/register', {
+      const registerRes = await fetch('http://localhost:8088/register', {
         method: 'POST',
         body: JSON.stringify(userObj), // Make sure userObj is stringified
         headers: {

@@ -18,6 +18,7 @@ App to manage notes and users. Visit the live version at: https://blitznotiz.at/
 - Java
 - Postgres SQL
 - EmailJS
+- ZAP for penetration testing
 
 ## LEARNINGS
 

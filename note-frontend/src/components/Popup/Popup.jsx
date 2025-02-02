@@ -4,7 +4,7 @@ import './Popup.css';
 import { turnEnumToHex, turnHexToEnum, checkIfHex } from '../features/helpers';
 import RichTextEditor from '../RichTextEditor/RichTextEditor';
 
-const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
+const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [translatedColors, setTranslatedColors] = useState([]);
   const [fontColor, setFontColor] = useState('#000000');
@@ -64,12 +64,21 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors }) => {
       }
       const jsonString = JSON.stringify(dataToSubmit);
       console.log('Data to submit: ', dataToSubmit);
-      await api.post(`/api/notes/${userId}`, jsonString, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      onAdd();
+
+      if (!isDefault) {
+        await api.post(`/api/notes/${userId}`, jsonString, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+
+      if (isDefault) {
+        onAdd(dataToSubmit);
+      } else {
+        onAdd();
+      }
+
       onClose();
       console.log(dataToSubmit, typeof dataToSubmit);
     } catch (error) {

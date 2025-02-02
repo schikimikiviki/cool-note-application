@@ -1,5 +1,5 @@
 try {
-  const res = await fetch(`http://localhost:8080/api/colorpalettes/`, {
+  const res = await fetch(`http://localhost:8088/api/colorpalettes/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

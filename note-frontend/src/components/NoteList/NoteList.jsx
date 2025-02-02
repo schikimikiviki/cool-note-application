@@ -14,6 +14,8 @@ const NoteList = ({
   colors,
   isDoneDelete,
   userData,
+  isDefault,
+  onEditDefault,
 }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState();
@@ -39,20 +41,27 @@ const NoteList = ({
   };
 
   const handleSave = async (noteId, noteObj) => {
-    try {
-      console.log('Edited Body:', noteObj);
+    if (isDefault) {
+      onEditDefault(noteObj, noteId);
+      setTimeout(() => {
+        setEditingNote(null);
+      }, 0);
+    } else {
+      try {
+        console.log('Edited Body:', noteObj);
 
-      await api.patch(`/api/notes/${noteId}`, noteObj, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      setEditingNote(null);
+        await api.patch(`/api/notes/${noteId}`, noteObj, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        setEditingNote(null);
 
-      // load ausführen, damit die edited note im state ist
-      onLoad();
-    } catch (error) {
-      console.error('Error while saving note:', error);
+        // load ausführen, damit die edited note im state ist
+        onLoad();
+      } catch (error) {
+        console.error('Error while saving note:', error);
+      }
     }
   };
 
@@ -71,7 +80,7 @@ const NoteList = ({
       // Toggle the current state (done <-> not done)
       const newDoneState = !isDoneList[index];
 
-      console.log('IS DONE STATE: ', newDoneState);
+      // console.log('IS DONE STATE: ', newDoneState);
 
       // Send the PATCH request to update the `done` state
       const response = await api.patch(
@@ -138,6 +147,7 @@ const NoteList = ({
                 onCancel={handleCancelEdit}
                 fontSize={fontSize}
                 colors={colors}
+                isDefault={isDefault}
               />
             ) : null}
             <div>

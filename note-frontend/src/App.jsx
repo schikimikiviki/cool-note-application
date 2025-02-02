@@ -4,11 +4,13 @@ import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
 import SettingsPage from './components/Settings/SettingsPage';
 import AdminPage from './components/AdminPage/AdminPage';
+import DefaultHome from './components/DefaultHome/DefaultHome';
 
 function App() {
   return (
     <div className='App'>
       <Routes>
+        <Route path='/' element={<DefaultHome />} />
         <Route path='/home' element={<Home />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />

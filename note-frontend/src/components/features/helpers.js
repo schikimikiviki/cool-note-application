@@ -97,7 +97,7 @@ export const getAllColorPalettes = async () => {
   // fetch available color palettes
 
   try {
-    const res = await fetch(`http://localhost:8080/api/colorpalettes/`, {
+    const res = await fetch(`http://localhost:8088/api/colorpalettes/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export const getAllColorPalettes = async () => {
 
 export const fetchGetFromBackend = async (path, errorType) => {
   try {
-    const res = await fetch(`http://localhost:8080/${path}`, {
+    const res = await fetch(`http://localhost:8088/${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -143,8 +143,8 @@ export const fetchGetFromBackend = async (path, errorType) => {
 
 export const loadUserObject = async (userName) => {
   try {
-    const response = await axios.get(`http://localhost:8080/users/${userName}`);
-    console.log('fetching url: ', `http://localhost:8080/users/${userName}`);
+    const response = await axios.get(`http://localhost:8088/users/${userName}`);
+    console.log('fetching url: ', `http://localhost:8088/users/${userName}`);
     // console.log(response.data);
     return response.data;
   } catch (error) {
