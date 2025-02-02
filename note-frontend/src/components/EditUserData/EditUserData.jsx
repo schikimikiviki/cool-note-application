@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { patchUserWithNewData, fetchGetFromBackend } from '../features/helpers';
-import api from '../../api/axiosConfig';
+import {
+  patchUserWithNewData,
+  fetchGetFromBackend,
+  validateUsername,
+} from '../features/helpers';
+import './EditUserData.css';
 
 const EditUserData = ({ userData, fontSize, onPatchUser }) => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -9,36 +13,35 @@ const EditUserData = ({ userData, fontSize, onPatchUser }) => {
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
 
-  const validateUsername = async () => {
-    let userArr = await fetchGetFromBackend('users', 'userFetch');
-    let userAlreadyExists = false;
-
-    console.log(userArr);
-
-    for (const user of userArr) {
-      if (user.username === username) {
-        userAlreadyExists = true;
-        console.log('User already exits!');
-      }
-    }
-
-    return userAlreadyExists;
-  };
-
   const handleUserDataChange = async (e) => {
     // save new data to db
     // then, save new data to state!
 
     e.preventDefault();
 
+    let regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{7,15}$/;
+
+    setErrorMessage('');
+    setSuccessMessage('');
+
     // check only if userName was modified
     if (username !== userData.username) {
-      const userAlreadyExists = await validateUsername(); // Wait for username validation
+      const userAlreadyExists = await validateUsername(username); // Wait for username validation
 
       if (userAlreadyExists) {
         setErrorMessage('Username already exists!');
+
         return; // Stop further execution if username exists
       }
+    }
+
+    if (!regex.test(password.trim())) {
+      setErrorMessage(
+        'Password must have at least one lowercase letter, one uppercase letter, one digit, one special character and be 7 characters long!'
+      );
+
+      return;
     }
 
     // Create user object with only changed fields
@@ -61,15 +64,8 @@ const EditUserData = ({ userData, fontSize, onPatchUser }) => {
     if (responseObj) {
       setSuccessMessage('Updated user data successfully');
       setErrorMessage('');
-
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 5000);
     } else {
       setErrorMessage('Could not update user data');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, 5000);
     }
 
     onPatchUser(responseObj);

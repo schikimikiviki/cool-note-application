@@ -203,6 +203,20 @@ export const turnHexToEnum = (hex) => {
   return match ? match[0] : null;
 };
 
+export const validateUsername = async (username) => {
+  let userArr = await fetchGetFromBackend('users', 'userFetch');
+
+  console.log(userArr);
+
+  const userAlreadyExists = userArr.some((user) => user.username === username);
+
+  if (userAlreadyExists) {
+    console.log('User already exists!');
+  }
+
+  return userAlreadyExists;
+};
+
 export default {
   loadUserObject,
   fetchGetFromBackend,
@@ -213,4 +227,5 @@ export default {
   getCustomPaletteViaId,
   checkIfHex,
   getPaletteViaID,
+  validateUsername,
 };

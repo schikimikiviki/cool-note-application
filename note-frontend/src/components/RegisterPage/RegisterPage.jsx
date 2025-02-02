@@ -3,7 +3,7 @@ import noteIcon from '../../assets/note-icon.png';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { fetchGetFromBackend } from '../features/helpers.js';
+import { fetchGetFromBackend, validateUsername } from '../features/helpers.js';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -16,31 +16,24 @@ const RegisterPage = () => {
 
   // Function to validate username and password lengths
   const validateForm = () => {
+    let regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{7,15}$/;
+
+    setErrorMessage('');
+    setRegistrationMessage('');
+
     if (username.length < 5) {
       setErrorMessage('Username must be at least 5 characters long!');
       return false;
-    } else if (password.length < 5) {
-      setErrorMessage('Password must be at least 5 characters long!');
+    }
+    if (!regex.test(password.trim())) {
+      setErrorMessage(
+        'Password must have at least one lowercase letter, one uppercase letter, one digit, one special character and be 7 characters long!'
+      );
       return false;
     }
     setErrorMessage('');
     return true;
-  };
-
-  const validateUsername = async () => {
-    let userArr = await fetchGetFromBackend('users', 'userFetch');
-    let userAlreadyExists = false;
-
-    console.log(userArr);
-
-    for (const user of userArr) {
-      if (user.username === username) {
-        userAlreadyExists = true;
-        console.log('User already exits!');
-      }
-    }
-
-    return userAlreadyExists;
   };
 
   const handleRegister = async (e) => {
@@ -51,11 +44,11 @@ const RegisterPage = () => {
       return; // Stop form submission if validation fails
     }
 
-    const userAlreadyExists = await validateUsername(); // Wait for username validation
+    const userAlreadyExists = await validateUsername(username); // Wait for username validation
 
     if (userAlreadyExists) {
       setErrorMessage('Username already exists!');
-      return; // Stop further execution if username exists
+      return;
     }
 
     const captchaValue = recaptcha.current.getValue();
@@ -108,6 +101,7 @@ const RegisterPage = () => {
       }
     } catch (error) {
       setErrorMessage('An error occurred during registration.');
+
       console.error('Error during registration:', error);
     }
   };

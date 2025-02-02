@@ -33,6 +33,10 @@ const AdminPage = () => {
     try {
       if (!id || isNaN(id) || id <= 0) {
         setErrorMessage('Please enter a valid numeric ID');
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 5000);
+
         return;
       }
 
@@ -47,14 +51,23 @@ const AdminPage = () => {
         setErrorMessage('');
         setUserID('');
         fetchUsers();
+        setTimeout(() => {
+          setRegistrationMessage('');
+        }, 5000);
       } else {
         setErrorMessage('Deletion failed!');
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 5000);
       }
     } catch (err) {
       console.log(err);
       setErrorMessage(
         'Deletion impossible - please recheck the entered number'
       );
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
     }
   };
 

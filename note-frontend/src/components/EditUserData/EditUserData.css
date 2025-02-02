@@ -1,12 +1,3 @@
-.add-user {
-  display: flex;
-  gap: 10px;
-}
-
-.form-item {
-  width: 200px;
-}
-
 .error-message {
   animation: fadeOut 2s forwards;
   animation-delay: 5s;
@@ -17,7 +8,7 @@
   text-align: center;
 }
 
-.registration-message {
+.success-message {
   background-color: #177e05;
   color: #fff;
   padding: 10px;

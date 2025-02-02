@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './AddUserForm.css';
+import { validateUsername } from '../features/helpers';
 
 const AddUserForm = ({ onAdd }) => {
   const [userName, setUserName] = useState('');
@@ -32,12 +33,33 @@ const AddUserForm = ({ onAdd }) => {
   const registerUser = async (event) => {
     event.preventDefault();
 
-    if (userName.length == 0) {
+    let regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{7,15}$/;
+
+    setErrorMessage('');
+    setRegistrationMessage('');
+
+    if (userName.length < 5) {
       setErrorMessage('Please provide a username');
-    } else if (password.length == 0) {
-      setErrorMessage('Please provide a password');
-    } else if (fullname.length == 0) {
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
+    }
+    if (!regex.test(password.trim())) {
+      setErrorMessage(
+        'Password must have at least one lowercase letter, one uppercase letter, one digit, one special character and be 7 characters long!'
+      );
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
+
+      return false;
+    }
+    if (fullname.length == 0) {
       setErrorMessage('Please provide a full name');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
     }
     if (role.length === 0) {
       setErrorMessage('Please select at least one role.');
@@ -48,6 +70,14 @@ const AddUserForm = ({ onAdd }) => {
     if (role.includes('ADMIN') && !role.includes('USER')) {
       setErrorMessage('Cannot create only admin role, must have both');
       return false;
+    }
+
+    // check if username is valid
+    const userAlreadyExists = await validateUsername(userName); // Wait for username validation
+
+    if (userAlreadyExists) {
+      setErrorMessage('Username already exists!');
+      return; // Stop further execution if username exists
     }
 
     let userObj = {
@@ -74,12 +104,21 @@ const AddUserForm = ({ onAdd }) => {
         setRegistrationMessage('Registration successful!');
         setErrorMessage('');
         onAdd();
+        setTimeout(() => {
+          setRegistrationMessage('');
+        }, 5000);
       } else {
         setErrorMessage('Registration failed!');
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 5000);
       }
     } catch (error) {
       setErrorMessage('An error occurred during registration.');
       console.error('Error during registration:', error);
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
     }
   };
 
