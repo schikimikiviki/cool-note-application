@@ -17,6 +17,7 @@ App to manage notes and users. Visit the live version at: https://blitznotiz.at/
 - React + Vite
 - Java
 - Postgres SQL
+- EmailJS
 
 ## LEARNINGS
 

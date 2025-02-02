@@ -93,11 +93,12 @@ const LoginPage = () => {
       const randomInd = Math.floor(Math.random() * characters.length);
       result += characters.charAt(randomInd);
     }
-    console.log('Generated code: ', result);
+    //  console.log('Generated code: ', result);
     return result;
   };
 
   const sendMailToUser = (mailadress, authCode, fullname) => {
+    console.log('Sending mail to... ', mailadress);
     emailjs
       .send(
         import.meta.env.VITE_EMAIL_SERVICE_ID,
@@ -106,6 +107,7 @@ const LoginPage = () => {
           to_email: mailadress,
           to_name: fullname,
           from_name: 'Blitznotiz.at',
+          from_email: 'noreply@blitznotiz.at',
           message: `Here is your authentication code: ${authCode}`,
         },
         import.meta.env.VITE_EMAIL_USER_ID
@@ -151,7 +153,8 @@ const LoginPage = () => {
       setUserData(userData);
       setIsLoginCorrect(true);
 
-      if (userData.isAuthActive) {
+      // it may happen that the isAuthActive will be true, but the user did not supply the mail adress
+      if (userData.isAuthActive && userData.email !== null) {
         // send user to 2 fa first
         setAuthenticationActive(true);
 

@@ -137,7 +137,7 @@ const AdvancedSettings = ({
               id='email'
               name='email'
               placeholder='Enter e-mail adress for 2-factor authentication'
-              value={userData.email || ''}
+              defaultValue={userData.email || ''}
               onChange={handleMailChange}
               style={{ fontSize: fontSize }}
               required
