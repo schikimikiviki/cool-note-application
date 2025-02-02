@@ -12,14 +12,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 
 
 @Entity
 public class CustomColorPalette {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_color_palette_seq")
+	@SequenceGenerator(name = "custom_color_palette_seq", sequenceName = "custom_color_palette_sequence", initialValue = 5000, allocationSize = 1)
+	private Long id;
+	 
     private String name;
     
     @ElementCollection

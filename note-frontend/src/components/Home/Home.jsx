@@ -316,6 +316,16 @@ function Home() {
 
     let responseObj = await patchUserWithNewData(userObj, userData.id);
     setUserData(responseObj);
+
+    // also, we need to re-sort the notes so that there are no "holes" in the frontend
+    // where the done notes were
+
+    if (data) {
+      const filteredNotes = originalNotes.filter((note) => !note.done);
+      setFilteredNotes(filteredNotes);
+    } else {
+      load();
+    }
   };
 
   const filterDueDate = (filterState) => {

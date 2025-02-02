@@ -18,13 +18,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 
 @Entity
 public class ColorPalette {
 	
+
+	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "color_palette_seq")
+	@SequenceGenerator(name = "color_palette_seq", sequenceName = "color_palette_sequence", initialValue = 10000, allocationSize = 1)
+	private Long id;
+	   
     private String name;
     
     @ElementCollection
