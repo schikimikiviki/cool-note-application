@@ -16,6 +16,7 @@ const NoteList = ({
   isDefault,
   onEditDefault,
   updateDone,
+  onDefaultDelete,
 }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState();
@@ -65,6 +66,10 @@ const NoteList = ({
     }
   };
 
+  const handleDeleteDefault = async (noteId) => {
+    onDefaultDelete(noteId);
+  };
+
   const handleDelete = async (noteId) => {
     try {
       await api.delete(`api/notes/${noteId}`);
@@ -80,53 +85,48 @@ const NoteList = ({
   };
 
   const handleDone = async (noteId, index) => {
-    if (isDefault) {
+    try {
+      // Toggle the current state (done <-> not done)
       const newDoneState = !isDoneList[index];
-      updateDone(newDoneState, noteId);
-    } else {
-      try {
-        // Toggle the current state (done <-> not done)
-        const newDoneState = !isDoneList[index];
 
-        // console.log('IS DONE STATE: ', newDoneState);
+      // console.log('IS DONE STATE: ', newDoneState);
 
-        // Send the PATCH request to update the `done` state
-        const response = await api.patch(
-          `/api/notes/${noteId}`,
-          { isDone: newDoneState }, // Send the updated 'done' state
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        // If the update is successful, update the local state
-        if (response.status === 200) {
-          const updatedIsDoneList = [...isDoneList];
-          updatedIsDoneList[index] = newDoneState;
-          setIsDoneList(updatedIsDoneList);
+      // Send the PATCH request to update the `done` state
+      const response = await api.patch(
+        `/api/notes/${noteId}`,
+        { isDone: newDoneState }, // Send the updated 'done' state
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
+      );
 
-        if (userData.deleteAllDone) {
-          console.log('user has set done notes to be deleted!');
-
-          try {
-            api.delete(`/api/notes/${noteId}`, {
-              headers: { 'Content-Type': 'application/json' },
-            });
-
-            console.log('All notes deleted');
-          } catch (err) {
-            console.error('Error deleting notes:', err);
-            return; // Exit early if deletion fails
-          }
-        }
-
-        onLoad(); // Reload to reflect changes from DB
-      } catch (error) {
-        console.error('Error while changing note state:', error);
+      // If the update is successful, update the local state
+      if (response.status === 200) {
+        const updatedIsDoneList = [...isDoneList];
+        updatedIsDoneList[index] = newDoneState;
+        setIsDoneList(updatedIsDoneList);
       }
+
+      if (userData.deleteAllDone) {
+        console.log('user has set done notes to be deleted!');
+
+        try {
+          api.delete(`/api/notes/${noteId}`, {
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          console.log('All notes deleted');
+        } catch (err) {
+          console.error('Error deleting notes:', err);
+          return; // Exit early if deletion fails
+        }
+      }
+
+      onLoad(); // Reload to reflect changes from DB
+    } catch (error) {
+      console.error('Error while changing note state:', error);
     }
   };
 
@@ -176,7 +176,7 @@ const NoteList = ({
                   </p>
                   <span
                     className='close-button'
-                    onClick={() => handleDelete(note.id)}
+                    onClick={() => handleDeleteDefault(note.id)}
                   >
                     X
                   </span>

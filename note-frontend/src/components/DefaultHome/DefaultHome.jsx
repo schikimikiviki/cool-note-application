@@ -27,7 +27,7 @@ function DefaultHome() {
       content:
         'Add a note that is due today. Now you can filter for this note.',
       createdAt: '2025-01-08T19:53:30.618715',
-      colorString: '#e7c6ff',
+      colorString: '#E7C6FF',
       isDone: false,
       fontColor: '#000000',
       dueDate: '2025-01-09T09:53:00.000Z',
@@ -38,7 +38,7 @@ function DefaultHome() {
       content:
         'You can also use the search bar to look up notes containing a specific title or content.',
       createdAt: '2025-01-08T19:53:30.618715',
-      colorString: '#bbd0ff',
+      colorString: '#BBD0FF',
       isDone: false,
       fontColor: '#000000',
       dueDate: '2025-01-09T09:53:00.000Z',
@@ -49,7 +49,7 @@ function DefaultHome() {
       content:
         'You can categorize your notes by color. Click on a color to use it as a filter.',
       createdAt: '2025-01-08T19:53:30.618715',
-      colorString: '#e7c6ff',
+      colorString: '#E7C6FF',
       isDone: false,
       fontColor: '#000000',
       dueDate: '2025-01-09T09:53:00.000Z',
@@ -60,7 +60,7 @@ function DefaultHome() {
       content:
         'Use the register button to sign up and save your notes permanently.',
       createdAt: '2025-01-08T19:53:30.618715',
-      colorString: '#c8b6ff',
+      colorString: '#C8B6FF',
       isDone: false,
       fontColor: '#000000',
       dueDate: '2025-01-09T09:53:00.000Z',
@@ -181,8 +181,12 @@ function DefaultHome() {
       return note;
     });
 
-    console.log(updatedNotes);
+    setOriginalNotes([...updatedNotes]);
+    setFilteredNotes([...updatedNotes]);
+  };
 
+  const handleDelete = (noteId) => {
+    const updatedNotes = originalNotes.filter((note) => note.id !== noteId);
     setOriginalNotes([...updatedNotes]);
     setFilteredNotes([...updatedNotes]);
   };
@@ -249,6 +253,7 @@ function DefaultHome() {
         isDefault={true}
         onEditDefault={editNoteDefault}
         updateDone={handleDoneNote}
+        onDefaultDelete={handleDelete}
       />
       <DefaultFooter
         titles={hideTitles}
