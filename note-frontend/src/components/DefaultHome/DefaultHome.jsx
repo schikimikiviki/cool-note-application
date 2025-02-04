@@ -5,17 +5,62 @@ import '../../index.css';
 import NoteList from '../NoteList/NoteList.jsx';
 import DefaultHeader from '../DefaultHeader/DefaultHeader.jsx';
 import Popup from '../Popup/Popup.jsx';
-import Footer from '../Footer/Footer.jsx';
+import DefaultFooter from '../DefaultFooter/DefaultFooter.jsx';
 import ColorSort from '../ColorSort/ColorSort.jsx';
 
 function DefaultHome() {
   const [originalNotes, setOriginalNotes] = useState([
     {
       id: 1,
-      title: 'Hello test user!',
-      content: 'Welcome to the notes app!',
+      title: 'Hello and welcome to the notes app!',
+      content:
+        'Take a look around. You can add notes by clicking the Add Note button in the top right. ',
       createdAt: '2025-01-08T19:53:30.618715',
       colorString: '#ffd6ff',
+      isDone: false,
+      fontColor: '#000000',
+      dueDate: '2025-01-09T09:53:00.000Z',
+    },
+    {
+      id: 2,
+      title: 'You can test the functionality ... ',
+      content:
+        'Add a note that is due today. Now you can filter for this note.',
+      createdAt: '2025-01-08T19:53:30.618715',
+      colorString: '#e7c6ff',
+      isDone: false,
+      fontColor: '#000000',
+      dueDate: '2025-01-09T09:53:00.000Z',
+    },
+    {
+      id: 3,
+      title: 'Search for an important note ... ',
+      content:
+        'You can also use the search bar to look up notes containing a specific title or content.',
+      createdAt: '2025-01-08T19:53:30.618715',
+      colorString: '#bbd0ff',
+      isDone: false,
+      fontColor: '#000000',
+      dueDate: '2025-01-09T09:53:00.000Z',
+    },
+    {
+      id: 4,
+      title: 'Filter for a color ... ',
+      content:
+        'You can categorize your notes by color. Click on a color to use it as a filter.',
+      createdAt: '2025-01-08T19:53:30.618715',
+      colorString: '#e7c6ff',
+      isDone: false,
+      fontColor: '#000000',
+      dueDate: '2025-01-09T09:53:00.000Z',
+    },
+    {
+      id: 5,
+      title: 'Like using notes?',
+      content:
+        'Use the register button to sign up and save your notes permanently.',
+      createdAt: '2025-01-08T19:53:30.618715',
+      colorString: '#c8b6ff',
       isDone: false,
       fontColor: '#000000',
       dueDate: '2025-01-09T09:53:00.000Z',
@@ -37,7 +82,7 @@ function DefaultHome() {
   });
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isDarkThemeSet, setIsDarkThemeSet] = useState(false);
-  const [hideTitles, setHideTitles] = useState(false);
+  const [hideTitles, setHideTitles] = useState(true);
   const location = useLocation();
   const { applicationState } = location.state || {};
   const [fontSize, setFontSize] = useState(); // put css prop in here
@@ -128,6 +173,20 @@ function DefaultHome() {
     );
   };
 
+  const handleDoneNote = (doneState, noteId) => {
+    const updatedNotes = originalNotes.map((note) => {
+      if (note.id === noteId) {
+        return { ...note, isDone: doneState };
+      }
+      return note;
+    });
+
+    console.log(updatedNotes);
+
+    setOriginalNotes([...updatedNotes]);
+    setFilteredNotes([...updatedNotes]);
+  };
+
   return (
     <div
       className={`main-page ${isDarkThemeSet ? 'dark-theme' : 'light-theme'}`}
@@ -189,6 +248,15 @@ function DefaultHome() {
         colors={userColors}
         isDefault={true}
         onEditDefault={editNoteDefault}
+        updateDone={handleDoneNote}
+      />
+      <DefaultFooter
+        titles={hideTitles}
+        onTitleChange={changeTitles}
+        userDetails={userData}
+        fontSize={fontSize}
+        onHide={handleHideNotes}
+        deleteDone={hideDoneNotes}
       />
     </div>
   );

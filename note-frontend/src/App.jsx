@@ -5,6 +5,7 @@ import RegisterPage from './components/RegisterPage/RegisterPage';
 import SettingsPage from './components/Settings/SettingsPage';
 import AdminPage from './components/AdminPage/AdminPage';
 import DefaultHome from './components/DefaultHome/DefaultHome';
+import LegalPage from './components/LegalPage/LegalPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/settings' element={<SettingsPage />} />
         <Route path='/admin' element={<AdminPage />} />
+        <Route path='/legal' element={<LegalPage />} />
       </Routes>
     </div>
   );

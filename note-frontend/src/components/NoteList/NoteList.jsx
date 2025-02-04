@@ -3,7 +3,6 @@ import api from '../../api/axiosConfig';
 import './NoteList.css';
 import EditPopup from '../EditPopup/EditPopup';
 import parse from 'html-react-parser';
-import { turnEnumToHex, turnHexToEnum } from '../features/helpers';
 
 const NoteList = ({
   notes,
@@ -16,6 +15,7 @@ const NoteList = ({
   userData,
   isDefault,
   onEditDefault,
+  updateDone,
 }) => {
   const [editingNote, setEditingNote] = useState(null);
   const [areTitlesVisible, setAreTitlesVisible] = useState();
@@ -75,49 +75,58 @@ const NoteList = ({
     }
   };
 
+  const handleDoneNote = async (state, noteId) => {
+    updateDone(state, noteId);
+  };
+
   const handleDone = async (noteId, index) => {
-    try {
-      // Toggle the current state (done <-> not done)
+    if (isDefault) {
       const newDoneState = !isDoneList[index];
+      updateDone(newDoneState, noteId);
+    } else {
+      try {
+        // Toggle the current state (done <-> not done)
+        const newDoneState = !isDoneList[index];
 
-      // console.log('IS DONE STATE: ', newDoneState);
+        // console.log('IS DONE STATE: ', newDoneState);
 
-      // Send the PATCH request to update the `done` state
-      const response = await api.patch(
-        `/api/notes/${noteId}`,
-        { isDone: newDoneState }, // Send the updated 'done' state
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        // Send the PATCH request to update the `done` state
+        const response = await api.patch(
+          `/api/notes/${noteId}`,
+          { isDone: newDoneState }, // Send the updated 'done' state
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        // If the update is successful, update the local state
+        if (response.status === 200) {
+          const updatedIsDoneList = [...isDoneList];
+          updatedIsDoneList[index] = newDoneState;
+          setIsDoneList(updatedIsDoneList);
         }
-      );
 
-      // If the update is successful, update the local state
-      if (response.status === 200) {
-        const updatedIsDoneList = [...isDoneList];
-        updatedIsDoneList[index] = newDoneState;
-        setIsDoneList(updatedIsDoneList);
-      }
+        if (userData.deleteAllDone) {
+          console.log('user has set done notes to be deleted!');
 
-      if (userData.deleteAllDone) {
-        console.log('user has set done notes to be deleted!');
+          try {
+            api.delete(`/api/notes/${noteId}`, {
+              headers: { 'Content-Type': 'application/json' },
+            });
 
-        try {
-          api.delete(`/api/notes/${noteId}`, {
-            headers: { 'Content-Type': 'application/json' },
-          });
-
-          console.log('All notes deleted');
-        } catch (err) {
-          console.error('Error deleting notes:', err);
-          return; // Exit early if deletion fails
+            console.log('All notes deleted');
+          } catch (err) {
+            console.error('Error deleting notes:', err);
+            return; // Exit early if deletion fails
+          }
         }
-      }
 
-      onLoad(); // Reload to reflect changes from DB
-    } catch (error) {
-      console.error('Error while changing note state:', error);
+        onLoad(); // Reload to reflect changes from DB
+      } catch (error) {
+        console.error('Error while changing note state:', error);
+      }
     }
   };
 
@@ -131,109 +140,221 @@ const NoteList = ({
 
   return (
     <div className='main-container'>
-      {notes.map((note, index) => (
-        <div key={note.id} style={{ position: 'relative' }}>
-          <div
-            className={`note-container ${isDoneList[index] ? 'overlay' : ''}`}
-            style={{
-              backgroundColor: isDoneList[index] ? 'grey' : note.colorString,
-              visibility: isDoneList[index] && areDoneDeleted ? 'hidden' : '',
-            }}
-          >
-            {editingNote === note.id ? (
-              <EditPopup
-                note={note}
-                onSave={handleSave}
-                onCancel={handleCancelEdit}
-                fontSize={fontSize}
-                colors={colors}
-                isDefault={isDefault}
-              />
-            ) : null}
-            <div>
-              <p
-                style={{
-                  fontStyle: userData.fontStyle,
-                  fontSize: fontSize,
-                  color: note.fontColor,
-                  marginTop: '-20px',
-                  marginLeft: '-20px',
-                  marginBottom: '10px',
-                }}
-              >
-                {changeISOString(note.dueDate) || ''}
-              </p>
-              <span
-                className='close-button'
-                onClick={() => handleDelete(note.id)}
-              >
-                X
-              </span>
-
-              {areTitlesVisible ? (
-                <h2
-                  className='handwriting'
-                  style={{
-                    fontSize:
-                      fontSize === 'var(--font-size-big)' ? '35px' : '18px',
-                    color: note.fontColor || '#000000',
-                    fontFamily: userData.fontStyle || 'Montserrat',
-                    marginBottom: '10px',
-                  }}
-                >
-                  {note.title}
-                </h2>
-              ) : (
-                <h2></h2>
-              )}
-
+      {isDefault
+        ? notes.map((note) => (
+            <div key={note.id} style={{ position: 'relative' }}>
               <div
-                className='handwriting'
+                className={`note-container ${note.isDone ? 'overlay' : ''}`}
                 style={{
-                  fontSize: fontSize,
-                  color: note.fontColor || '#000000',
-                  fontFamily: userData.fontStyle || 'Montserrat',
+                  backgroundColor: note.isDone ? 'grey' : note.colorString,
+                  visibility: note.isDone && areDoneDeleted ? 'hidden' : '',
                 }}
               >
-                {parse(note.content)}
-              </div>
-              <hr className='line'></hr>
-              <div
-                className='heading-small'
-                style={{
-                  fontSize:
-                    fontSize === 'var(--font-size-big)' ? '20px' : '15px',
-                  fontFamily: userData.fontStyle || 'Montserrat',
-                }}
-              >
-                Note-id: {note.id}
-              </div>
-              <br />
+                {editingNote === note.id ? (
+                  <EditPopup
+                    note={note}
+                    onSave={handleSave}
+                    onCancel={handleCancelEdit}
+                    fontSize={fontSize}
+                    colors={colors}
+                    isDefault={isDefault}
+                  />
+                ) : null}
 
-              <div className='note-footer'>
-                <span
-                  className={isDoneList[index] ? 'invisible' : 'link-default'}
-                  style={{
-                    fontSize: fontSize,
-                    fontFamily: userData.fontStyle || 'Montserrat',
-                  }}
-                  disabled={isDoneList[index]}
-                  onClick={() => handleEdit(note.id)}
-                >
-                  Edit
-                </span>
-                <button
-                  onClick={() => handleDone(note.id, index)}
-                  className={`done-button`}
-                  style={{ fontFamily: userData.fontStyle || 'Montserrat' }}
-                >
-                  {isDoneList[index] ? '✔️ ' : 'Done ✔️'}{' '}
-                </button>
+                <div>
+                  <p
+                    style={{
+                      fontStyle: userData.fontStyle,
+                      fontSize: fontSize,
+                      color: note.fontColor,
+                      marginTop: '-20px',
+                      marginLeft: '-20px',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {changeISOString(note.dueDate) || ''}
+                  </p>
+                  <span
+                    className='close-button'
+                    onClick={() => handleDelete(note.id)}
+                  >
+                    X
+                  </span>
+
+                  {areTitlesVisible ? (
+                    <h2
+                      className='handwriting'
+                      style={{
+                        fontSize:
+                          fontSize === 'var(--font-size-big)' ? '35px' : '18px',
+                        color: note.fontColor || '#000000',
+                        fontFamily: userData.fontStyle || 'Montserrat',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {note.title}
+                    </h2>
+                  ) : (
+                    <h2></h2>
+                  )}
+
+                  <div
+                    className='handwriting'
+                    style={{
+                      fontSize: fontSize,
+                      color: note.fontColor || '#000000',
+                      fontFamily: userData.fontStyle || 'Montserrat',
+                    }}
+                  >
+                    {parse(note.content)}
+                  </div>
+                  <hr className='line'></hr>
+                  <div
+                    className='heading-small'
+                    style={{
+                      fontSize:
+                        fontSize === 'var(--font-size-big)' ? '20px' : '15px',
+                      fontFamily: userData.fontStyle || 'Montserrat',
+                    }}
+                  >
+                    Note-id: {note.id}
+                  </div>
+                  <br />
+
+                  <div className='note-footer'>
+                    <span
+                      className={note.isDone ? 'invisible' : 'link-default'}
+                      style={{
+                        fontSize: fontSize,
+                        fontFamily: userData.fontStyle || 'Montserrat',
+                      }}
+                      disabled={note.isDone}
+                      onClick={() => handleEdit(note.id)}
+                    >
+                      Edit
+                    </span>
+                    <button
+                      onClick={() => handleDoneNote(!note.isDone, note.id)}
+                      className='done-button'
+                      style={{ fontFamily: userData.fontStyle || 'Montserrat' }}
+                    >
+                      {note.isDone ? '✔️' : 'Done ✔️'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      ))}
+          ))
+        : notes.map((note, index) => (
+            <div key={note.id} style={{ position: 'relative' }}>
+              <div
+                className={`note-container ${
+                  isDoneList[index] ? 'overlay' : ''
+                }`}
+                style={{
+                  backgroundColor: isDoneList[index]
+                    ? 'grey'
+                    : note.colorString,
+                  visibility:
+                    isDoneList[index] && areDoneDeleted ? 'hidden' : '',
+                }}
+              >
+                {editingNote === note.id ? (
+                  <EditPopup
+                    note={note}
+                    onSave={handleSave}
+                    onCancel={handleCancelEdit}
+                    fontSize={fontSize}
+                    colors={colors}
+                    isDefault={isDefault}
+                  />
+                ) : null}
+                <div>
+                  <p
+                    style={{
+                      fontStyle: userData.fontStyle,
+                      fontSize: fontSize,
+                      color: note.fontColor,
+                      marginTop: '-20px',
+                      marginLeft: '-20px',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {changeISOString(note.dueDate) || ''}
+                  </p>
+                  <span
+                    className='close-button'
+                    onClick={() => handleDelete(note.id)}
+                  >
+                    X
+                  </span>
+
+                  {areTitlesVisible ? (
+                    <h2
+                      className='handwriting'
+                      style={{
+                        fontSize:
+                          fontSize === 'var(--font-size-big)' ? '35px' : '18px',
+                        color: note.fontColor || '#000000',
+                        fontFamily: userData.fontStyle || 'Montserrat',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {note.title}
+                    </h2>
+                  ) : (
+                    <h2></h2>
+                  )}
+
+                  <div
+                    className='handwriting'
+                    style={{
+                      fontSize: fontSize,
+                      color: note.fontColor || '#000000',
+                      fontFamily: userData.fontStyle || 'Montserrat',
+                    }}
+                  >
+                    {parse(note.content)}
+                  </div>
+                  <hr className='line'></hr>
+                  <div
+                    className='heading-small'
+                    style={{
+                      fontSize:
+                        fontSize === 'var(--font-size-big)' ? '20px' : '15px',
+                      fontFamily: userData.fontStyle || 'Montserrat',
+                    }}
+                  >
+                    Note-id: {note.id}
+                  </div>
+                  <br />
+
+                  <div className='note-footer'>
+                    <span
+                      className={
+                        isDoneList[index] ? 'invisible' : 'link-default'
+                      }
+                      style={{
+                        fontSize: fontSize,
+                        fontFamily: userData.fontStyle || 'Montserrat',
+                      }}
+                      disabled={isDoneList[index]}
+                      onClick={() => handleEdit(note.id)}
+                    >
+                      Edit
+                    </span>
+                    <button
+                      onClick={() => handleDone(note.id, index)}
+                      className={`done-button`}
+                      style={{ fontFamily: userData.fontStyle || 'Montserrat' }}
+                    >
+                      {isDoneList[index] ? '✔️ ' : 'Done ✔️'}{' '}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
     </div>
   );
 };
