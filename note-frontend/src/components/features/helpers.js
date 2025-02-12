@@ -8,11 +8,13 @@ export const checkIfHex = (colorArray) => {
 
 export const getPaletteViaID = async (id) => {
   // ganze farbpalette soll returned werden
+  const authToken = localStorage.getItem('authToken');
   try {
     // http://localhost:8080/api/colorpalettes/custom/
     const response = await api.get(`/api/colorpalettes/`, {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${authToken}`,
       },
     });
 
@@ -37,11 +39,13 @@ export const getPaletteViaID = async (id) => {
 
 export const getCustomPaletteViaId = async (id) => {
   // ganze farbpalette soll returned werden
+  const authToken = localStorage.getItem('authToken');
   try {
     // http://localhost:8080/api/colorpalettes/custom/
     const response = await api.get(`/api/colorpalettes/custom/`, {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${authToken}`,
       },
     });
 
@@ -67,9 +71,11 @@ export const getCustomPaletteViaId = async (id) => {
 export const patchUserWithNewData = async (userObj, id) => {
   try {
     console.log('patching user with data: ', userObj);
+    const authToken = localStorage.getItem('authToken');
     const response = await api.patch(`/users/${id}`, userObj, {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${authToken}`,
       },
     });
 
@@ -78,6 +84,7 @@ export const patchUserWithNewData = async (userObj, id) => {
       const userResponse = await api.get(`/users/id/${id}`, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
 
@@ -96,11 +103,14 @@ export const patchUserWithNewData = async (userObj, id) => {
 export const getAllColorPalettes = async () => {
   // fetch available color palettes
 
+  const authToken = localStorage.getItem('authToken');
+
   try {
     const res = await fetch(`http://localhost:8088/api/colorpalettes/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${authToken}`,
       },
     });
 
@@ -120,11 +130,13 @@ export const getAllColorPalettes = async () => {
 };
 
 export const fetchGetFromBackend = async (path, errorType) => {
+  const authToken = localStorage.getItem('authToken');
   try {
     const res = await fetch(`http://localhost:8088/${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${authToken}`,
       },
     });
 
@@ -143,9 +155,19 @@ export const fetchGetFromBackend = async (path, errorType) => {
 
 export const loadUserObject = async (userName) => {
   try {
-    const response = await axios.get(`http://localhost:8088/users/${userName}`);
-    console.log('fetching url: ', `http://localhost:8088/users/${userName}`);
-    // console.log(response.data);
+    // Get auth credentials from localStorage
+    const authToken = localStorage.getItem('authToken'); // e.g., base64(username:password)
+
+    const response = await axios.get(
+      `http://localhost:8088/users/${userName}`,
+      {
+        headers: {
+          Authorization: `Basic ${authToken}`, // Add Basic auth credentials
+        },
+        withCredentials: true, // Allow cookies to be sent with the request (for sessions)
+      }
+    );
+
     return response.data;
   } catch (error) {
     console.error('Error fetching user notes:', error);

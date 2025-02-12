@@ -59,12 +59,14 @@ const RegisterPage = () => {
     }
 
     try {
+      const authToken = localStorage.getItem('authToken');
       // Verify captcha
       const res = await fetch('http://localhost:8088/verify', {
         method: 'POST',
         body: JSON.stringify({ captchaValue }),
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
       const data = await res.json();
@@ -87,6 +89,7 @@ const RegisterPage = () => {
         body: JSON.stringify(userObj), // Make sure userObj is stringified
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
       const registerData = await registerRes.json();

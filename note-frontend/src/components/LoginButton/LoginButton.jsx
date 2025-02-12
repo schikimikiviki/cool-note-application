@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import './LoginButton.css';
 
 const LoginButton = (props) => {
   const navigate = useNavigate();

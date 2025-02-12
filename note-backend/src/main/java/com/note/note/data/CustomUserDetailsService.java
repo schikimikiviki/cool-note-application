@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,9 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.note.note.repository.UserRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -45,7 +44,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		var authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
 				.collect(Collectors.toList());
 
-		logger.info("Authorities: ", authorities);
+		logger.info("Authorities: {}", authorities);
+
 
 		return new CustomUserDetails(user.getUsername(), user.getPassword(), authorities, user.getNotes());
 	}

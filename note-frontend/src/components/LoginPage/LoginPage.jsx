@@ -136,15 +136,18 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         'http://localhost:8088/login',
-        { username, password },
+        { username: username, password: password },
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
           },
         }
       );
       // Handle successful login
       console.log('Login successful:', response.data);
+
+      const authToken = btoa(`${username}:${password}`);
+      localStorage.setItem('authToken', authToken);
 
       // UserDaten fetchen und in den State speichern, zB. für Settings
       // und user-definierte Daten und Notes

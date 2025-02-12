@@ -3,6 +3,7 @@ import ModeSwitcher from '../ModeSwitcher/ModeSwitcher';
 import SearchBar from '../SearchBar/SearchBar';
 import '../Header/Header.css';
 import noteIcon from '../../assets/note-icon.png';
+import LoginButton from '../LoginButton/LoginButton';
 
 const DefaultHeader = (props) => {
   const handleData = () => {
@@ -32,6 +33,7 @@ const DefaultHeader = (props) => {
           isDarkThemeSet={props.isDarkThemeSet}
         />
         <PlusButton onClick={handleData} fontSize={props.fontSize} />
+        <LoginButton />
       </div>
     </div>
   );

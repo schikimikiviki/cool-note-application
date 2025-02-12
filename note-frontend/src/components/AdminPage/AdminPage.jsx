@@ -1,9 +1,10 @@
 import UsersList from '../UserList/UserList';
 import './AdminPage.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AddUserForm from '../AddUserForm/AddUserForm';
 import api from '../../api/axiosConfig';
 import { useState, useEffect } from 'react';
+import NotFound from '../NotFound/NotFound';
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -11,12 +12,16 @@ const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [registrationMessage, setRegistrationMessage] = useState('');
+  const location = useLocation();
+  const userData = location.state?.applicationState;
 
   const fetchUsers = async () => {
     try {
+      const authToken = localStorage.getItem('authToken');
       const response = await api.get(`/users`, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`, // Add Basic auth credentials
         },
       });
       setUsers(response.data);
@@ -73,71 +78,79 @@ const AdminPage = () => {
 
   return (
     <>
-      <div className='admin-header'>
-        <h1>Admin Page</h1>
-        <br />
-        <button
-          onClick={() => {
-            navigate('/home');
-          }}
-          style={{ padding: '5px' }}
-        >
-          return /home
-        </button>
-      </div>
-      <div className='admin-page'>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <UsersList users={users} />
-          <br />
-
-          <AddUserForm onAdd={fetchUsers} />
-          <br />
-          <div>
-            <h2>
-              <u>Delete user</u>
-            </h2>
-            {errorMessage && (
-              <div
-                className='error-message'
-                style={{ marginBottom: '20px', marginTop: '20px' }}
-              >
-                <p>{errorMessage}</p>
-              </div>
-            )}
-
-            {registrationMessage && (
-              <div
-                className='registration-message'
-                style={{ marginBottom: '20px', marginTop: '20px' }}
-              >
-                <p>{registrationMessage}</p>
-              </div>
-            )}
-            <label className='form-item'>
-              Enter user ID:
-              <br />
-              <input
-                type='text'
-                value={userID}
-                onChange={(e) => setUserID(e.target.value)}
-              />
-            </label>
-            <br />
+      {userData?.roles?.includes('ADMIN') ? (
+        <>
+          <div className='admin-header'>
+            <h1>Admin Page</h1>
             <br />
             <button
-              style={{
-                width: '150px',
-                padding: '5px',
-                backgroundColor: 'antiquewhite',
-                border: 'none',
+              onClick={() => {
+                navigate('/home');
               }}
-              onClick={() => deleteUser(userID)}
+              style={{ padding: '5px' }}
             >
-              Delete
+              return /home
             </button>
           </div>
-        </div>
-      </div>
+          <div className='admin-page'>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <UsersList users={users} />
+              <br />
+
+              <AddUserForm onAdd={fetchUsers} />
+              <br />
+              <div>
+                <h2>
+                  <u>Delete user</u>
+                </h2>
+                {errorMessage && (
+                  <div
+                    className='error-message'
+                    style={{ marginBottom: '20px', marginTop: '20px' }}
+                  >
+                    <p>{errorMessage}</p>
+                  </div>
+                )}
+
+                {registrationMessage && (
+                  <div
+                    className='registration-message'
+                    style={{ marginBottom: '20px', marginTop: '20px' }}
+                  >
+                    <p>{registrationMessage}</p>
+                  </div>
+                )}
+                <label className='form-item'>
+                  Enter user ID:
+                  <br />
+                  <input
+                    type='text'
+                    value={userID}
+                    onChange={(e) => setUserID(e.target.value)}
+                  />
+                </label>
+                <br />
+                <br />
+                <button
+                  style={{
+                    width: '150px',
+                    padding: '5px',
+                    backgroundColor: 'antiquewhite',
+                    border: 'none',
+                  }}
+                  onClick={() => deleteUser(userID)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <NotFound />
+        </>
+      )}
     </>
   );
 };

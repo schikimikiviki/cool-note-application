@@ -6,6 +6,7 @@ import SettingsPage from './components/Settings/SettingsPage';
 import AdminPage from './components/AdminPage/AdminPage';
 import DefaultHome from './components/DefaultHome/DefaultHome';
 import LegalPage from './components/LegalPage/LegalPage';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/settings' element={<SettingsPage />} />
         <Route path='/admin' element={<AdminPage />} />
         <Route path='/legal' element={<LegalPage />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </div>
   );

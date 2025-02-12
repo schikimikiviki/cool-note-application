@@ -36,7 +36,7 @@ const EditUserData = ({ userData, fontSize, onPatchUser }) => {
       }
     }
 
-    if (!regex.test(password.trim())) {
+    if (password.trim() !== '' && !regex.test(password.trim())) {
       setErrorMessage(
         'Password must have at least one lowercase letter, one uppercase letter, one digit, one special character and be 7 characters long!'
       );

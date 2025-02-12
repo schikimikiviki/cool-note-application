@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.note.note.data.ColorPalette;
 import com.note.note.data.CustomColorPalette;
 import com.note.note.data.CustomUserDetailsService;
+import com.note.note.data.LoginRequest;
 import com.note.note.data.Note;
 import com.note.note.data.User;
 import com.note.note.data.UserDto;
@@ -66,6 +66,7 @@ public class UserController {
 		return userDetailsService.loadUserByUsername(principal.getName());
 	}
 
+	
 	@GetMapping("/test")
 	public ResponseEntity<String> testLogging() {
 		System.out.println("testtt");
@@ -90,24 +91,28 @@ public class UserController {
 		// Return details of a single user
 		return userService.findUserById(Id);
 	}
+	
+	 @GetMapping("/admin")
+	    public ResponseEntity<String> getAdminPage() {
+	        return ResponseEntity.ok("Admin page content");
+	    }
+	
+	 @PostMapping("/login")
+	    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+	        String username = loginRequest.getUsername();
+	        String password = loginRequest.getPassword();
+	        
 
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestParam Map<String, String> loginData) {
-		String username = loginData.get("username");
-		String password = loginData.get("password");
+	        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-		// Load user details by username
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-		if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
-			// Login successful
-			return ResponseEntity.ok(Map.of("success", true, "message", "Login successful"));
-		} else {
-			// Invalid credentials
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(Map.of("success", false, "message", "Invalid credentials"));
-		}
-	}
+	        if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
+	            return ResponseEntity.ok(Map.of("success", true, "message", "Login successful"));
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                    .body(Map.of("success", false, "message", "Invalid credentials"));
+	        }
+	    }
+	
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody UserDto userDto) {
