@@ -181,6 +181,36 @@
   height: 80px;
 }
 
+@media only screen and (max-width: 768px) {
+  .delete-form {
+    display: inline;
+  }
+
+  #email {
+    margin-top: 10px;
+    width: 250px !important;
+    padding: 0 !important;
+  }
+
+  .delete {
+    font-size: 13px !important;
+    padding: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  #auth {
+    margin-top: 10px;
+    height: 15px !important;
+  }
+}
+
+.tab-button {
+  padding: 5px;
+  border-radius: 20px;
+  background-color: whitesmoke !important;
+}
+
 #auth {
   margin-right: 10px;
   height: 50px;

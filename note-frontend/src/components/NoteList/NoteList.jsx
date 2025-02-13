@@ -58,6 +58,8 @@ const NoteList = ({
   };
 
   const handleSave = async (noteId, noteObj) => {
+    const authToken = localStorage.getItem('authToken');
+
     if (isDefault) {
       onEditDefault(noteObj, noteId);
       setTimeout(() => {
@@ -70,6 +72,7 @@ const NoteList = ({
         await api.patch(`/api/notes/${noteId}`, noteObj, {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Basic ${authToken}`,
           },
         });
         setEditingNote(null);
@@ -87,8 +90,15 @@ const NoteList = ({
   };
 
   const handleDelete = async (noteId) => {
+    const authToken = localStorage.getItem('authToken');
+
     try {
-      await api.delete(`api/notes/${noteId}`);
+      await api.delete(`api/notes/${noteId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
+        },
+      });
       console.log(`Note with id ${noteId} sucessfully deleted!`);
       onDelete(noteId);
     } catch (error) {
@@ -106,6 +116,7 @@ const NoteList = ({
       const newDoneState = !isDoneList[index];
 
       // console.log('IS DONE STATE: ', newDoneState);
+      const authToken = localStorage.getItem('authToken');
 
       // Send the PATCH request to update the `done` state
       const response = await api.patch(
@@ -114,6 +125,7 @@ const NoteList = ({
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Basic ${authToken}`,
           },
         }
       );
@@ -130,7 +142,10 @@ const NoteList = ({
 
         try {
           api.delete(`/api/notes/${noteId}`, {
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Basic ${authToken}`,
+            },
           });
 
           console.log('All notes deleted');

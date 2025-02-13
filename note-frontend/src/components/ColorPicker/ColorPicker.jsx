@@ -8,6 +8,7 @@ const ColorPicker = ({
   onAddPalette,
   onDelete,
   onChangePaletteName,
+  isMobile,
 }) => {
   const [color1, setColor1] = useState('#000000');
   const [color2, setColor2] = useState('#000000');
@@ -59,16 +60,22 @@ const ColorPicker = ({
 
   const handleDeletePalette = async (id) => {
     console.log('trying to  delete palette with id: ', id);
+    const authToken = localStorage.getItem('authToken');
+
     try {
       const request = await api.delete(`/api/colorpalettes/custom/${id}`, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
 
       // If successful, call the refreshStateFromDb function to update the UI with the latest user data
       const userResponse = await api.get(`/users/id/${user.id}`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
+        },
       });
 
       console.log('Updated user data after delete:', userResponse.data);
@@ -83,6 +90,7 @@ const ColorPicker = ({
 
     let paletteObj = {};
     paletteObj.name = paletteNameInput;
+    const authToken = localStorage.getItem('authToken');
 
     try {
       const request = await api.patch(
@@ -91,6 +99,7 @@ const ColorPicker = ({
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Basic ${authToken}`,
           },
         }
       );
@@ -100,6 +109,7 @@ const ColorPicker = ({
         const userResponse = await api.get(`/users/id/${user.id}`, {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Basic ${authToken}`,
           },
         });
 
@@ -157,10 +167,7 @@ const ColorPicker = ({
         ></input>
       </div>
       <div style={{ marginTop: '20px' }}>
-        <label
-          style={{ fontSize: fontSize, marginRight: '10px' }}
-          htmlFor='text'
-        >
+        <label style={{ marginRight: '10px' }} htmlFor='text'>
           Select a name for the new palette:
         </label>
         <input
@@ -190,70 +197,89 @@ const ColorPicker = ({
       </h2>
       <br />
 
-      {user.customColorPaletteList &&
+      {user.customColorPaletteList && user.customColorPaletteList.length > 0 ? (
         user.customColorPaletteList.map((palette, paletteIndex) => (
           <div
             key={paletteIndex}
             style={{
               gap: '10px',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
+              flexDirection: 'column', // Stack name/icons and input button in separate lines
+              alignItems: 'flex-start',
               paddingBottom: '10px',
             }}
           >
-            <p>{palette.name}</p>
-            <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
-              <span
-                style={{
-                  cursor: 'pointer',
-                  color: 'blue',
-                  fontSize: '20px',
-                }}
-                title='Edit Palette'
-                onClick={() => handleEditPalette(paletteIndex)}
-              >
-                ✏️
-              </span>
+            {/* Name and Icons in a single line */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '10px',
+                alignItems: 'center',
+              }}
+            >
+              <p>{palette.name}</p>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <span
+                  style={{
+                    cursor: 'pointer',
+                    color: 'blue',
+                    fontSize: '20px',
+                  }}
+                  title='Edit Palette'
+                  onClick={() => handleEditPalette(paletteIndex)}
+                >
+                  ✏️
+                </span>
 
-              <span
-                style={{
-                  cursor: 'pointer',
-                  color: 'red',
-                  fontSize: '20px',
-                }}
-                title='Delete Palette'
-                onClick={() => handleDeletePalette(palette.id)}
-              >
-                🗑️
-              </span>
-
-              {edit === paletteIndex && (
-                <>
-                  <input
-                    type='text'
-                    value={paletteNameInput}
-                    onChange={(e) => setPaletteNameInput(e.target.value)}
-                  />
-
-                  <button
-                    type='submit'
-                    onClick={() =>
-                      handleSubmitName(
-                        user.customColorPaletteList[paletteIndex].id
-                      )
-                    }
-                  >
-                    Submit
-                  </button>
-                </>
-              )}
+                <span
+                  style={{
+                    cursor: 'pointer',
+                    color: 'red',
+                    fontSize: '20px',
+                  }}
+                  title='Delete Palette'
+                  onClick={() => handleDeletePalette(palette.id)}
+                >
+                  🗑️
+                </span>
+              </div>
             </div>
+
+            {/* Input field and Submit button below */}
+            {edit === paletteIndex && (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column', // Stack input field and button in separate lines
+                  gap: '10px',
+                  marginTop: '10px',
+                }}
+              >
+                <input
+                  type='text'
+                  value={paletteNameInput}
+                  onChange={(e) => setPaletteNameInput(e.target.value)}
+                />
+
+                <button
+                  type='submit'
+                  onClick={() =>
+                    handleSubmitName(
+                      user.customColorPaletteList[paletteIndex].id
+                    )
+                  }
+                >
+                  Submit
+                </button>
+              </div>
+            )}
           </div>
-        ))}
+        ))
+      ) : (
+        <p>No custom palettes found.</p>
+      )}
     </>
   );
-  1;
 };
 
 export default ColorPicker;

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './AddUserForm.css';
 import { validateUsername } from '../features/helpers';
 
-const AddUserForm = ({ onAdd }) => {
+const AddUserForm = ({ onAdd, isMobile }) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [fullname, setFullname] = useState('');
@@ -89,11 +89,13 @@ const AddUserForm = ({ onAdd }) => {
 
     try {
       console.log('POSTING the following user to the db: ', userObj);
-      const registerRes = await fetch('http://localhost:8080/register', {
+      const authToken = localStorage.getItem('authToken');
+      const registerRes = await fetch('http://localhost:8088/register', {
         method: 'POST',
         body: JSON.stringify(userObj), // Make sure userObj is stringified
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
       const registerData = await registerRes.json();
@@ -149,7 +151,11 @@ const AddUserForm = ({ onAdd }) => {
       <form onSubmit={registerUser}>
         <div className='add-user'>
           <div
-            style={{ width: '20%', display: 'flex', flexDirection: 'column' }}
+            style={{
+              width: isMobile ? '50%' : '20%',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
           >
             <label className='form-item'>
               Enter username:

@@ -31,7 +31,7 @@ const UsersList = ({ users }) => {
         flexDirection: 'column',
       }}
     >
-      <h2>
+      <h2 style={{ marginBottom: '10px' }}>
         <u>Get all users</u>
       </h2>
       <div style={{ display: 'flex' }}>

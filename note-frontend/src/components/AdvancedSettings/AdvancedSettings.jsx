@@ -10,6 +10,7 @@ const AdvancedSettings = ({
   secondHalf,
   onChangeAuth,
   onAuthSubmit,
+  isMobile,
 }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
   const navigate = useNavigate();
@@ -22,10 +23,12 @@ const AdvancedSettings = ({
 
   const deleteProfile = async () => {
     // first make a delete request to the backend
+    const authToken = localStorage.getItem('authToken');
     try {
       const response = await api.delete(`/users/${userData.id}`, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
     } catch (err) {
@@ -139,7 +142,7 @@ const AdvancedSettings = ({
               placeholder='Enter e-mail adress for 2-factor authentication'
               defaultValue={userData.email || ''}
               onChange={handleMailChange}
-              style={{ fontSize: fontSize }}
+              style={{ fontSize: isMobile ? '15px' : fontSize }}
               required
             />
 
@@ -165,7 +168,10 @@ const AdvancedSettings = ({
             {firstHalf.length > 0 && (
               <>
                 {firstHalf.map((txt) => (
-                  <li key={txt} style={{ fontSize: fontSize }}>
+                  <li
+                    key={txt}
+                    style={{ fontSize: isMobile ? '16px' : fontSize }}
+                  >
                     <p>{txt}</p>
                   </li>
                 ))}
@@ -178,7 +184,10 @@ const AdvancedSettings = ({
             {secondHalf.length > 0 && (
               <>
                 {secondHalf.map((txt) => (
-                  <li key={txt} style={{ fontSize: fontSize }}>
+                  <li
+                    key={txt}
+                    style={{ fontSize: isMobile ? '16px' : fontSize }}
+                  >
                     <p>{txt}</p>
                   </li>
                 ))}{' '}

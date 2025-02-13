@@ -14,6 +14,22 @@ const AdminPage = () => {
   const [registrationMessage, setRegistrationMessage] = useState('');
   const location = useLocation();
   const userData = location.state?.applicationState;
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(false);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(width <= 768 ? true : false);
+  }, [width]);
 
   const fetchUsers = async () => {
     try {
@@ -45,9 +61,12 @@ const AdminPage = () => {
         return;
       }
 
+      const authToken = localStorage.getItem('authToken');
+
       const response = await api.delete(`/users/${id}`, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Basic ${authToken}`,
         },
       });
 
@@ -97,7 +116,7 @@ const AdminPage = () => {
               <UsersList users={users} />
               <br />
 
-              <AddUserForm onAdd={fetchUsers} />
+              <AddUserForm onAdd={fetchUsers} isMobile={isMobile} />
               <br />
               <div>
                 <h2>
