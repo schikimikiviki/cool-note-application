@@ -17,6 +17,19 @@
   margin: 2.5rem;
 }
 
+@media only screen and (max-width: 768px) {
+  .note-container {
+    max-width: 150px;
+    margin: 0.8rem;
+    padding: 0.8rem;
+  }
+
+  .main-container {
+    padding: 0%;
+    gap: 10px;
+  }
+}
+
 .close-button {
   top: 0.5rem;
   margin-left: 90%;

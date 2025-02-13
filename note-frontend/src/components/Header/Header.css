@@ -1,26 +1,23 @@
 .header-main {
-    display: flex;
-    justify-content: space-around; 
-    background: rgba(84, 100, 118, 0.5);
-    padding: 1%;
-    border-radius: 20px;
-    border: 0.5px solid black; 
+  display: flex;
+  justify-content: space-around;
+  background: rgba(84, 100, 118, 0.5);
+  padding: 1%;
+  border-radius: 20px;
+  border: 0.5px solid black;
 }
 
 .margin-decent {
-    margin: 20px;
+  margin: 20px;
 }
 
 .header-item {
-    display: flex;
-    justify-content: space-between;  
-    gap: 5px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 .heading-main {
-    font-size: 30px;
-    margin-top: 10%; 
-  }
-
-
-   
+  font-size: 30px;
+  margin-top: 10%;
+}

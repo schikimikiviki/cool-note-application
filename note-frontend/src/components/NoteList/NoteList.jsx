@@ -22,6 +22,22 @@ const NoteList = ({
   const [areTitlesVisible, setAreTitlesVisible] = useState();
   const [isDoneList, setIsDoneList] = useState([]);
   const [areDoneDeleted, setAreDoneDeleted] = useState();
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(false);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(width <= 768 ? true : false);
+  }, [width]);
 
   // Sync the `isDoneList` whenever `notes` change
   useEffect(() => {
@@ -165,10 +181,10 @@ const NoteList = ({
                   <p
                     style={{
                       fontStyle: userData.fontStyle,
-                      fontSize: fontSize,
+                      fontSize: isMobile ? '13px' : fontSize,
                       color: note.fontColor,
-                      marginTop: '-20px',
-                      marginLeft: '-20px',
+                      marginTop: isMobile ? '-10px' : '-20px',
+                      marginLeft: isMobile ? '-10px' : '-20px',
                       marginBottom: '10px',
                     }}
                   >
@@ -185,8 +201,11 @@ const NoteList = ({
                     <h2
                       className='handwriting'
                       style={{
-                        fontSize:
-                          fontSize === 'var(--font-size-big)' ? '35px' : '18px',
+                        fontSize: isMobile
+                          ? '18px'
+                          : fontSize === 'var(--font-size-big)'
+                          ? '35px'
+                          : '18px',
                         color: note.fontColor || '#000000',
                         fontFamily: userData.fontStyle || 'Montserrat',
                         marginBottom: '10px',
@@ -201,7 +220,7 @@ const NoteList = ({
                   <div
                     className='handwriting'
                     style={{
-                      fontSize: fontSize,
+                      fontSize: isMobile ? '16px' : fontSize,
                       color: note.fontColor || '#000000',
                       fontFamily: userData.fontStyle || 'Montserrat',
                     }}

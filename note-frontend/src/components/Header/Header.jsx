@@ -4,8 +4,36 @@ import SearchBar from '../SearchBar/SearchBar';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import './Header.css';
 import noteIcon from '../../assets/note-icon.png';
+import { useState, useEffect } from 'react';
+import MobileHeader from '../MobileHeader/MobileHeader';
 
 const Header = (props) => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 768;
+
+  if (isMobile) {
+    // console.log('Mobile device  detected!');
+    return (
+      <MobileHeader
+        onType={props.onType}
+        onClick={props.onClick}
+        isDarkThemeSet={props.isDarkThemeSet}
+        onReceive={props.onReceive}
+      />
+    );
+  }
+
   const handleData = () => {
     props.onReceive();
   };

@@ -13,6 +13,24 @@ const ColorSort = ({
   const [translatedColors, setTranslatedColors] = useState([]);
   const [translatedCustomMeanings, setTranslatedCustomMeanings] = useState({});
   const [filterByDueDate, setFilterByDueDate] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [colorWidth, setColorWidth] = useState('100px');
+  const [isMobile, setIsMobile] = useState(false);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setColorWidth(width <= 768 ? '70px' : '100px');
+    setIsMobile(width <= 768 ? true : false);
+  }, [width]);
 
   useEffect(() => {
     const processColors = async () => {
@@ -73,22 +91,27 @@ const ColorSort = ({
             display: 'flex',
           }}
         >
-          <div
-            className='before-after'
-            style={{
-              fontSize:
-                fontSize === 'var(--font-size-medium)' ? '16px' : fontSize,
-              height: fontSize === 'var(--font-size-big)' ? '' : '20px',
-            }}
-          >
-            Filter by color
-          </div>
+          {isMobile ? (
+            <></>
+          ) : (
+            <div
+              className='before-after'
+              style={{
+                fontSize:
+                  fontSize === 'var(--font-size-medium)' ? '16px' : fontSize,
+                height: fontSize === 'var(--font-size-big)' ? '' : '20px',
+              }}
+            >
+              Filter by color
+            </div>
+          )}
+
           {translatedColors.map((color, index) => (
             <div
               key={index}
               onClick={() => handleColorClick(color)}
               style={{
-                width: '100px',
+                width: colorWidth,
                 height: '20px',
                 marginBottom: '20px',
                 backgroundColor: color,
@@ -99,31 +122,61 @@ const ColorSort = ({
               {translatedCustomMeanings[color]}
             </div>
           ))}
-          <div
-            className='before-after'
+
+          {isMobile ? (
+            <></>
+          ) : (
+            <div
+              className='before-after'
+              style={{
+                fontSize:
+                  fontSize === 'var(--font-size-medium)' ? '17px' : fontSize,
+                height: fontSize === 'var(--font-size-big)' ? '' : '20px',
+              }}
+              onClick={resetColor} // Reset filter button
+            >
+              Reset filter
+            </div>
+          )}
+        </div>
+
+        {isMobile ? (
+          <></>
+        ) : (
+          <button
+            onClick={filterByDate}
             style={{
+              marginLeft: '50px',
               fontSize:
                 fontSize === 'var(--font-size-medium)' ? '17px' : fontSize,
               height: fontSize === 'var(--font-size-big)' ? '' : '20px',
             }}
-            onClick={resetColor} // Reset filter button
           >
-            Reset filter
-          </div>
-        </div>
+            {filterByDueDate ? 'Show all notes' : '  Show due notes'}
+          </button>
+        )}
+      </div>
 
-        <button
-          onClick={filterByDate}
+      {isMobile ? (
+        <div
           style={{
-            marginLeft: '50px',
-            fontSize:
-              fontSize === 'var(--font-size-medium)' ? '17px' : fontSize,
-            height: fontSize === 'var(--font-size-big)' ? '' : '20px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '10px',
           }}
         >
-          {filterByDueDate ? 'Show all notes' : '  Show due notes'}
-        </button>
-      </div>
+          <button className='button-mobile-small' onClick={resetColor}>
+            Reset filter
+          </button>
+          <button className='button-mobile-small' onClick={filterByDate}>
+            {filterByDueDate ? 'Show all notes' : '  Show due notes'}
+          </button>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
