@@ -4,6 +4,18 @@
   justify-content: center;
 }
 
+@media only screen and (max-width: 768px) {
+  .register-form {
+    margin: 2px;
+  }
+
+  .register-header {
+    gap: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+}
+
 .register-container {
   width: 100vw;
   height: 100vh;

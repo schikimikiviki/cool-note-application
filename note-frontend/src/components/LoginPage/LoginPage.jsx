@@ -1,6 +1,6 @@
 import './LoginPage.css';
 import noteIcon from '../../assets/note-icon.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import api from '../../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,22 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [secondErrorMessage, setSecondErrorMessage] = useState('');
   const navigate = useNavigate();
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(false);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(width <= 768 ? true : false);
+  }, [width]);
 
   const handleCodeChange = (e) => {
     setCode(e.target.value);
@@ -198,8 +214,15 @@ const LoginPage = () => {
     <>
       <div className='login-container'>
         <div className='login-header'>
-          <img src={noteIcon} alt='note-logo' width={150} height={150} />
-          <h1>! my very important notes !</h1>
+          <img
+            src={noteIcon}
+            alt='note-logo'
+            width={isMobile ? '100' : '150'}
+            height={isMobile ? '100' : '150'}
+          />
+          <h1 style={{ fontSize: isMobile ? '22px' : 'auto' }}>
+            ! my very important notes !
+          </h1>
         </div>
         <div className='page-container'>
           <div className={`login-body ${authenticationActive ? '' : 'toLeft'}`}>

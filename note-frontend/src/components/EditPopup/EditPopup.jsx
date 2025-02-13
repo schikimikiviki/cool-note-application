@@ -12,6 +12,22 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
   const [dueDate, setDueDate] = useState(
     note.dueDate ? new Date(note.dueDate).toISOString().slice(0, 16) : ''
   );
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(false);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(width <= 768 ? true : false);
+  }, [width]);
 
   useEffect(() => {
     if (colors) {
@@ -95,7 +111,7 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
 
         <p
           className='heading-edit'
-          style={{ paddingTop: '1%', fontSize: fontSize }}
+          style={{ paddingTop: '1%', fontSize: isMobile ? '15px' : fontSize }}
         >
           Edit color:
         </p>
@@ -122,7 +138,10 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
             ))}
           </div>
         </div>
-        <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+        <h1
+          className='heading-edit'
+          style={{ fontSize: isMobile ? '15px' : fontSize }}
+        >
           Edit title:
         </h1>
         <textarea
@@ -134,11 +153,19 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
 
         <h1
           className='heading-edit'
-          style={{ fontSize: fontSize, marginBottom: '5px' }}
+          style={{
+            fontSize: isMobile ? '15px' : fontSize,
+            marginBottom: '5px',
+          }}
         >
           Edit contents:
         </h1>
-        <div style={{ paddingLeft: '5px', marginBottom: '20px' }}>
+        <div
+          style={{
+            paddingLeft: '5px',
+            marginBottom: isMobile ? '10px' : '20px',
+          }}
+        >
           <RichTextEditor
             noteContent={editedContent}
             onChangeContent={handleChangeContent}
@@ -156,7 +183,10 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
           <div style={{ width: '30%' }}>
             <h1
               className='heading-edit'
-              style={{ fontSize: fontSize, marginBottom: '5px' }}
+              style={{
+                fontSize: isMobile ? '15px' : fontSize,
+                marginBottom: '5px',
+              }}
             >
               Edit font color:
             </h1>
@@ -173,7 +203,10 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
           <div>
             <h1
               className='heading-edit'
-              style={{ fontSize: fontSize, marginBottom: '5px' }}
+              style={{
+                fontSize: isMobile ? '15px' : fontSize,
+                marginBottom: '5px',
+              }}
             >
               Edit due date:
             </h1>
@@ -186,9 +219,15 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
             />
           </div>
         </div>
+        {isMobile ? (
+          <></>
+        ) : (
+          <>
+            <br />
+            <br />
+          </>
+        )}
 
-        <br />
-        <br />
         <div
           style={{
             display: 'flex',

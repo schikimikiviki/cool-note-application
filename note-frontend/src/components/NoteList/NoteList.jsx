@@ -241,7 +241,7 @@ const NoteList = ({
                   <br />
 
                   <div className='note-footer'>
-                    <span
+                    <p
                       className={note.isDone ? 'invisible' : 'link-default'}
                       style={{
                         fontSize: fontSize,
@@ -251,7 +251,7 @@ const NoteList = ({
                       onClick={() => handleEdit(note.id)}
                     >
                       Edit
-                    </span>
+                    </p>
                     <button
                       onClick={() => handleDoneNote(!note.isDone, note.id)}
                       className='done-button'

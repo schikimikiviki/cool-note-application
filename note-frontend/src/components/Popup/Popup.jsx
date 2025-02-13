@@ -11,6 +11,22 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
   const [dueDate, setDueDate] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [noteName, setNoteName] = useState('');
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(false);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(width <= 768 ? true : false);
+  }, [width]);
 
   useEffect(() => {
     const processColors = async () => {
@@ -64,11 +80,13 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
       }
       const jsonString = JSON.stringify(dataToSubmit);
       console.log('Data to submit: ', dataToSubmit);
+      const authToken = localStorage.getItem('authToken');
 
       if (!isDefault) {
         await api.post(`/api/notes/${userId}`, jsonString, {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Basic ${authToken}`,
           },
         });
       }
@@ -119,7 +137,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
           <input
             type='text'
             name='name'
-            style={{ fontSize: fontSize, width: '100%' }}
+            style={{ fontSize: isMobile ? '12px' : fontSize, width: '100%' }}
             placeholder='Please type in a note heading'
             value={noteName}
             onChange={handleTitleChange}
@@ -139,12 +157,16 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
                 alignItems: 'center',
               }}
             >
-              <p
-                className='heading-medium'
-                style={{ paddingTop: '1%', fontSize: fontSize }}
-              >
-                Select a color:
-              </p>
+              {isMobile ? (
+                <></>
+              ) : (
+                <p
+                  className='heading-medium'
+                  style={{ paddingTop: '1%', fontSize: fontSize }}
+                >
+                  Select a color:
+                </p>
+              )}
             </div>
             <div
               style={{
@@ -177,10 +199,13 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
               alignItems: 'center',
             }}
           >
-            <div style={{ width: '30%' }}>
+            <div style={{ width: isMobile ? '50%' : '30%' }}>
               <h1
                 className='heading-edit'
-                style={{ fontSize: fontSize, marginBottom: '5px' }}
+                style={{
+                  fontSize: isMobile ? '15px' : fontSize,
+                  marginBottom: '5px',
+                }}
               >
                 Edit font color:
               </h1>
@@ -197,13 +222,20 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
               ></input>
             </div>
             <div>
-              <h1 className='heading-edit' style={{ fontSize: fontSize }}>
+              <h1
+                className='heading-edit'
+                style={{ fontSize: isMobile ? '15px' : fontSize }}
+              >
                 Edit due date:
               </h1>
               <input
                 type='datetime-local'
                 value={dueDate}
-                style={{ marginLeft: '5px', width: '200px', marginTop: '10px' }}
+                style={{
+                  marginLeft: isMobile ? '0px' : '5px',
+                  width: isMobile ? '150px' : '200px',
+                  marginTop: '10px',
+                }}
                 onChange={handleDateChange}
               />
             </div>

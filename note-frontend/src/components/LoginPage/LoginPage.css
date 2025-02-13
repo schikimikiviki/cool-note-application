@@ -4,6 +4,18 @@
   justify-content: center;
 }
 
+@media only screen and (max-width: 768px) {
+  .login-form {
+    margin: 2px;
+  }
+
+  .login-header {
+    gap: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+}
+
 .login-container {
   width: 100vw;
   height: 100vh;

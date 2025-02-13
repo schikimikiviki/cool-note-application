@@ -28,6 +28,14 @@
     padding: 0%;
     gap: 10px;
   }
+
+  .link-default {
+    font-size: 15px !important;
+  }
+
+  .done-button {
+    padding: 5px;
+  }
 }
 
 .close-button {
