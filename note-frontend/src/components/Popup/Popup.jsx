@@ -79,7 +79,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
         dataToSubmit.dueDate = convertToISOWithTimezone(dueDate);
       }
       const jsonString = JSON.stringify(dataToSubmit);
-      console.log('Data to submit: ', dataToSubmit);
+      // console.log('Data to submit: ', dataToSubmit);
       const authToken = localStorage.getItem('authToken');
 
       if (!isDefault) {
@@ -98,7 +98,7 @@ const Popup = ({ onClose, onAdd, userId, fontSize, colors, isDefault }) => {
       }
 
       onClose();
-      console.log(dataToSubmit, typeof dataToSubmit);
+      // console.log(dataToSubmit, typeof dataToSubmit);
     } catch (error) {
       console.error('Error while posting note:', error);
     }

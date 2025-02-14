@@ -67,7 +67,7 @@ const NoteList = ({
       }, 0);
     } else {
       try {
-        console.log('Edited Body:', noteObj);
+        // console.log('Edited Body:', noteObj);
 
         await api.patch(`/api/notes/${noteId}`, noteObj, {
           headers: {
@@ -99,7 +99,7 @@ const NoteList = ({
           Authorization: `Basic ${authToken}`,
         },
       });
-      console.log(`Note with id ${noteId} sucessfully deleted!`);
+      // console.log(`Note with id ${noteId} sucessfully deleted!`);
       onDelete(noteId);
     } catch (error) {
       console.error('Error while deleting note:', error);
@@ -138,7 +138,7 @@ const NoteList = ({
       }
 
       if (userData.deleteAllDone) {
-        console.log('user has set done notes to be deleted!');
+        // console.log('user has set done notes to be deleted!');
 
         try {
           api.delete(`/api/notes/${noteId}`, {
@@ -148,7 +148,7 @@ const NoteList = ({
             },
           });
 
-          console.log('All notes deleted');
+          // console.log('All notes deleted');
         } catch (err) {
           console.error('Error deleting notes:', err);
           return; // Exit early if deletion fails

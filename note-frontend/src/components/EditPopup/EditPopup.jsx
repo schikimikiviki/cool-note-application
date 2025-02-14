@@ -64,7 +64,7 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
       modifiedFields.dueDate = convertToISOWithTimezone(dueDate);
     }
 
-    console.log('Onsave gets: ', modifiedFields);
+    //console.log('Onsave gets: ', modifiedFields);
     // Pass the note ID and the modified fields to onSave
     onSave(note.id, modifiedFields);
   };
@@ -83,7 +83,7 @@ const EditPopup = ({ note, onSave, onCancel, fontSize, colors }) => {
   };
 
   const handleChangeContent = (value) => {
-    console.log(value);
+    // console.log(value);
     setEditedContent(value);
   };
 

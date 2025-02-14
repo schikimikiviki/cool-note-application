@@ -36,7 +36,7 @@ const ColorPicker = ({
         ],
       };
 
-      console.log(user);
+      // console.log(user);
 
       let responseObj = await patchUserWithNewData(userObj, user.id);
       onAddPalette(responseObj);
@@ -59,7 +59,7 @@ const ColorPicker = ({
   };
 
   const handleDeletePalette = async (id) => {
-    console.log('trying to  delete palette with id: ', id);
+    //console.log('trying to  delete palette with id: ', id);
     const authToken = localStorage.getItem('authToken');
 
     try {
@@ -78,7 +78,7 @@ const ColorPicker = ({
         },
       });
 
-      console.log('Updated user data after delete:', userResponse.data);
+      //console.log('Updated user data after delete:', userResponse.data);
       onDelete(userResponse.data); // Call onDelete to update the state
     } catch (err) {
       console.log('Failed to POST data', err);
@@ -113,7 +113,7 @@ const ColorPicker = ({
           },
         });
 
-        console.log('Got the following user data: ', userResponse.data);
+        // console.log('Got the following user data: ', userResponse.data);
         localStorage.setItem('userData', JSON.stringify(userResponse.data));
         onChangePaletteName(userResponse.data);
       } catch (err) {

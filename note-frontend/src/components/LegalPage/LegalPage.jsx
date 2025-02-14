@@ -78,8 +78,8 @@ const LegalPage = () => {
                       </h2>
                       <p>
                         You can contact me at:{' '}
-                        <a href='mailto:admin@blitznotiz.at'>
-                          admin@blitznotiz.at
+                        <a href='mailto:mail@blitznotiz.at'>
+                          mail@blitznotiz.at
                         </a>
                       </p>
                     </>
@@ -145,7 +145,7 @@ const LegalPage = () => {
               </h2>
               <p style={{ fontSize: '24px', marginTop: '15px' }}>
                 You can contact me at:{' '}
-                <a href='mailto:admin@blitznotiz.at'>admin@blitznotiz.at</a>
+                <a href='mailto:mail@blitznotiz.at'>mail@blitznotiz.at</a>
               </p>
             </TabPanel>
             <TabPanel tabId='extra'>

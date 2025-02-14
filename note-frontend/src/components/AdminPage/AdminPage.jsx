@@ -167,7 +167,7 @@ const AdminPage = () => {
         </>
       ) : (
         <>
-          <NotFound />
+          <NotFound loggedIn='true' />
         </>
       )}
     </>

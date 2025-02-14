@@ -15,6 +15,7 @@ import {
   getCustomPaletteViaId,
   patchUserWithNewData,
 } from '../features/helpers.js';
+import NotFound from '../NotFound/NotFound.jsx';
 
 function Home() {
   const [originalNotes, setOriginalNotes] = useState([]);
@@ -139,7 +140,7 @@ function Home() {
               (palette) => palette.name === 'Default'
             );
 
-            console.log('Found default palette: ', foundPalette);
+            // console.log('Found default palette: ', foundPalette);
 
             if (foundPalette) {
               setUserColors(foundPalette.colorList);
@@ -158,7 +159,7 @@ function Home() {
               // Save updated palette to localStorage
               localStorage.setItem('colors', JSON.stringify(newPalette));
 
-              console.log('Updated palette saved:', newPalette);
+              //  console.log('Updated palette saved:', newPalette);
             } else {
               console.warn('No "Default" palette found.');
             }
@@ -230,9 +231,9 @@ function Home() {
 
   const load = async () => {
     try {
-      console.log(`Executing load for user ${userData.username}...`);
+      // console.log(`Executing load for user ${userData.username}...`);
       const newUserData = await loadUserObject(userData.username);
-      console.log('New user data: ', newUserData);
+      //   console.log('New user data: ', newUserData);
 
       localStorage.setItem('userData', JSON.stringify(newUserData));
 
@@ -248,9 +249,9 @@ function Home() {
   };
 
   const handleSearch = async (searchTerm) => {
-    console.log('SEARCH TERM: ', searchTerm);
-    console.log('NOTES STATE', userData.notes);
-    console.log('ORIGINALNOTES', originalNotes);
+    // console.log('SEARCH TERM: ', searchTerm);
+    // console.log('NOTES STATE', userData.notes);
+    // console.log('ORIGINALNOTES', originalNotes);
     if (searchTerm === '') {
       setFilteredNotes(originalNotes);
     } else {
@@ -259,14 +260,14 @@ function Home() {
           note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           note.content.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      console.log(filteredNotes);
+      //console.log(filteredNotes);
 
       setFilteredNotes(filteredNotes);
     }
   };
 
   const changeTitles = async (data) => {
-    console.log(data);
+    // console.log(data);
     setHideTitles(data);
 
     let userObj = {};
@@ -283,23 +284,23 @@ function Home() {
         // Reset the notes to the original ones when filter is reset
 
         setFilteredNotes(originalNotes);
-        console.log('Resetting notes to original ones');
+        // console.log('Resetting notes to original ones');
         return;
       }
-      console.log(color);
+      // console.log(color);
       // Proceed with color filtering if color is not null
 
       if (color) {
         // Always filter from originalNotes to prevent notes from being deleted
 
-        console.log(originalNotes);
+        // console.log(originalNotes);
         const filteredNotes = originalNotes.filter(
           (note) => note.colorString === color
         );
 
         setFilteredNotes(filteredNotes);
 
-        console.log('Updating notes to filtered notes', filteredNotes);
+        // console.log('Updating notes to filtered notes', filteredNotes);
       }
     } catch (error) {
       console.error('Error while sorting notes by color:', error);
@@ -308,7 +309,7 @@ function Home() {
 
   const handleHideNotes = async (data) => {
     // patch the user and update the state
-    console.log(data);
+    // console.log(data);
     setHideDoneNotes(data);
 
     let userObj = {};
@@ -329,14 +330,14 @@ function Home() {
   };
 
   const filterDueDate = (filterState) => {
-    console.log(filterState);
+    // console.log(filterState);
 
     if (filterState) {
       // Get today's date in YYYY-MM-DD format
       const today = new Date().toISOString().slice(0, 10);
 
-      console.log('Today is: ', today);
-      console.log(originalNotes);
+      // console.log('Today is: ', today);
+      // console.log(originalNotes);
 
       // Filter notes where the dueDate starts with today's date
       const filteredNotes = originalNotes.filter((note) => {
@@ -350,96 +351,106 @@ function Home() {
 
       setFilteredNotes(filteredNotes);
 
-      console.log('Updating notes to filtered notes', filteredNotes);
+      // console.log('Updating notes to filtered notes', filteredNotes);
     } else {
       // reset filter to OG state
       setFilteredNotes(originalNotes);
-      console.log('Resetting notes to original ones');
+      //console.log('Resetting notes to original ones');
     }
   };
 
   return (
-    <div
-      className={`main-page ${isDarkThemeSet ? 'dark-theme' : 'light-theme'}`}
-    >
-      {isDarkThemeSet ? (
-        <div className='bg-animation'>
-          <div id='stars'></div>
-          <div id='stars2'></div>
-          <div id='stars3'></div>
-          <div id='stars4'></div>
-        </div>
-      ) : (
-        <div id='background-wrap'>
-          <div className='x1'>
-            <div className='cloud'></div>
-          </div>
-
-          <div className='x2'>
-            <div className='cloud'></div>
-          </div>
-
-          <div className='x3'>
-            <div className='cloud'></div>
-          </div>
-
-          <div className='x4'>
-            <div className='cloud'></div>
-          </div>
-
-          <div className='x5'>
-            <div className='cloud'></div>
-          </div>
-        </div>
-      )}
-
-      <Header
-        onReceive={handleRequest}
-        onClick={handleThemeChange}
-        onType={handleSearch}
-        fontSize={fontSize}
-        isDarkThemeSet={isDarkThemeSet}
-      />
-      {isPopupOpen && (
-        <Popup
-          onClose={closePopup}
-          onAdd={load}
-          userId={userData.id}
-          fontSize={fontSize}
-          colors={userColors}
-        />
-      )}
-
-      <ColorSort
-        colors={userColors}
-        onColorSort={handleColorSort}
-        fontSize={fontSize}
-        customMeanings={customMeanings}
-        onFilterDue={filterDueDate}
-      />
+    <>
       {userData ? (
-        <NoteList
-          userData={userData}
-          notes={filteredNotes}
-          onDelete={load}
-          titles={hideTitles}
-          isDoneDelete={hideDoneNotes}
-          onLoad={load}
-          fontSize={fontSize}
-          colors={userColors}
-        />
+        <div
+          className={`main-page ${
+            isDarkThemeSet ? 'dark-theme' : 'light-theme'
+          }`}
+        >
+          {isDarkThemeSet ? (
+            <div className='bg-animation'>
+              <div id='stars'></div>
+              <div id='stars2'></div>
+              <div id='stars3'></div>
+              <div id='stars4'></div>
+            </div>
+          ) : (
+            <div id='background-wrap'>
+              <div className='x1'>
+                <div className='cloud'></div>
+              </div>
+
+              <div className='x2'>
+                <div className='cloud'></div>
+              </div>
+
+              <div className='x3'>
+                <div className='cloud'></div>
+              </div>
+
+              <div className='x4'>
+                <div className='cloud'></div>
+              </div>
+
+              <div className='x5'>
+                <div className='cloud'></div>
+              </div>
+            </div>
+          )}
+
+          <Header
+            onReceive={handleRequest}
+            onClick={handleThemeChange}
+            onType={handleSearch}
+            fontSize={fontSize}
+            isDarkThemeSet={isDarkThemeSet}
+          />
+          {isPopupOpen && (
+            <Popup
+              onClose={closePopup}
+              onAdd={load}
+              userId={userData.id}
+              fontSize={fontSize}
+              colors={userColors}
+            />
+          )}
+
+          <ColorSort
+            colors={userColors}
+            onColorSort={handleColorSort}
+            fontSize={fontSize}
+            customMeanings={customMeanings}
+            onFilterDue={filterDueDate}
+          />
+          {userData ? (
+            <NoteList
+              userData={userData}
+              notes={filteredNotes}
+              onDelete={load}
+              titles={hideTitles}
+              isDoneDelete={hideDoneNotes}
+              onLoad={load}
+              fontSize={fontSize}
+              colors={userColors}
+            />
+          ) : (
+            <p>Loading notes...</p>
+          )}
+          <Footer
+            titles={hideTitles}
+            onTitleChange={changeTitles}
+            userDetails={userData}
+            fontSize={fontSize}
+            onHide={handleHideNotes}
+            deleteDone={hideDoneNotes}
+          />
+        </div>
       ) : (
-        <p>Loading notes...</p>
-      )}
-      <Footer
-        titles={hideTitles}
-        onTitleChange={changeTitles}
-        userDetails={userData}
-        fontSize={fontSize}
-        onHide={handleHideNotes}
-        deleteDone={hideDoneNotes}
-      />
-    </div>
+        <>
+          <NotFound />
+        </>
+      )}{' '}
+    </>
   );
 }
 

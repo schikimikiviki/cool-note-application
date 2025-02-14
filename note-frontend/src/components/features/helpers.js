@@ -57,7 +57,7 @@ export const getCustomPaletteViaId = async (id) => {
     const result = data.find((palette) => palette.id === numericId);
 
     if (result) {
-      console.log('Found this result: ', result);
+      //console.log('Found this result: ', result);
       return result;
     } else {
       console.log('No palette found with the given ID:', id);
@@ -70,7 +70,7 @@ export const getCustomPaletteViaId = async (id) => {
 
 export const patchUserWithNewData = async (userObj, id) => {
   try {
-    console.log('patching user with data: ', userObj);
+    //  console.log('patching user with data: ', userObj);
     const authToken = localStorage.getItem('authToken');
     const response = await api.patch(`/users/${id}`, userObj, {
       headers: {
@@ -88,7 +88,7 @@ export const patchUserWithNewData = async (userObj, id) => {
         },
       });
 
-      console.log('Got the following user data: ', userResponse.data);
+      // console.log('Got the following user data: ', userResponse.data);
       localStorage.setItem('userData', JSON.stringify(userResponse.data));
       // setUserData(userResponse.data); ----> do this in the component itself
       return userResponse.data;
@@ -228,7 +228,7 @@ export const turnHexToEnum = (hex) => {
 export const validateUsername = async (username) => {
   let userArr = await fetchGetFromBackend('users', 'userFetch');
 
-  console.log(userArr);
+  // console.log(userArr);
 
   const userAlreadyExists = userArr.some((user) => user.username === username);
 

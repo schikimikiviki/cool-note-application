@@ -44,7 +44,7 @@ const LoginPage = () => {
   const handleAuthCheck = () => {
     // check if code is valid
     if (code === generatedAuthCode) {
-      console.log('Appliying font size: ', userData.fontSize);
+      //   console.log('Appliying font size: ', userData.fontSize);
 
       if (userData.roles.includes('ADMIN')) {
         navigate('/admin', { state: { applicationState: userData } });
@@ -114,7 +114,7 @@ const LoginPage = () => {
   };
 
   const sendMailToUser = (mailadress, authCode, fullname) => {
-    console.log('Sending mail to... ', mailadress);
+    // console.log('Sending mail to... ', mailadress);
     emailjs
       .send(
         import.meta.env.VITE_EMAIL_SERVICE_ID,
@@ -130,8 +130,8 @@ const LoginPage = () => {
       )
       .then(
         (result) => {
-          console.log('Email sent successfully!', result.text);
-          alert('Email sent successfully!');
+          //console.log('Email sent successfully!', result.text);
+          //alert('Email sent successfully!');
         },
         (error) => {
           console.error('Failed to send email:', error.text);
@@ -160,7 +160,7 @@ const LoginPage = () => {
         }
       );
       // Handle successful login
-      console.log('Login successful:', response.data);
+      // console.log('Login successful:', response.data);
 
       const authToken = btoa(`${username}:${password}`);
       localStorage.setItem('authToken', authToken);
@@ -179,7 +179,7 @@ const LoginPage = () => {
 
         let generatedCode = generateCode();
         setGeneratedAuthCode(generatedCode);
-        console.log(userData);
+        // console.log(userData);
         sendMailToUser(userData.email, generatedCode, userData.username);
       } else {
         if (userData.roles.includes('ADMIN')) {

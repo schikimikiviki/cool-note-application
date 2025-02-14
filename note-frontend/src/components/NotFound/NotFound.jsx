@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NotFound.css';
 
-function NotFound() {
+function NotFound({ loggedIn }) {
   const navigate = useNavigate();
 
   return (
@@ -12,7 +12,10 @@ function NotFound() {
         Oops! The page you're looking for doesn't exist. It might have been
         moved or deleted.
       </p>
-      <button className='button' onClick={() => navigate('/')}>
+      <button
+        className='button'
+        onClick={loggedIn ? () => navigate('/home') : () => navigate('/')}
+      >
         Go Back Home
       </button>
     </div>

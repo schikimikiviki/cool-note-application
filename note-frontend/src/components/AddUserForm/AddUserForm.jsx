@@ -88,7 +88,7 @@ const AddUserForm = ({ onAdd, isMobile }) => {
     };
 
     try {
-      console.log('POSTING the following user to the db: ', userObj);
+      // console.log('POSTING the following user to the db: ', userObj);
       const authToken = localStorage.getItem('authToken');
       const registerRes = await fetch('http://localhost:8088/register', {
         method: 'POST',
@@ -100,7 +100,7 @@ const AddUserForm = ({ onAdd, isMobile }) => {
       });
       const registerData = await registerRes.json();
 
-      console.log(registerData);
+      // console.log(registerData);
 
       if (registerData.success) {
         setRegistrationMessage('Registration successful!');

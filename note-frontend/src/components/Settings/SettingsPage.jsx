@@ -159,16 +159,16 @@ const SettingsPage = () => {
       return;
     }
 
-    console.log(
-      isCustomPalette ? 'Custom palette selected' : 'Default palette selected'
-    );
+    // console.log(
+    //   isCustomPalette ? 'Custom palette selected' : 'Default palette selected'
+    // );
 
     // also, put this to the db :))))
     // translate the users notes to have a new color of the new palette!
 
     let userNotes = JSON.parse(localStorage.getItem('userData')).notes;
     let oldNotes = JSON.parse(JSON.stringify(userNotes)); // Deep clone to make sure that we dont display an old version of the object from localstorage
-    console.log('Old notes: ', oldNotes);
+    // console.log('Old notes: ', oldNotes);
 
     if (isCustomPalette) {
       if (userNotes) {
@@ -180,7 +180,7 @@ const SettingsPage = () => {
           }
         });
 
-        console.log(colorsToCheck);
+        // console.log(colorsToCheck);
 
         userNotes.forEach(function (note) {
           // check if the color is included already in the customColorPaletteList
@@ -191,7 +191,7 @@ const SettingsPage = () => {
             note.colorString = newColor;
           }
         });
-        console.log('new notes: ', userNotes);
+        // console.log('new notes: ', userNotes);
       }
     } else {
       if (userNotes) {
@@ -207,7 +207,7 @@ const SettingsPage = () => {
           }
         });
 
-        console.log('new notes: ', userNotes);
+        //console.log('new notes: ', userNotes);
       }
     }
 
@@ -221,23 +221,23 @@ const SettingsPage = () => {
       userObj.notes = userNotes;
     }
 
-    console.log(userData);
+    //console.log(userData);
 
     let responseObj = await patchUserWithNewData(userObj, userData.id);
     setUserData(responseObj);
 
     // color im Localstorage überschreiben, weil sonst die neue Farbe nicht gerendert wird
 
-    console.log('wir speichern: ', palette);
+    // console.log('wir speichern: ', palette);
     if (isCustomPalette) {
-      console.log('getting custom pallete');
+      // console.log('getting custom pallete');
       getCustomPaletteViaId(palette).then((userSetColors) => {
         if (userSetColors) {
           localStorage.setItem('colors', JSON.stringify(userSetColors)); // speichern damit wir das in den Settings abrufen können
         }
       });
     } else {
-      console.log('getting default pallete');
+      //console.log('getting default pallete');
 
       getPaletteViaID(palette).then((userSetColors) => {
         if (userSetColors) {
@@ -318,7 +318,7 @@ const SettingsPage = () => {
       const notesToDelete = responseObj.notes.filter(
         (note) => note.isDone === true
       );
-      console.log('Notes to delete:', notesToDelete);
+      //console.log('Notes to delete:', notesToDelete);
       const authToken = localStorage.getItem('authToken');
 
       if (notesToDelete.length > 0) {
@@ -333,7 +333,7 @@ const SettingsPage = () => {
           );
 
           await Promise.all(deletionPromises); // Wait for all deletions to complete
-          console.log('All notes deleted');
+          //console.log('All notes deleted');
         } catch (err) {
           console.error('Error deleting notes:', err);
           return; // Exit early if deletion fails
@@ -352,7 +352,7 @@ const SettingsPage = () => {
         },
       });
 
-      console.log('Got the updated user data:', updatedUser.data);
+      //console.log('Got the updated user data:', updatedUser.data);
       localStorage.setItem('userData', JSON.stringify(updatedUser.data));
       setUserData(updatedUser.data); // Update the state with the latest data
     } catch (err) {
@@ -361,7 +361,7 @@ const SettingsPage = () => {
   };
 
   const refreshStateFromDb = (response) => {
-    console.log(response);
+    //console.log(response);
     setUserData(response);
   };
 

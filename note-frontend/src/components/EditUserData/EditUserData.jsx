@@ -55,7 +55,7 @@ const EditUserData = ({ userData, fontSize, onPatchUser }) => {
 
     // If no fields have changed, do nothing
     if (Object.keys(userObj).length === 0) {
-      console.log('No changes detected, skipping update.');
+      //console.log('No changes detected, skipping update.');
       return;
     }
 

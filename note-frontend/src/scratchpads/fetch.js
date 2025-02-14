@@ -12,7 +12,7 @@ try {
 
   const data = await res.json();
 
-  console.log('DATA: ', data);
+  //console.log('DATA: ', data);
 } catch (error) {
   console.error(`Error during fetch type:  ${error}`);
 }

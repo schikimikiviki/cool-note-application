@@ -17,7 +17,7 @@ const UsersList = ({ users }) => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleShowUser = (user) => {
-    console.log(user);
+    // console.log(user);
     setShowUser(user);
   };
 
