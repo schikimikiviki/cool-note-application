@@ -102,7 +102,7 @@ const ColorSort = ({
                 height: fontSize === 'var(--font-size-big)' ? '' : '20px',
               }}
             >
-              Filter by color
+              Click on a color
             </div>
           )}
 

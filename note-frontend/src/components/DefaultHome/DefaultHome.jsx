@@ -66,7 +66,7 @@ function DefaultHome() {
       dueDate: '2025-01-09T09:53:00.000Z',
     },
     {
-      id: 5,
+      id: 6,
       title: '... or download the app',
       content:
         '<p>for IOS and Android: <a rel="noopener noreferrer nofollow" href="https://blitznotiz.at/pwa"><u>here</u></a></p>',
