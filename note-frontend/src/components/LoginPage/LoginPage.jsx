@@ -151,7 +151,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8088/login',
+        'https://api.blitznotiz.at/login',
         { username: username, password: password },
         {
           headers: {

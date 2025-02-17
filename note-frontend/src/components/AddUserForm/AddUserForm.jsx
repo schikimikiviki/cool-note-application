@@ -90,7 +90,7 @@ const AddUserForm = ({ onAdd, isMobile }) => {
     try {
       // console.log('POSTING the following user to the db: ', userObj);
       const authToken = localStorage.getItem('authToken');
-      const registerRes = await fetch('http://localhost:8088/register', {
+      const registerRes = await fetch('https://api.blitznotiz.at/register', {
         method: 'POST',
         body: JSON.stringify(userObj), // Make sure userObj is stringified
         headers: {

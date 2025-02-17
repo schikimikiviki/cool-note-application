@@ -106,7 +106,7 @@ export const getAllColorPalettes = async () => {
   const authToken = localStorage.getItem('authToken');
 
   try {
-    const res = await fetch(`http://localhost:8088/api/colorpalettes/`, {
+    const res = await fetch(`https://api.blitznotiz.at/api/colorpalettes/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export const getAllColorPalettes = async () => {
 export const fetchGetFromBackend = async (path, errorType) => {
   const authToken = localStorage.getItem('authToken');
   try {
-    const res = await fetch(`http://localhost:8088/${path}`, {
+    const res = await fetch(`https://api.blitznotiz.at/${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ export const loadUserObject = async (userName) => {
     const authToken = localStorage.getItem('authToken'); // e.g., base64(username:password)
 
     const response = await axios.get(
-      `http://localhost:8088/users/${userName}`,
+      `https://api.blitznotiz.at/users/${userName}`,
       {
         headers: {
           Authorization: `Basic ${authToken}`, // Add Basic auth credentials

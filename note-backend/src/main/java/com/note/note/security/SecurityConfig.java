@@ -32,7 +32,7 @@ public class SecurityConfig {
 		http
 
 		.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authz) ->  authz
-
+		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 		.requestMatchers("/users/**").authenticated()
 		.requestMatchers("{userId}/notes").authenticated()
 		.requestMatchers("/api/notes/**").authenticated()

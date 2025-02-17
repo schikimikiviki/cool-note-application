@@ -77,7 +77,7 @@ const RegisterPage = () => {
     try {
       const authToken = localStorage.getItem('authToken');
       // Verify captcha
-      const res = await fetch('http://localhost:8088/verify', {
+      const res = await fetch('https://api.blitznotiz.at/verify', {
         method: 'POST',
         body: JSON.stringify({ captchaValue }),
         headers: {
@@ -100,7 +100,7 @@ const RegisterPage = () => {
         roles: ['USER'], // admin users cannot be registered via frontend
       };
       //console.log('POSTING the following user to the db: ', userObj);
-      const registerRes = await fetch('http://localhost:8088/register', {
+      const registerRes = await fetch('https://api.blitznotiz.at/register', {
         method: 'POST',
         body: JSON.stringify(userObj), // Make sure userObj is stringified
         headers: {

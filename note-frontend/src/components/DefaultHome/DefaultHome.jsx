@@ -65,6 +65,17 @@ function DefaultHome() {
       fontColor: '#000000',
       dueDate: '2025-01-09T09:53:00.000Z',
     },
+    {
+      id: 5,
+      title: '... or download the app',
+      content:
+        '<p>for IOS and Android: <a rel="noopener noreferrer nofollow" href="https://blitznotiz.at/pwa"><u>here</u></a></p>',
+      createdAt: '2025-01-08T19:53:30.618715',
+      colorString: '#C8B6FF',
+      isDone: false,
+      fontColor: '#000000',
+      dueDate: '2025-01-09T09:53:00.000Z',
+    },
   ]);
   const [filteredNotes, setFilteredNotes] = useState(originalNotes);
   const [userData, setUserData] = useState({
