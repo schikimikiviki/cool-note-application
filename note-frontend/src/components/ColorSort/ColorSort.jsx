@@ -91,7 +91,7 @@ const ColorSort = ({
             display: 'flex',
           }}
         >
-          {isMobile ? (
+          {/* {isMobile ? (
             <></>
           ) : (
             <div
@@ -104,7 +104,7 @@ const ColorSort = ({
             >
               Click on a color
             </div>
-          )}
+          )} */}
 
           {translatedColors.map((color, index) => (
             <div

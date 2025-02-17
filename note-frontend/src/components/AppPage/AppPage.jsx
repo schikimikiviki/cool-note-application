@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import ios1 from '../../assets/ios-1.png';
 import ios2 from '../../assets/ios-2.png';
 import ios3 from '../../assets/ios-3.png';
+import android1 from '../../assets/android-1.png';
+import android2 from '../../assets/android-2.jpeg';
 
 const AppPage = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -111,7 +113,50 @@ const AppPage = () => {
                 </div>
               </div>
             )}
-            {activeTab === 1 && <div>This is the content for Tab 2.</div>}
+            {activeTab === 1 && (
+              <div
+                style={{
+                  display: isMobile ? 'inline' : 'flex',
+                  gap: '20px',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      fontSize: '22px',
+                      marginBottom: '10px',
+                      minHeight: '100px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignContent: 'center',
+                    }}
+                  >
+                    Click on the settings icon <br></br>in the top right corner
+                    <br></br>
+                    and select "add to home page".
+                  </p>
+                  <img src={android1} width='280' height='600' />
+                </div>
+                <div>
+                  <p
+                    style={{
+                      fontSize: '22px',
+                      marginBottom: '10px',
+                      minHeight: '100px',
+
+                      justifyContent: 'center',
+                      alignContent: 'center',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Click "install".
+                  </p>
+                  <img src={android2} width='280' height='600' />
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <br />
