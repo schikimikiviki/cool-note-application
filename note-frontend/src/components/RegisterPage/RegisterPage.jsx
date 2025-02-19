@@ -38,8 +38,8 @@ const RegisterPage = () => {
     setErrorMessage('');
     setRegistrationMessage('');
 
-    if (username.length < 5) {
-      setErrorMessage('Username must be at least 5 characters long!');
+    if (username.length < 3) {
+      setErrorMessage('Username must be at least 3 characters long!');
       return false;
     }
     if (!regex.test(password.trim())) {
@@ -82,7 +82,6 @@ const RegisterPage = () => {
         body: JSON.stringify({ captchaValue }),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Basic ${authToken}`,
         },
       });
       const data = await res.json();
@@ -105,7 +104,6 @@ const RegisterPage = () => {
         body: JSON.stringify(userObj), // Make sure userObj is stringified
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Basic ${authToken}`,
         },
       });
       const registerData = await registerRes.json();

@@ -153,3 +153,5 @@ Include /etc/letsencrypt/options-ssl-apache.conf
 ```
 
 6. Also, rewrite the frontend requests if necessary: For example, a request to http://localhost:8088/login becomes https://api.blitznotiz.at/login
+
+7. Copy the .env file to the new /dist folder on the server

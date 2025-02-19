@@ -226,17 +226,30 @@ export const turnHexToEnum = (hex) => {
 };
 
 export const validateUsername = async (username) => {
-  let userArr = await fetchGetFromBackend('users', 'userFetch');
+  try {
+    const res = await fetch(
+      `https://api.blitznotiz.at/users/check-username?username=${encodeURIComponent(
+        username
+      )}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-  // console.log(userArr);
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
+    }
 
-  const userAlreadyExists = userArr.some((user) => user.username === username);
+    const data = await res.json();
 
-  if (userAlreadyExists) {
-    console.log('User already exists!');
+    return data;
+  } catch (error) {
+    console.error(`Error during fetch:  ${error}`);
+    return false;
   }
-
-  return userAlreadyExists;
 };
 
 export default {

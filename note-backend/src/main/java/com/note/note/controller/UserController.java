@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.note.note.data.ColorPalette;
@@ -317,6 +318,13 @@ public class UserController {
 		// If the user isn't found, return null or throw an exception
 		return null;
 	}
+	
+	@GetMapping("/check-username")
+    public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
+		List<User> allUsers = userService.findAllUsers();
+	    boolean exists = allUsers.stream().anyMatch(user -> user.getUsername().equals(username));
+	    return ResponseEntity.ok(exists);
+    }
 
 	@DeleteMapping("/users/{userId}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
