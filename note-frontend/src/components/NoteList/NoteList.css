@@ -21,7 +21,21 @@
   hyphens: auto;
 }
 
+h2 {
+  hyphens: auto;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
 @media only screen and (max-width: 768px) {
+  ul {
+    padding-left: 2.1rem;
+  }
+
+  ol {
+    padding-left: 2.1rem;
+  }
+
   .note-container {
     max-width: 150px;
     margin: 0.8rem;

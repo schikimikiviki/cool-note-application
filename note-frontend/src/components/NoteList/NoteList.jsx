@@ -214,6 +214,7 @@ const NoteList = ({
 
                   {areTitlesVisible ? (
                     <h2
+                      lang='de'
                       className='handwriting'
                       style={{
                         fontSize: isMobile
@@ -325,6 +326,7 @@ const NoteList = ({
 
                   {areTitlesVisible ? (
                     <h2
+                      lang='de'
                       className='handwriting'
                       style={{
                         fontSize:
