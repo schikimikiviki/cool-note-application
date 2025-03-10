@@ -173,7 +173,7 @@ const NoteList = ({
     <div className='main-container'>
       {isDefault
         ? notes.map((note) => (
-            <div key={note.id} style={{ position: 'relative' }}>
+            <div lang='de' key={note.id} style={{ position: 'relative' }}>
               <div
                 className={`note-container ${note.isDone ? 'overlay' : ''}`}
                 style={{
@@ -280,7 +280,7 @@ const NoteList = ({
             </div>
           ))
         : notes.map((note, index) => (
-            <div key={note.id} style={{ position: 'relative' }}>
+            <div lang='de' key={note.id} style={{ position: 'relative' }}>
               <div
                 className={`note-container ${
                   isDoneList[index] ? 'overlay' : ''
@@ -309,8 +309,8 @@ const NoteList = ({
                       fontStyle: userData.fontStyle,
                       fontSize: fontSize,
                       color: note.fontColor,
-                      marginTop: '-20px',
-                      marginLeft: '-20px',
+                      marginTop: '-10px',
+                      marginLeft: '-10px',
                       marginBottom: '10px',
                     }}
                   >
